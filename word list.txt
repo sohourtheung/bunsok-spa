@@ -467,8 +467,8 @@ Update Payroll
 Method
 Sale Return
 Purchase Return
-Net Sale Return,
-Net Purchase Return,
+Net Sale Return
+Net Purchase Return
 Attendance
 Add Attendance
 HRM Setting
@@ -518,3 +518,18 @@ Type Product Name or Code...
 Type date or sale reference...
 Type date or purchase reference...
 Tax Number
+Holiday
+Add Holiday
+Update Holiday
+Approve
+My Holiday
+Holiday Approve
+My Transaction
+Sale Generated
+Purchase Generated
+Quotation Generated
+My Transactions
+Warehouse Report
+Quick Cash
+Clear
+You can upload multiple image. Only .jpeg, .jpg, .png, .gif file can be uploaded. First image will be base image.

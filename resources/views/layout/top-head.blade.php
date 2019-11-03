@@ -142,6 +142,12 @@
                             <a href="{{route('setting.general')}}"><i class="fa fa-cog"></i> {{trans('file.settings')}}</a>
                           </li>
                           @endif
+                          <li> 
+                            <a href="{{url('my-transactions/'.date('Y').'/'.date('m'))}}"><i class="ion-arrow-swap"></i> {{trans('file.My Transaction')}}</a>
+                          </li>
+                          <li> 
+                            <a href="{{url('holidays/my-holiday/'.date('Y').'/'.date('m'))}}"><i class="fa fa-plane"></i> {{trans('file.My Holiday')}}</a>
+                          </li>
                           <li>
                             <a href="{{ route('logout') }}"
                                onclick="event.preventDefault();

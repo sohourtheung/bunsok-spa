@@ -10,4 +10,6 @@ class Employee extends Model
         "name", "image", "department_id", "email", "phone_number",
         "user_id", "address", "city", "country", "is_active"
     ];
+
+    
 }

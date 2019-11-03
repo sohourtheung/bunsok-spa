@@ -519,5 +519,20 @@ return [
 	"Type date or sale reference..." => "प्रकार दिनांक या बिक्री संदर्भ ...",
 	"Type date or purchase reference..." => "दिनांक या खरीद संदर्भ लिखें ...",
 	"Tax Number" => "कर संख्या",
-	];
+	"Holiday" => "छुट्टी का दिन",
+	"Add Holiday" => "छुट्टी जोड़ें",
+	"Update Holiday" => "अद्यतन छुट्टी",
+	"Approve" => "मंजूर",
+	"My Holiday" => "मेरी छुट्टी",
+	"Holiday Approve" => "छुट्टी मंजूर",
+	"My Transaction" => "मेरा लेन-देन",
+	"Sale Generated" => "बिक्री उत्पन्न",
+	"Purchase Generated" => "खरीदी गई",
+	"Quotation Generated" => "उद्धरण उत्पन्न हुआ",
+	"My Transactions" => "मेरे लेन-देन",
+	"Warehouse Report" => "वेयरहाउस रिपोर्ट",
+	"Quick Cash" => "त्वरित नकद प्राप्ति",
+	"Clear" => "स्पष्ट",
+	"You can upload multiple image. Only .jpeg, .jpg, .png, .gif file can be uploaded. First image will be base image." => "आप कई छवि अपलोड कर सकते हैं। केवल .jpeg, .jpg, .png, .gif फ़ाइल अपलोड की जा सकती है। पहली छवि आधार छवि होगी।",
+		];
 ?>

@@ -41,6 +41,8 @@
     <link rel="stylesheet" href="<?php echo asset('public/css/style.default.css') ?>" id="theme-stylesheet" type="text/css">
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="<?php echo asset('public/css/custom-'.$general_setting->theme) ?>" type="text/css" id="custom-style">
+    <link rel="stylesheet" href="<?php echo asset('public/css/dropzone.css') ?>"></link>
+    <link rel="stylesheet" href="<?php echo asset('public/css/style.css') ?>"></link>
     <!-- Tweaks for older IEs--><!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
@@ -69,6 +71,7 @@
     <script type="text/javascript" src="<?php echo asset('public/vendor/daterange/js/daterangepicker.min.js') ?>"></script>
     <script type="text/javascript" src="<?php echo asset('public/vendor/tinymce/js/tinymce/tinymce.min.js') ?>"></script>
     <script type="text/javascript" src="<?php echo asset('public/js/dropzone.js') ?>"></script>
+    
     <!-- table sorter js-->
     <script type="text/javascript" src="<?php echo asset('public/vendor/datatable/pdfmake.min.js') ?>"></script>
     <script type="text/javascript" src="<?php echo asset('public/vendor/datatable/vfs_fonts.js') ?>"></script>
@@ -377,7 +380,7 @@
                         ['role_id', $role->id]
                     ])->first();
               ?>
-              @if($department_active || $index_employee_active || $attendance_active || $payroll_active)
+              
               <li class=""><a href="#hrm" aria-expanded="false" data-toggle="collapse"> <i class="ion-person-stalker"></i><span>HRM</span></a>
                 <ul id="hrm" class="collapse list-unstyled ">
                   @if($department_active)
@@ -392,9 +395,10 @@
                   @if($payroll_active)
                   <li id="payroll-menu"><a href="{{route('payroll.index')}}">{{trans('file.Payroll')}}</a></li>
                   @endif
+                  <li id="holiday-menu"><a href="{{route('holidays.index')}}">{{trans('file.Holiday')}}</a></li>
                 </ul>
               </li>
-              @endif
+              
               <li><a href="#people" aria-expanded="false" data-toggle="collapse"> <i class="icon-user"></i><span>{{trans('file.People')}}</span></a>
                 <ul id="people" class="collapse list-unstyled ">
                   <?php $index_permission_active = DB::table('permissions')
@@ -470,6 +474,11 @@
                         ->join('role_has_permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
                         ->where([
                           ['permissions.name', 'best-seller'],
+                          ['role_id', $role->id] ])->first();
+                  $warehouse_report_active = DB::table('permissions')
+                        ->join('role_has_permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
+                        ->where([
+                          ['permissions.name', 'warehouse-report'],
                           ['role_id', $role->id] ])->first();
                   $warehouse_stock_report_active = DB::table('permissions')
                         ->join('role_has_permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
@@ -615,6 +624,11 @@
                     <input type="hidden" name="warehouse_id" value="0" />
                     <a id="purchase-report-link" href="">{{trans('file.Purchase Report')}}</a>
                     {!! Form::close() !!}
+                  </li>
+                  @endif
+                  @if($warehouse_report_active)
+                  <li id="warehouse-report-menu">
+                    <a id="warehouse-report-link" href="">{{trans('file.Warehouse Report')}}</a>
                   </li>
                   @endif
                   @if($warehouse_stock_report_active)
@@ -842,6 +856,12 @@
                             <a href="{{route('setting.general')}}"><i class="fa fa-cog"></i> {{trans('file.settings')}}</a>
                           </li>
                           @endif
+                          <li> 
+                            <a href="{{url('my-transactions/'.date('Y').'/'.date('m'))}}"><i class="ion-arrow-swap"></i> {{trans('file.My Transaction')}}</a>
+                          </li>
+                          <li> 
+                            <a href="{{url('holidays/my-holiday/'.date('Y').'/'.date('m'))}}"><i class="fa fa-plane"></i> {{trans('file.My Holiday')}}</a>
+                          </li>
                           @if($empty_database_permission_active)
                           <li>
                             <a onclick="return confirm('Are you sure want to delete? If you do this all of your data will be lost.')" href="{{route('setting.emptyDatabase')}}"><i class="fa fa-database"></i> {{trans('file.Empty Database')}}</a>
@@ -1003,6 +1023,41 @@
                             </div>
                         </div>
                       </div>
+                      <div class="form-group">
+                          <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
+                      </div>
+                    {{ Form::close() }}
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <!-- warehouse modal -->
+      <div id="warehouse-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+        <div role="document" class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Warehouse Report')}}</h5>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                  <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
+                    {!! Form::open(['route' => 'report.warehouse', 'method' => 'post']) !!}
+                    <?php 
+                      $lims_warehouse_list = DB::table('warehouses')->where('is_active', true)->get();
+                    ?>
+                      <div class="form-group">
+                          <label><strong>{{trans('file.Warehouse')}} *</strong></label>
+                          <select name="warehouse_id" class="selectpicker form-control" required data-live-search="true" id="warehouse-id" data-live-search-style="begins" title="Select warehouse...">
+                              @foreach($lims_warehouse_list as $warehouse)
+                              <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
+                              @endforeach
+                          </select>
+                      </div>
+
+                      <input type="hidden" name="start_date" value="1988-04-18" />
+                      <input type="hidden" name="end_date" value="{{date('Y-m-d')}}" />
+
                       <div class="form-group">
                           <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
                       </div>
@@ -1191,6 +1246,11 @@
       $("a#payment-report-link").click(function(e){
         e.preventDefault();
         $("#payment-report-form").submit();
+      });
+
+      $("a#warehouse-report-link").click(function(e){
+        e.preventDefault();
+        $('#warehouse-modal').modal();
       });
 
       $("a#user-report-link").click(function(e){

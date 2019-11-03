@@ -18,6 +18,7 @@ use DNS1D;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Validation\Rule;
+use DB;
 
 class ProductController extends Controller
 {
@@ -91,7 +92,8 @@ class ProductController extends Controller
             {
                 $nestedData['id'] = $product->id;
                 $nestedData['key'] = $key;
-                $nestedData['image'] = '<img src="'.url('public/images/product',$product->image).'" height="80" width="80">';
+                $product_image = explode(",", $product->image);
+                $nestedData['image'] = '<img src="'.url('public/images/product', $product_image[0]).'" height="80" width="80">';
                 $nestedData['name'] = $product->name;
                 $nestedData['code'] = $product->code;
                 if($product->brand_id)
@@ -100,7 +102,7 @@ class ProductController extends Controller
                     $nestedData['brand'] = "N/A";
                 $nestedData['category'] = Category::find($product->category_id)->name;
                 $nestedData['qty'] = $product->qty;
-                if($product->unit)
+                if($product->unit_id)
                     $nestedData['unit'] = Unit::find($product->unit_id)->unit_code;
                 else
                     $nestedData['unit'] = 'N/A';
@@ -111,7 +113,10 @@ class ProductController extends Controller
                               <span class="caret"></span>
                               <span class="sr-only">Toggle Dropdown</span>
                             </button>
-                            <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">';
+                            <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
+                            <li>
+                                <button="type" class="btn btn-link view"><i class="fa fa-eye"></i> '.trans('file.View').'</button>
+                            </li>';
                 if(in_array("products-edit", $request['all_permission']))
                     $nestedData['options'] .= '<li>
                             <a href="'.route('products.edit', ['id' => $product->id]).'" class="btn btn-link"><i class="fa fa-edit"></i> '.trans('file.edit').'</a>
@@ -134,7 +139,7 @@ class ProductController extends Controller
                 else
                     $tax_method = trans('file.Inclusive');
 
-                $nestedData['product'] = array( '[ "'.$product->type.'"', ' "'.$product->name.'"', ' "'.$product->code.'"', ' "'.$nestedData['brand'].'"', ' "'.$nestedData['category'].'"', ' "'.$nestedData['unit'].'"', ' "'.$product->cost.'"', ' "'.$product->price.'"', ' "'.$tax.'"', ' "'.$tax_method.'"', ' "'.$product->alert_quantity.'"', ' "'.$product->product_details.'"', ' "'.$product->id.'"', ' "'.$product->product_list.'"', ' "'.$product->qty_list.'"', ' "'.$product->price_list.'"', ' "'.$product->qty.'"]'
+                $nestedData['product'] = array( '[ "'.$product->type.'"', ' "'.$product->name.'"', ' "'.$product->code.'"', ' "'.$nestedData['brand'].'"', ' "'.$nestedData['category'].'"', ' "'.$nestedData['unit'].'"', ' "'.$product->cost.'"', ' "'.$product->price.'"', ' "'.$tax.'"', ' "'.$tax_method.'"', ' "'.$product->alert_quantity.'"', ' "'.$product->product_details.'"', ' "'.$product->id.'"', ' "'.$product->product_list.'"', ' "'.$product->qty_list.'"', ' "'.$product->price_list.'"', ' "'.$product->qty.'"', ' "'.$product->image.'"]'
                 );
                 $nestedData['imagedata'] = DNS1D::getBarcodePNG($product->code, $product->barcode_symbology);
                 $data[] = $nestedData;
@@ -179,12 +184,9 @@ class ProductController extends Controller
                     Rule::unique('products')->where(function ($query) {
                     return $query->where('is_active', 1);
                 }),
-            ],
-            'image' => 'image|mimes:jpg,jpeg,png,gif|max:100000',
+            ]
         ]);
-
         $data = $request->except('image', 'file');
-
         if($data['type'] == 'combo'){
             $data['product_list'] = implode(",", $data['product_id']);
             $data['qty_list'] = implode(",", $data['product_qty']);
@@ -200,13 +202,15 @@ class ProductController extends Controller
         if($data['last_date'])
             $data['last_date'] = date('Y-m-d', strtotime($data['last_date']));
         $data['is_active'] = true;
-        $image = $request->image;
-        if ($image) {
-            $ext = pathinfo($image->getClientOriginalName(), PATHINFO_EXTENSION);
-            $imageName = preg_replace('/[^a-zA-Z0-9]/', '', $request['name']);
-            $imageName = $imageName . '.' . $ext;
-            $image->move('public/images/product', $imageName);
-            $data['image'] = $imageName;
+        $images = $request->image;
+        $image_names = [];
+        if($images) {            
+            foreach ($images as $key => $image) {
+                $imageName = $image->getClientOriginalName();
+                $image->move('public/images/product', $imageName);
+                $image_names[] = $imageName;
+            }
+            $data['image'] = implode(",", $image_names);
         }
         else {
             $data['image'] = 'zummXD2dvAtI.png';
@@ -220,7 +224,7 @@ class ProductController extends Controller
             $data['file'] = $fileName;
         }
         Product::create($data);
-        return redirect('products')->with('create_message', 'Product created successfully'); 
+        \Session::flash('create_message', 'Product created successfully');
     }
 
     public function edit($id)
@@ -240,30 +244,28 @@ class ProductController extends Controller
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
 
-    public function update(Request $request, $id)
+    public function updateProduct(Request $request)
     {
         $this->validate($request, [
             'name' => [
                 'max:255',
-                Rule::unique('products')->ignore($id)->where(function ($query) {
+                Rule::unique('products')->ignore($request->input('id'))->where(function ($query) {
                     return $query->where('is_active', 1);
                 }),
             ],
 
             'code' => [
                 'max:255',
-                Rule::unique('products')->ignore($id)->where(function ($query) {
+                Rule::unique('products')->ignore($request->input('id'))->where(function ($query) {
                     return $query->where('is_active', 1);
                 }),
-            ],
-
-            'image' => 'image|mimes:jpg,jpeg,png,gif|max:100000',
+            ]
         ]);
-
-        $lims_product_data = Product::findOrFail($id);
+        $data = $request->except('image', 'file');
+        $lims_product_data = Product::findOrFail($request->input('id'));
         $data = $request->except('image', 'file');
 
-        if($data['type'] == 'combo'){
+        if($data['type'] == 'combo') {
             $data['product_list'] = implode(",", $data['product_id']);
             $data['qty_list'] = implode(",", $data['product_qty']);
             $data['price_list'] = implode(",", $data['unit_price']);
@@ -277,14 +279,25 @@ class ProductController extends Controller
             $data['starting_date'] = date('Y-m-d', strtotime($data['starting_date']));
         if($data['last_date'])
             $data['last_date'] = date('Y-m-d', strtotime($data['last_date']));
-        $image = $request->image;
-        if ($image) {
-            $ext = pathinfo($image->getClientOriginalName(), PATHINFO_EXTENSION);
-            $imageName = preg_replace('/[^a-zA-Z0-9]/', '', $request['name']);
-            $imageName = $imageName . '.' . $ext;
-            $image->move('public/images/product', $imageName);
-            $data['image'] = $imageName;
+        $images = $request->image;
+        $image_names = [];
+        if($images) {            
+            foreach ($images as $key => $image) {
+                $imageName = $image->getClientOriginalName();
+                $image->move('public/images/product', $imageName);
+                $image_names[] = $imageName;
+            }
+            if($lims_product_data->image != 'zummXD2dvAtI.png') {
+                $data['image'] = $lims_product_data->image.','.implode(",", $image_names);
+            }
+            else{
+                $data['image'] = implode(",", $image_names);
+            }
         }
+        else {
+            $data['image'] = $lims_product_data->image;
+        }
+
         $file = $request->file;
         if ($file) {
             $ext = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
@@ -294,7 +307,7 @@ class ProductController extends Controller
             $data['file'] = $fileName;
         }
         $lims_product_data->update($data);
-        return redirect('products')->with('edit_message', 'Product updated successfully');
+        \Session::flash('edit_message', 'Product updated successfully');
     }
 
     public function generateCode()
@@ -442,6 +455,12 @@ class ProductController extends Controller
     {
         $lims_product_data = Product::findOrFail($id);
         $lims_product_data->is_active = false;
+        if($lims_product_data->image) {
+            $images = explode(",", $lims_product_data->image);
+            foreach ($images as $key => $image) {
+                unlink('public/images/product/'.$image);
+            }
+        }
         $lims_product_data->save();
         return redirect('products')->with('message', 'Product deleted successfully');
     }

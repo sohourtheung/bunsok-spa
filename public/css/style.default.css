@@ -2822,14 +2822,34 @@ a>code {
     margin-bottom: 15px;
 }
 
-@media (min-width: 576px) {
-    .card-deck {
-        margin-right: -15px;
-        margin-left: -15px;
-    }
+.validation-msg {
+    color: red;
+}
 
-    .card-deck .card {
-        margin-right: 15px;
-        margin-left: 15px;
-    }
+/*
+ * START Slider
+ * *******************************************/
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  height: 40px;
+  width: 40px;
+  background-image: none;
+  background-color: #6449e7;
+  text-align: center;
+  line-height: 40px;
+}
+
+.carousel-control-next-icon:after
+{
+  content: '\f105';
+  font-family: 'FontAwesome';
+  font-size: 20px;
+  color: #fff;
+}
+
+.carousel-control-prev-icon:after {
+  content: '\f104';
+  font-family: 'FontAwesome';
+  font-size: 20px;
+  color: #fff;
 }

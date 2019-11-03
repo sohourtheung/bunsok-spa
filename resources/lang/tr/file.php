@@ -519,5 +519,20 @@ return [
 	"Type date or sale reference..." => "Tarih veya satış referansını girin ...",
 	"Type date or purchase reference..." => "Tarih veya satın alma referansını yazın ...",
 	"Tax Number" => "Vergi numarası",
-	];
+	"Holiday" => "Tatil",
+	"Add Holiday" => "Tatil ekle",
+	"Update Holiday" => "Tatil Güncelle",
+	"Approve" => "onaylamak",
+	"My Holiday" => "Tatilim",
+	"Holiday Approve" => "Tatil onaylaması",
+	"My Transaction" => "İşlemim",
+	"Sale Generated" => "Üretilen Satış",
+	"Purchase Generated" => "Satınalma Üretildi",
+	"Quotation Generated" => "Oluşturulan Teklif",
+	"My Transactions" => "İşlemlerim",
+	"Warehouse Report" => "Depo raporu",
+	"Quick Cash" => "Çabuk para",
+	"Clear" => "Açık",
+	"You can upload multiple image. Only .jpeg, .jpg, .png, .gif file can be uploaded. First image will be base image." => "Birden fazla resim yükleyebilirsiniz. Sadece .jpeg, .jpg, .png, .gif dosyası yüklenebilir. İlk görüntü temel görüntü olacaktır.",
+];
 ?>

@@ -376,7 +376,7 @@
     $("#cheque").hide();
     $('#view-payment').modal('hide');
 
-    $(document).on("click", "tr.sale-link td:not(:first-child, :last-child)", function(){
+    $(document).on("click", "tr.sale-link td:not(:first-child, :last-child)", function() {
         var sale = $(this).parent().data('sale');
         saleDetails(sale);
     });

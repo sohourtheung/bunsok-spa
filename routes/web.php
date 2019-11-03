@@ -12,9 +12,7 @@
 */
 Auth::routes();
 Route::group(['middleware' => 'auth'], function() {
-	Route::get('/dashboard', function () {
-	    return view('home');
-	});
+	Route::get('/dashboard', 'HomeController@dashboard');
 });
 
 Route::group(['middleware' => ['auth', 'active']], function() {
@@ -69,6 +67,7 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 	Route::get('products/print_barcode','ProductController@printBarcode')->name('product.printBarcode');
 	Route::get('products/lims_product_search', 'ProductController@limsProductSearch')->name('product.search');
 	Route::post('products/deletebyselection', 'ProductController@deleteBySelection');
+	Route::post('products/update', 'ProductController@updateProduct');
 	Route::resource('products', 'ProductController');
 
 	Route::post('importcustomer_group', 'CustomerGroupController@importCustomerGroup')->name('customer_group.import');
@@ -191,6 +190,7 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 	Route::post('report/purchase', 'ReportController@purchaseReport')->name('report.purchase');
 	Route::post('report/sale_report', 'ReportController@saleReport')->name('report.sale');
 	Route::post('report/payment_report_by_date', 'ReportController@paymentReportByDate')->name('report.paymentByDate');
+	Route::post('report/warehouse_report', 'ReportController@warehouseReport')->name('report.warehouse');
 	Route::post('report/user_report', 'ReportController@userReport')->name('report.user');
 	Route::post('report/customer_report', 'ReportController@customerReport')->name('report.customer');
 	Route::post('report/supplier', 'ReportController@supplierReport')->name('report.supplier');
@@ -256,6 +256,13 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 	Route::post('stock-count/finalize', 'StockCountController@finalize')->name('stock-count.finalize');
 	Route::get('stock-count/stockdif/{id}', 'StockCountController@stockDif');
 	Route::get('stock-count/{id}/qty_adjustment', 'StockCountController@qtyAdjustment')->name('stock-count.adjustment');
+
+	Route::post('holidays/deletebyselection', 'HolidayController@deleteBySelection');
+	Route::get('approve-holiday/{id}', 'HolidayController@approveHoliday')->name('approveHoliday');
+	Route::get('holidays/my-holiday/{year}/{month}', 'HolidayController@myHoliday')->name('myHoliday');
+	Route::resource('holidays', 'HolidayController');
+
 	Route::get('/home', 'HomeController@index')->name('home');
+	Route::get('my-transactions/{year}/{month}', 'HomeController@myTransaction');
 });
 

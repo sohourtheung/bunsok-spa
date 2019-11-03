@@ -518,6 +518,20 @@ return [
 	"Type date or sale reference..." => "Type date or sale reference...",
 	"Type date or purchase reference..." => "Type date or purchase reference...",
 	"Tax Number" => "Tax Number",
-	
+	"Holiday" => "Holiday",
+	"Add Holiday" => "Add Holiday",
+	"Update Holiday" => "Update Holiday",
+	"Approve" => "Approve",
+	"My Holiday" => "My Holiday",
+	"Holiday Approve" => "Holiday Approve",
+	"My Transaction" => "My Transactions",
+	"Sale Generated" => "Sale Generated",
+	"Purchase Generated" => "Purchase Generated",
+	"Quotation Generated" => "Quotation Generated",
+	"My Transactions" => "My Transactions",
+	"Warehouse Report" => "Warehouse Report",
+	"Quick Cash" => "Quick Cash",
+	"Clear" => "Clear",
+	"You can upload multiple image. Only .jpeg, .jpg, .png, .gif file can be uploaded. First image will be base image." => "You can upload multiple image. Only .jpeg, .jpg, .png, .gif file can be uploaded. First image will be base image.",
 ];
 ?>

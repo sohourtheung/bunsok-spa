@@ -519,5 +519,20 @@ return [
 	"Type date or sale reference..." => "Typdatum oder Verkaufsreferenz ...",
 	"Type date or purchase reference..." => "Geben Sie das Datum oder die Kaufnummer ein ...",
 	"Tax Number" => "Steuernummer",
-	];
+	"Holiday" => "Urlaub",
+	"Add Holiday" => "Urlaub hinzufügen",
+	"Update Holiday" => "Feiertag aktualisieren",
+	"Approve" => "Genehmigen",
+	"My Holiday" => "Mein Urlaub",
+	"Holiday Approve" => "Urlaub genehmigen",
+	"My Transaction" => "Meine Transaktion",
+	"Sale Generated" => "Verkauf generiert",
+	"Purchase Generated" => "Kauf generiert",
+	"Quotation Generated" => "Angebot generiert",
+	"My Transactions" => "Meine Transaktionen",
+	"Warehouse Report" => "Lagerbericht",
+	"Quick Cash" => "Schnelles Geld",
+	"Clear" => "klar",
+	"You can upload multiple image. Only .jpeg, .jpg, .png, .gif file can be uploaded. First image will be base image." => "Sie können mehrere Bilder hochladen. Es können nur JPEG-, JPG-, PNG- und GIF-Dateien hochgeladen werden. Das erste Bild ist das Basisbild.",
+];
 ?>

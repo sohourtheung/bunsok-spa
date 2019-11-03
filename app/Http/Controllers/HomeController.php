@@ -23,6 +23,11 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
+    public function dashboard()
+    {
+        return view('home');
+    }
+
     public function index()
     { 
         $start_date = date("Y").'-'.date("m").'-'.'01';
@@ -149,5 +154,31 @@ class HomeController extends Controller
         }
         
         return $data;
+    }
+
+    public function myTransaction($year, $month)
+    {
+        $start = 1;
+        $number_of_day = cal_days_in_month(CAL_GREGORIAN,$month,$year);
+        while($start <= $number_of_day)
+        {
+            if($start < 10)
+                $date = $year.'-'.$month.'-0'.$start;
+            else
+                $date = $year.'-'.$month.'-'.$start;
+            $sale_generated[$start] = Sale::whereDate('created_at', $date)->where('user_id', Auth::id())->count();
+            $sale_grand_total[$start] = Sale::whereDate('created_at', $date)->where('user_id', Auth::id())->sum('grand_total');
+            $purchase_generated[$start] = Purchase::whereDate('created_at', $date)->where('user_id', Auth::id())->count();
+            $purchase_grand_total[$start] = Purchase::whereDate('created_at', $date)->where('user_id', Auth::id())->sum('grand_total');
+            $quotation_generated[$start] = Quotation::whereDate('created_at', $date)->where('user_id', Auth::id())->count();
+            $quotation_grand_total[$start] = Quotation::whereDate('created_at', $date)->where('user_id', Auth::id())->sum('grand_total');
+            $start++;
+        }
+        $start_day = date('w', strtotime($year.'-'.$month.'-01')) + 1;
+        $prev_year = date('Y', strtotime('-1 month', strtotime($year.'-'.$month.'-01')));
+        $prev_month = date('m', strtotime('-1 month', strtotime($year.'-'.$month.'-01')));
+        $next_year = date('Y', strtotime('+1 month', strtotime($year.'-'.$month.'-01')));
+        $next_month = date('m', strtotime('+1 month', strtotime($year.'-'.$month.'-01')));
+        return view('user.my_transaction', compact('start_day', 'year', 'month', 'number_of_day', 'prev_year', 'prev_month', 'next_year', 'next_month', 'sale_generated', 'sale_grand_total','purchase_generated', 'purchase_grand_total','quotation_generated', 'quotation_grand_total'));
     }
 }

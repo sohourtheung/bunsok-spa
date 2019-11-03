@@ -152,6 +152,7 @@
 
     var expense_id = [];
     var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
+    var all_permission = <?php echo json_encode($all_permission) ?>;
     
     $.ajaxSetup({
         headers: {

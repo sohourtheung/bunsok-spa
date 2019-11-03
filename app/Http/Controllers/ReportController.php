@@ -706,6 +706,40 @@ class ReportController extends Controller
         return view('report.payment_report',compact('lims_payment_data', 'start_date', 'end_date'));
     }
 
+    public function warehouseReport(Request $request)
+    {
+        $data = $request->all();
+        $warehouse_id = $data['warehouse_id'];
+        $start_date = $data['start_date'];
+        $end_date = $data['end_date'];
+
+        $lims_purchase_data = Purchase::where('warehouse_id', $warehouse_id)->whereDate('created_at', '>=' , $start_date)->whereDate('created_at', '<=' , $end_date)->get();
+        $lims_sale_data = Sale::where('warehouse_id', $warehouse_id)->whereDate('created_at', '>=' , $start_date)->whereDate('created_at', '<=' , $end_date)->get();
+        $lims_quotation_data = Quotation::where('warehouse_id', $warehouse_id)->whereDate('created_at', '>=' , $start_date)->whereDate('created_at', '<=' , $end_date)->get();
+        $lims_return_data = Returns::where('warehouse_id', $warehouse_id)->whereDate('created_at', '>=' , $start_date)->whereDate('created_at', '<=' , $end_date)->get();
+        $lims_expense_data = Expense::where('warehouse_id', $warehouse_id)->whereDate('created_at', '>=' , $start_date)->whereDate('created_at', '<=' , $end_date)->get();
+
+        $lims_product_purchase_data = [];
+        $lims_product_sale_data = [];
+        $lims_product_quotation_data = [];
+        $lims_product_return_data = [];
+
+        foreach ($lims_purchase_data as $key => $purchase) {
+            $lims_product_purchase_data[$key] = ProductPurchase::where('purchase_id', $purchase->id)->get();
+        }
+        foreach ($lims_sale_data as $key => $sale) {
+            $lims_product_sale_data[$key] = Product_Sale::where('sale_id', $sale->id)->get();
+        }
+        foreach ($lims_quotation_data as $key => $quotation) {
+            $lims_product_quotation_data[$key] = ProductQuotation::where('quotation_id', $quotation->id)->get();
+        }
+        foreach ($lims_return_data as $key => $return) {
+            $lims_product_return_data[$key] = ProductReturn::where('return_id', $return->id)->get();
+        }
+        $lims_warehouse_list = Warehouse::where('is_active', true)->get();
+        return view('report.warehouse_report', compact('warehouse_id', 'start_date', 'end_date', 'lims_purchase_data', 'lims_product_purchase_data', 'lims_sale_data', 'lims_product_sale_data', 'lims_warehouse_list', 'lims_quotation_data', 'lims_product_quotation_data', 'lims_return_data', 'lims_product_return_data', 'lims_expense_data'));
+    }
+
     public function userReport(Request $request)
     {
         $data = $request->all();
@@ -762,6 +796,11 @@ class ReportController extends Controller
                            ->whereDate('payments.created_at', '<=' , $end_date)
                            ->select('payments.*', 'sales.reference_no as sale_reference')
                            ->get();
+
+        $lims_product_sale_data = [];
+        $lims_product_quotation_data = [];
+        $lims_product_return_data = [];
+
         foreach ($lims_sale_data as $key => $sale) {
             $lims_product_sale_data[$key] = Product_Sale::where('sale_id', $sale->id)->get();
         }
@@ -791,6 +830,10 @@ class ReportController extends Controller
                            ->whereDate('payments.created_at', '<=' , $end_date)
                            ->select('payments.*', 'purchases.reference_no as purchase_reference')
                            ->get();
+
+        $lims_product_purchase_data = [];
+        $lims_product_quotation_data = [];
+        $lims_product_return_data = [];
 
         foreach ($lims_purchase_data as $key => $purchase) {
             $lims_product_purchase_data[$key] = ProductPurchase::where('purchase_id', $purchase->id)->get();

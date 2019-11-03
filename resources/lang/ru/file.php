@@ -519,5 +519,20 @@ return [
 	"Type date or sale reference..." => "Введите дату или ссылку на продажу ...",
 	"Type date or purchase reference..." => "Введите дату или ссылку на покупку ...",
 	"Tax Number" => "Налоговый номер",
-	];
+	"Holiday" => "День отдыха",
+	"Add Holiday" => "Добавить праздник",
+	"Update Holiday" => "Обновление Holiday",
+	"Approve" => "Одобрить",
+	"My Holiday" => "Мои каникулы",
+	"Holiday Approve" => "Праздник Одобрить",
+	"My Transaction" => "Моя транзакция",
+	"Sale Generated" => "Продажа сгенерирована",
+	"Purchase Generated" => "Покупка сгенерирована",
+	"Quotation Generated" => "Цитата сгенерирована",
+	"My Transactions" => "Мои транзакции",
+	"Warehouse Report" => "Складской отчет",
+	"Quick Cash" => "Quick Cash",
+	"Clear" => "чистый",
+	"You can upload multiple image. Only .jpeg, .jpg, .png, .gif file can be uploaded. First image will be base image." => "Вы можете загрузить несколько изображений. Только .jpeg, .jpg, .png, .gif файл может быть загружен. Первое изображение будет базовым.",
+];
 ?>

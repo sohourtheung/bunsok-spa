@@ -46,7 +46,7 @@ class SaleController extends Controller
     public function index()
     {      
         $role = Role::find(Auth::user()->role_id);
-        if($role->hasPermissionTo('sales-index')){
+        if($role->hasPermissionTo('sales-index')) {
             $permissions = Role::findByName($role->name)->permissions;
             foreach ($permissions as $permission)
                 $all_permission[] = $permission->name;
@@ -398,7 +398,7 @@ class SaleController extends Controller
         else
             $message = ' Sale created successfully';
         if($mail_data['email'] && $data['sale_status'] == 1) {
-            try{
+            try {
                 Mail::send( 'mail.sale_details', $mail_data, function( $message ) use ($mail_data)
                 {
                     $message->to( $mail_data['email'] )->subject( 'Sale Details' );
@@ -777,7 +777,8 @@ class SaleController extends Controller
         foreach ($lims_product_list as $key => $product) {
             $data['name'][$key] = $product->name;
             $data['code'][$key] = $product->code;
-            $data['image'][$key] = $product->image;
+            $images = explode(",", $product->image);
+            $data['image'][$key] = $images[0];
         }
         return $data;
     }
@@ -792,7 +793,8 @@ class SaleController extends Controller
         foreach ($lims_product_list as $key => $product) {
             $data['name'][$key] = $product->name;
             $data['code'][$key] = $product->code;
-            $data['image'][$key] = $product->image;
+            $images = explode(",", $product->image);
+            $data['image'][$key] = $images[0];
         }
         return $data;
     }
@@ -1744,6 +1746,10 @@ class SaleController extends Controller
                                     ['featured', 1],
                                     ['is_active', true]
                                 ])->get();
+            foreach ($lims_product_list as $key => $product) {
+                $images = explode(",", $product->image);
+                $product->base_image = $images[0];
+            }
             $product_number = count($lims_product_list);
             $lims_pos_setting_data = PosSetting::latest()->first();
             $lims_brand_list = Brand::where('is_active',true)->get();

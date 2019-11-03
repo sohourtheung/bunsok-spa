@@ -656,6 +656,15 @@ class RoleController extends Controller
         else
             $role->revokePermissionTo('purchase-report');
 
+        if($request->has('warehouse-report')){
+            $permission = Permission::firstOrCreate(['name' => 'warehouse-report']);
+            if(!$role->hasPermissionTo('warehouse-report')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('warehouse-report');
+
         if($request->has('warehouse-stock-report')){
             $permission = Permission::firstOrCreate(['name' => 'warehouse-stock-report']);
             if(!$role->hasPermissionTo('warehouse-stock-report')){
@@ -844,6 +853,15 @@ class RoleController extends Controller
         }
         else
             $role->revokePermissionTo('coupon');
+
+        if($request->has('holiday')){
+            $permission = Permission::firstOrCreate(['name' => 'holiday']);
+            if(!$role->hasPermissionTo('holiday')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('holiday');
 
         return redirect('role')->with('message', 'Permission updated successfully');
     }

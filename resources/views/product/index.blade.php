@@ -80,12 +80,15 @@
     <div role="document" class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 id="exampleModalLabel" class="modal-title">{{trans('Product Details')}} &nbsp;&nbsp;</h5>
-          <button id="print-btn" type="button" class="btn btn-default btn-sm"><i class="fa fa-print"></i> {{trans('file.Print')}}</button>
+          <h5 id="exampleModalLabel" class="modal-title">{{trans('Product Details')}}</h5>
+          <button id="print-btn" type="button" class="btn btn-default btn-sm ml-3"><i class="fa fa-print"></i> {{trans('file.Print')}}</button>
           <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
         </div>
         <div class="modal-body">
-            <div id="product-content"></div>
+            <div class="row">
+                <div class="col-md-5" id="slider-content"></div>
+                <div class="col-md-5 offset-1" id="product-content"></div>
+            </div>
             <table class="table table-bordered table-hover product-warehouse-list">
                 <thead>
                 </thead>
@@ -104,7 +107,8 @@
     </div>
 </div>
 
-<script type="text/javascript">
+
+<script>
 
     $("ul#product").siblings('a').attr('aria-expanded','true');
     $("ul#product").addClass("show");
@@ -120,6 +124,7 @@
     var warehouse = [];
     var qty = [];
     var htmltext;
+    var slidertext;
     var product_id = [];
     var all_permission = <?php echo json_encode($all_permission) ?>;
     var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
@@ -138,12 +143,47 @@
         }
     });
     
-    $(document).on("click", "tr.product-link td:not(:first-child, :last-child)", function(){
-        var product = $(this).parent().data('product');
+    $(document).on("click", "tr.product-link td:not(:first-child, :last-child)", function() {
+        productDetails( $(this).parent().data('product'), $(this).parent().data('imagedata') );        
+    });
+
+    $(document).on("click", ".view", function(){
+        var product = $(this).parent().parent().parent().parent().parent().data('product');
+        var imagedata = $(this).parent().parent().parent().parent().parent().data('imagedata');
+        productDetails(product, imagedata);
+    });
+
+    $("#print-btn").on("click", function(){
+          var divToPrint=document.getElementById('product-details');
+          var newWin=window.open('','Print-Window');
+          newWin.document.open();
+          newWin.document.write('<link rel="stylesheet" href="<?php echo asset('public/vendor/bootstrap/css/bootstrap.min.css') ?>" type="text/css"><style type="text/css">@media print {.modal-dialog { max-width: 1000px;} }</style><body onload="window.print()">'+divToPrint.innerHTML+'</body>');
+          newWin.document.close();
+          setTimeout(function(){newWin.close();},10);
+    });
+
+    function productDetails(product, imagedata) {
         product[11] = product[11].replace(/@/g, '"');
-        var imagedata = $(this).parent().data('imagedata');
-        htmltext = '';
+        htmltext = slidertext = '';
+
         htmltext = '<p><strong>{{trans("file.Type")}}: </strong>'+product[0]+'</p><p><strong>{{trans("file.name")}}: </strong>'+product[1]+'</p><p><strong>{{trans("file.Code")}}: </strong>'+product[2]+ '</p><strong>{{trans("file.Barcode")}}: </strong><img src="data:image/png;base64,'+imagedata+'" alt="barcode" /></p><p><strong>{{trans("file.Brand")}}: </strong>'+product[3]+'</p><p><strong>{{trans("file.category")}}: </strong>'+product[4]+'</p><p><strong>{{trans("file.Quantity")}}: </strong>'+product[16]+'</p><p><strong>{{trans("file.Unit")}}: </strong>'+product[5]+'</p><p><strong>{{trans("file.Cost")}}: </strong>'+product[6]+'</p><p><strong>{{trans("file.Price")}}: </strong>'+product[7]+'</p><p><strong>{{trans("file.Tax")}}: </strong>'+product[8]+'</p><p><strong>{{trans("file.Tax Method")}} : </strong>'+product[9]+'</p><p><strong>{{trans("file.Alert Quantity")}} : </strong>'+product[10]+'</p><p><strong>{{trans("file.Product Details")}}: </strong></p>'+product[11];
+
+        if(product[17]) {
+            var product_image = product[17].split(",");
+            if(product_image.length > 1) {
+                slidertext = '<div id="product-img-slider" class="carousel slide" data-ride="carousel"><div class="carousel-inner">';
+                for (var i = 0; i < product_image.length; i++) {
+                    if(!i)
+                        slidertext += '<div class="carousel-item active"><img src="public/images/product/'+product_image[i]+'" height="300" width="100%"></div>';
+                    else
+                        slidertext += '<div class="carousel-item"><img src="public/images/product/'+product_image[i]+'" height="300" width="100%"></div>';
+                }
+                slidertext += '</div><a class="carousel-control-prev" href="#product-img-slider" data-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="sr-only">Previous</span></a><a class="carousel-control-next" href="#product-img-slider" data-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="sr-only">Next</span></a></div>';
+            }
+            else {
+                slidertext = '<img src="public/images/product/'+product[17]+'" height="300" width="100%">';
+            }
+        }
         
         $("#combo-header").text('');
         $(".item-list thead").remove();
@@ -204,18 +244,12 @@
                 }
             });
         }
+        
         $('#product-content').html(htmltext);
+        $('#slider-content').html(slidertext);
         $('#product-details').modal('show');
-    });
-
-    $("#print-btn").on("click", function(){
-          var divToPrint=document.getElementById('product-details');
-          var newWin=window.open('','Print-Window');
-          newWin.document.open();
-          newWin.document.write('<style type="text/css">@media print { #print-btn { display: none } #close-btn { display: none } }</style><body onload="window.print()">'+divToPrint.innerHTML+'</body>');
-          newWin.document.close();
-          setTimeout(function(){newWin.close();},10);
-    });
+        $('#product-img-slider').carousel(0);
+    }
 
     $('#product-data-table').DataTable( {
         "processing": true,

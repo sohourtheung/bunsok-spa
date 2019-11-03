@@ -29,7 +29,7 @@ class CreateProductsTable extends Migration
             $table->date('last_date')->nullable();
             $table->integer('tax_id')->nullable();
             $table->integer('tax_method')->nullable();
-            $table->string('image')->nullable();
+            $table->longText('image')->nullable();
             $table->tinyInteger('featured')->nullable();
             $table->text('product_details')->nullable();
             $table->text('product_invoice_details')->nullable();

@@ -420,6 +420,16 @@
 						                    </div>
 						                    <label for="payroll" class="padding05">{{trans('file.Payroll')}} &nbsp;&nbsp;</label>
 						                </span>
+						                <span style="display:inline-block;">
+						                    <div class="text-center" aria-checked="false" aria-disabled="false">
+					                    	@if(in_array("holiday", $all_permission))
+					                    	<input type="checkbox" value="1" class="checkbox" name="holiday" checked>
+					                    	@else
+					                    	<input type="checkbox" value="1" class="checkbox" name="holiday">
+					                    	@endif
+						                    </div>
+						                    <label for="holiday" class="padding05">{{trans('file.Holiday Approve')}} &nbsp;&nbsp;</label>
+						                </span>
 						            </td>
 						        </tr>
 						        <tr>
@@ -680,6 +690,16 @@
 					                    	@endif
 						                    </div>
 						                    <label for="sale-report" class="padding05">{{trans('file.Sale Report')}} &nbsp;&nbsp;</label>
+						                </span>
+						                <span style="display:inline-block;">
+						                    <div class="text-center" aria-checked="false" aria-disabled="false">
+					                    	@if(in_array("warehouse-report", $all_permission))
+					                    	<input type="checkbox" value="1" class="checkbox" name="warehouse-report" checked>
+					                    	@else
+					                    	<input type="checkbox" value="1" class="checkbox" name="warehouse-report">
+					                    	@endif
+						                    </div>
+						                    <label for="warehouse-report" class="padding05">{{trans('file.Warehouse Report')}} &nbsp;&nbsp;</label>
 						                </span>
 						                <span style="display:inline-block;">
 						                    <div class="text-center" aria-checked="false" aria-disabled="false">

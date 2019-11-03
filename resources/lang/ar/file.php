@@ -519,6 +519,21 @@ return [
 	"Type date or sale reference..." => "اكتب التاريخ أو مرجع البيع ...",
 	"Type date or purchase reference..." => "اكتب التاريخ أو مرجع الشراء ...",
 	"Tax Number" => "الرقم الضريبي",
+	"Holiday" => "يوم الاجازة",
+	"Add Holiday" => "أضف عطلة",
+	"Update Holiday" => "تحديث عطلة",
+	"Approve" => "يوافق",
+	"My Holiday" => "عطلتي",
+	"Holiday Approve" => "موافقة عطلة",
+	"My Transaction" => "معاملتي",
+	"Sale Generated" => "بيع ولدت",
+	"Purchase Generated" => "شراء ولدت",
+	"Quotation Generated" => "اقتباس المتولدة",
+	"My Transactions" => "معاملاتي",
+	"Warehouse Report" => "تقرير المستودع",
+	"Quick Cash" => "النقد السريع",
+	"Clear" => "واضح",
+	"You can upload multiple image. Only .jpeg, .jpg, .png, .gif file can be uploaded. First image will be base image." => "يمكنك تحميل صورة متعددة. يمكن فقط رفع ملف .jpeg و .jpg و .png و. gif. الصورة الأولى ستكون الصورة الأساسية.",
 	
 	];
 ?>
