@@ -22,8 +22,8 @@ class ExpenseController extends Controller
             if(empty($all_permission))
                 $all_permission[] = 'dummy text';
             $lims_account_list = Account::where('is_active', true)->get();
-            $general_setting = DB::table('general_settings')->latest()->first();
-            if(Auth::user()->role_id > 2 && $general_setting->staff_access == 'own')
+            
+            if(Auth::user()->role_id > 2 && config('staff_access') == 'own')
                 $lims_expense_all = Expense::orderBy('id', 'desc')->where('user_id', Auth::id())->get();
             else
                 $lims_expense_all = Expense::orderBy('id', 'desc')->get();

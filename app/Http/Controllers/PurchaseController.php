@@ -21,6 +21,7 @@ use App\GeneralSetting;
 use Stripe\Stripe;
 use Auth;
 use App\User;
+use App\ProductVariant;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Validator;
@@ -30,9 +31,8 @@ class PurchaseController extends Controller
     public function index()
     {
         $role = Role::find(Auth::user()->role_id);
-        if($role->hasPermissionTo('purchases-index')){
-            $general_setting = DB::table('general_settings')->latest()->first();
-            if(Auth::user()->role_id > 2 && $general_setting->staff_access == 'own')
+        if($role->hasPermissionTo('purchases-index')){            
+            if(Auth::user()->role_id > 2 && config('staff_access') == 'own')
                 $lims_purchase_list = Purchase::orderBy('id', 'desc')->where('user_id', Auth::id())->get();
             else
                 $lims_purchase_list = Purchase::orderBy('id', 'desc')->get();
@@ -58,27 +58,29 @@ class PurchaseController extends Controller
             6 => 'paid_amount',
         );
         
-        $general_setting = GeneralSetting::latest()->first();
-        if(Auth::user()->role_id > 2 && $general_setting->staff_access == 'own')
+        if(Auth::user()->role_id > 2 && config('staff_access') == 'own')
             $totalData = Purchase::where('user_id', Auth::id())->count();
         else
             $totalData = Purchase::count();
 
         $totalFiltered = $totalData;
 
-        $limit = $request->input('length');
+        if($request->input('length') != -1)
+            $limit = $request->input('length');
+        else
+            $limit = $totalData;
         $start = $request->input('start');
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
         if(empty($request->input('search.value'))){
-            if(Auth::user()->role_id > 2 && $general_setting->staff_access == 'own')
-                $purchases = Purchase::offset($start)
+            if(Auth::user()->role_id > 2 && config('staff_access') == 'own')
+                $purchases = Purchase::with('supplier', 'warehouse')->offset($start)
                             ->where('user_id', Auth::id())
                             ->limit($limit)
                             ->orderBy($order, $dir)
                             ->get();
             else
-                $purchases = Purchase::offset($start)
+                $purchases = Purchase::with('supplier', 'warehouse')->offset($start)
                             ->limit($limit)
                             ->orderBy($order, $dir)
                             ->get();
@@ -87,33 +89,55 @@ class PurchaseController extends Controller
         else
         {
             $search = $request->input('search.value');
-            if(Auth::user()->role_id > 2 && $general_setting->staff_access == 'own') {
-                $purchases =  Purchase::whereDate('created_at', '=' , date('Y-m-d', strtotime(str_replace('/', '-', $search))))
-                            ->where('user_id', Auth::id())
+            if(Auth::user()->role_id > 2 && config('staff_access') == 'own') {
+                $purchases =  Purchase::select('purchases.*')
+                            ->with('supplier', 'warehouse')
+                            ->leftJoin('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
+                            ->whereDate('purchases.created_at', '=' , date('Y-m-d', strtotime(str_replace('/', '-', $search))))
+                            ->where('purchases.user_id', Auth::id())
                             ->orwhere([
-                                ['reference_no', 'LIKE', "%{$search}%"],
-                                ['user_id', Auth::id()]
+                                ['purchases.reference_no', 'LIKE', "%{$search}%"],
+                                ['purchases.user_id', Auth::id()]
+                            ])
+                            ->orwhere([
+                                ['suppliers.name', 'LIKE', "%{$search}%"],
+                                ['purchases.user_id', Auth::id()]
                             ])
                             ->offset($start)
                             ->limit($limit)
                             ->orderBy($order,$dir)->get();
 
-                $totalFiltered = Purchase::whereDate('created_at', '=' , date('Y-m-d', strtotime(str_replace('/', '-', $search))))
-                            ->where('user_id', Auth::id())
+                $totalFiltered = Purchase::
+                            leftJoin('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
+                            ->whereDate('purchases.created_at', '=' , date('Y-m-d', strtotime(str_replace('/', '-', $search))))
+                            ->where('purchases.user_id', Auth::id())
                             ->orwhere([
-                                ['reference_no', 'LIKE', "%{$search}%"],
-                                ['user_id', Auth::id()]
-                            ])->count();
+                                ['purchases.reference_no', 'LIKE', "%{$search}%"],
+                                ['purchases.user_id', Auth::id()]
+                            ])
+                            ->orwhere([
+                                ['suppliers.name', 'LIKE', "%{$search}%"],
+                                ['purchases.user_id', Auth::id()]
+                            ])
+                            ->count();
             }
             else {
-                $purchases =  Purchase::whereDate('created_at', '=' , date('Y-m-d', strtotime(str_replace('/', '-', $search))))
-                            ->orwhere('reference_no', 'LIKE', "%{$search}%")
+                $purchases =  Purchase::select('purchases.*')
+                            ->with('supplier', 'warehouse')
+                            ->leftJoin('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
+                            ->whereDate('purchases.created_at', '=' , date('Y-m-d', strtotime(str_replace('/', '-', $search))))
+                            ->orwhere('purchases.reference_no', 'LIKE', "%{$search}%")
+                            ->orwhere('suppliers.name', 'LIKE', "%{$search}%")
                             ->offset($start)
                             ->limit($limit)
-                            ->orderBy($order,$dir)->get();
+                            ->orderBy($order,$dir)
+                            ->get();
 
-                $totalFiltered = Purchase::whereDate('created_at', '=' , date('Y-m-d', strtotime(str_replace('/', '-', $search))))
-                                ->orwhere('reference_no', 'LIKE', "%{$search}%")
+                $totalFiltered = Purchase::
+                                leftJoin('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
+                                ->whereDate('purchases.created_at', '=' , date('Y-m-d', strtotime(str_replace('/', '-', $search))))
+                                ->orwhere('purchases.reference_no', 'LIKE', "%{$search}%")
+                                ->orwhere('suppliers.name', 'LIKE', "%{$search}%")
                                 ->count();
             }
         }
@@ -124,17 +148,14 @@ class PurchaseController extends Controller
             {
                 $nestedData['id'] = $purchase->id;
                 $nestedData['key'] = $key;
-                $nestedData['date'] = date($general_setting->date_format, strtotime($purchase->created_at->toDateString()));
+                $nestedData['date'] = date(config('date_format'), strtotime($purchase->created_at->toDateString()));
                 $nestedData['reference_no'] = $purchase->reference_no;
-                $warehouse = Warehouse::find($purchase->warehouse_id);
 
-                if($purchase->supplier_id){
-                    $supplier = Supplier::find($purchase->supplier_id);
+                if($purchase->supplier_id) {
+                    $supplier = $purchase->supplier;
                 }
-                else{
+                else {
                     $supplier = new Supplier();
-                    $supplier->name = $supplier->company_name = $supplier->email = $supplier->phone_number = $supplier->address = $supplier->city = '';
-                    
                 }
                 $nestedData['supplier'] = $supplier->name;
                 if($purchase->status == 1){
@@ -163,7 +184,7 @@ class PurchaseController extends Controller
                 $nestedData['paid_amount'] = number_format($purchase->paid_amount, 2);
                 $nestedData['due'] = number_format($purchase->grand_total - $purchase->paid_amount, 2);
                 $nestedData['options'] = '<div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.trans("file.action").'
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.trans("file.action").'
                               <span class="caret"></span>
                               <span class="sr-only">Toggle Dropdown</span>
                             </button>
@@ -173,7 +194,7 @@ class PurchaseController extends Controller
                                 </li>';
                 if(in_array("purchases-edit", $request['all_permission']))
                     $nestedData['options'] .= '<li>
-                        <a href="'.route('purchase.edit', ['id' => $purchase->id]).'" class="btn btn-link"><i class="fa fa-edit"></i> '.trans('file.edit').'</a>
+                        <a href="'.route('purchases.edit', ['id' => $purchase->id]).'" class="btn btn-link"><i class="dripicons-document-edit"></i> '.trans('file.edit').'</a>
                         </li>';
                 $nestedData['options'] .= 
                     '<li>
@@ -183,18 +204,17 @@ class PurchaseController extends Controller
                         <button type="button" class="get-payment btn btn-link" data-id = "'.$purchase->id.'"><i class="fa fa-money"></i> '.trans('file.View Payment').'</button>
                     </li>';
                 if(in_array("purchases-delete", $request['all_permission']))
-                    $nestedData['options'] .= \Form::open(["route" => ["purchase.destroy", $purchase->id], "method" => "DELETE"] ).'
+                    $nestedData['options'] .= \Form::open(["route" => ["purchases.destroy", $purchase->id], "method" => "DELETE"] ).'
                             <li>
-                              <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa fa-trash"></i> '.trans("file.delete").'</button> 
+                              <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> '.trans("file.delete").'</button> 
                             </li>'.\Form::close().'
                         </ul>
                     </div>';
 
                 // data for purchase details by one click
                 $user = User::find($purchase->user_id);
-                $warehouse = Warehouse::find($purchase->warehouse_id);
 
-                $nestedData['purchase'] = array( '[ "'.date($general_setting->date_format, strtotime($purchase->created_at->toDateString())).'"', ' "'.$purchase->reference_no.'"', ' "'.$purchase_status.'"',  ' "'.$purchase->id.'"', ' "'.$warehouse->name.'"', ' "'.$warehouse->phone.'"', ' "'.$warehouse->address.'"', ' "'.$supplier->name.'"', ' "'.$supplier->company_name.'"', ' "'.$supplier->email.'"', ' "'.$supplier->phone_number.'"', ' "'.$supplier->address.'"', ' "'.$supplier->city.'"', ' "'.$purchase->total_tax.'"', ' "'.$purchase->total_discount.'"', ' "'.$purchase->total_cost.'"', ' "'.$purchase->order_tax.'"', ' "'.$purchase->order_tax_rate.'"', ' "'.$purchase->order_discount.'"', ' "'.$purchase->shipping_cost.'"', ' "'.$purchase->grand_total.'"', ' "'.$purchase->paid_amount.'"', ' "'.$purchase->purchase_note.'"', ' "'.$user->name.'"', ' "'.$user->email.'"]'
+                $nestedData['purchase'] = array( '[ "'.date(config('date_format'), strtotime($purchase->created_at->toDateString())).'"', ' "'.$purchase->reference_no.'"', ' "'.$purchase_status.'"',  ' "'.$purchase->id.'"', ' "'.$purchase->warehouse->name.'"', ' "'.$purchase->warehouse->phone.'"', ' "'.$purchase->warehouse->address.'"', ' "'.$supplier->name.'"', ' "'.$supplier->company_name.'"', ' "'.$supplier->email.'"', ' "'.$supplier->phone_number.'"', ' "'.$supplier->address.'"', ' "'.$supplier->city.'"', ' "'.$purchase->total_tax.'"', ' "'.$purchase->total_discount.'"', ' "'.$purchase->total_cost.'"', ' "'.$purchase->order_tax.'"', ' "'.$purchase->order_tax_rate.'"', ' "'.$purchase->order_discount.'"', ' "'.$purchase->shipping_cost.'"', ' "'.$purchase->grand_total.'"', ' "'.$purchase->paid_amount.'"', ' "'.$purchase->purchase_note.'"', ' "'.$user->name.'"', ' "'.$user->email.'"]'
                 );
                 $data[] = $nestedData;
             }
@@ -216,25 +236,46 @@ class PurchaseController extends Controller
             $lims_supplier_list = Supplier::where('is_active', true)->get();
             $lims_warehouse_list = Warehouse::where('is_active', true)->get();
             $lims_tax_list = Tax::where('is_active', true)->get();
-            $lims_product_list = Product::where([
-                                    ['is_active', true],
-                                    ['type', 'standard']
-                                ])->get();
+            $lims_product_list_without_variant = $this->productWithoutVariant();
+            $lims_product_list_with_variant = $this->productWithVariant();
 
-            return view('purchase.create', compact('lims_supplier_list', 'lims_warehouse_list', 'lims_tax_list', 'lims_product_list'));
+            return view('purchase.create', compact('lims_supplier_list', 'lims_warehouse_list', 'lims_tax_list', 'lims_product_list_without_variant', 'lims_product_list_with_variant'));
         }
         else
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
 
+    public function productWithoutVariant()
+    {
+        return Product::ActiveStandard()->select('id', 'name', 'code')
+                ->whereNull('is_variant')->get();
+    }
+
+    public function productWithVariant()
+    {
+        return Product::join('product_variants', 'products.id', 'product_variants.product_id')
+                ->ActiveStandard()
+                ->whereNotNull('is_variant')
+                ->select('products.id', 'products.name', 'product_variants.item_code')
+                ->orderBy('position')->get();
+    }
+
     public function limsProductSearch(Request $request)
     {
-        $todayDate = date('Y-m-d');
         $product_code = explode(" ", $request['data']);
         $lims_product_data = Product::where('code', $product_code[0])->first();
+        if(!$lims_product_data) {
+            $lims_product_data = Product::join('product_variants', 'products.id', 'product_variants.product_id')
+                ->select('products.*', 'product_variants.item_code')
+                ->where('product_variants.item_code', $product_code)
+                ->first();
+        }
 
         $product[] = $lims_product_data->name;
-        $product[] = $lims_product_data->code;
+        if($lims_product_data->is_variant)
+            $product[] = $lims_product_data->item_code;
+        else
+            $product[] = $lims_product_data->code;
         $product[] = $lims_product_data->cost;
         
         if ($lims_product_data->tax_id) {
@@ -275,6 +316,7 @@ class PurchaseController extends Controller
     public function store(Request $request)
     {
         $data = $request->except('document');
+        //return dd($data);
         $data['user_id'] = Auth::id();
         $data['reference_no'] = 'pr-' . date("Ymd") . '-'. date("his");
         $document = $request->document;
@@ -294,11 +336,12 @@ class PurchaseController extends Controller
             $document->move('public/documents/purchase', $documentName);
             $data['document'] = $documentName;
         }
-        //return $data;
+        //return dd($data);
         Purchase::create($data);
 
         $lims_purchase_data = Purchase::latest()->first();
         $product_id = $data['product_id'];
+        $product_code = $data['product_code'];
         $qty = $data['qty'];
         $recieved = $data['recieved'];
         $purchase_unit = $data['purchase_unit'];
@@ -308,9 +351,8 @@ class PurchaseController extends Controller
         $tax = $data['tax'];
         $total = $data['subtotal'];
         $product_purchase = [];
-        $i=0;
 
-        foreach ($product_id as $id) {
+        foreach ($product_id as $i => $id) {
             $lims_purchase_unit_data  = Unit::where('unit_name', $purchase_unit[$i])->first();
 
             if ($lims_purchase_unit_data->operator == '*') {
@@ -318,22 +360,39 @@ class PurchaseController extends Controller
             } else {
                 $quantity = $recieved[$i] / $lims_purchase_unit_data->operation_value;
             }
-            //add quantity to product table
             $lims_product_data = Product::find($id);
+            if($lims_product_data->is_variant) {
+                $lims_product_variant_data = ProductVariant::select('id', 'variant_id', 'qty')->FindExactProductWithCode($lims_product_data->id, $product_code[$i])->first();
+                $lims_product_warehouse_data = Product_Warehouse::where([
+                    ['product_id', $id],
+                    ['variant_id', $lims_product_variant_data->variant_id],
+                    ['warehouse_id', $data['warehouse_id']]
+                ])->first();
+                $product_purchase['variant_id'] = $lims_product_variant_data->variant_id;
+                //add quantity to product variant table
+                $lims_product_variant_data->qty += $quantity;
+                $lims_product_variant_data->save();
+            }
+            else {
+                $lims_product_warehouse_data = Product_Warehouse::where([
+                    ['product_id', $id],
+                    ['warehouse_id', $data['warehouse_id'] ],
+                ])->first();
+            }
+            //add quantity to product table
             $lims_product_data->qty = $lims_product_data->qty + $quantity;
             $lims_product_data->save();
             //add quantity to warehouse
-            $lims_product_warehouse_data = Product_Warehouse::where([
-                ['product_id', $id],
-                ['warehouse_id', $data['warehouse_id'] ],
-                ])->first();
             if ($lims_product_warehouse_data) {
                 $lims_product_warehouse_data->qty = $lims_product_warehouse_data->qty + $quantity;
-            } else {
+            } 
+            else {
                 $lims_product_warehouse_data = new Product_Warehouse();
                 $lims_product_warehouse_data->product_id = $id;
                 $lims_product_warehouse_data->warehouse_id = $data['warehouse_id'];
                 $lims_product_warehouse_data->qty = $quantity;
+                if($lims_product_data->is_variant)
+                    $lims_product_warehouse_data->variant_id = $lims_product_variant_data->variant_id;
             }
 
             $lims_product_warehouse_data->save();
@@ -349,10 +408,9 @@ class PurchaseController extends Controller
             $product_purchase['tax'] = $tax[$i];
             $product_purchase['total'] = $total[$i];
             ProductPurchase::create($product_purchase);
-            $i++;
         }
 
-        return redirect('purchase')->with('message', 'Purchase created successfully');
+        return redirect('purchases')->with('message', 'Purchase created successfully');
     }
 
     public function productPurchaseData($id)
@@ -361,8 +419,11 @@ class PurchaseController extends Controller
         foreach ($lims_product_purchase_data as $key => $product_purchase_data) {
             $product = Product::find($product_purchase_data->product_id);
             $unit = Unit::find($product_purchase_data->purchase_unit_id);
-
-            $product_purchase[0][$key] = $product->name . '-' . $product->code;
+            if($product_purchase_data->variant_id) {
+                $lims_product_variant_data = ProductVariant::FindExactProduct($product->id, $product_purchase_data->variant_id)->select('item_code')->first();
+                $product->code = $lims_product_variant_data->item_code;
+            }
+            $product_purchase[0][$key] = $product->name . ' [' . $product->code.']';
             $product_purchase[1][$key] = $product_purchase_data->qty;
             $product_purchase[2][$key] = $unit->unit_code;
             $product_purchase[3][$key] = $product_purchase_data->tax;
@@ -471,9 +532,18 @@ class PurchaseController extends Controller
                     ['product_id', $product['id']],
                     ['warehouse_id', $data['warehouse_id']]
                 ])->first();
-                $product_warehouse->qty += $quantity;
+                if($product_warehouse) {
+                    $product_warehouse->qty += $quantity;
+                    $product_warehouse->save();
+                }
+                else {
+                    $lims_product_warehouse_data = new Product_Warehouse();
+                    $lims_product_warehouse_data->product_id = $product['id'];
+                    $lims_product_warehouse_data->warehouse_id = $data['warehouse_id'];
+                    $lims_product_warehouse_data->qty = $quantity;
+                    $lims_product_warehouse_data->save();
+                }
                 $product->save();
-                $product_warehouse->save();
             }
             
             $product_purchase = new ProductPurchase();
@@ -500,7 +570,7 @@ class PurchaseController extends Controller
         $lims_purchase_data->order_tax = ($lims_purchase_data->total_cost - $lims_purchase_data->order_discount) * ($data['order_tax_rate'] / 100);
         $lims_purchase_data->grand_total = ($lims_purchase_data->total_cost + $lims_purchase_data->order_tax + $lims_purchase_data->shipping_cost) - $lims_purchase_data->order_discount;
         $lims_purchase_data->save();
-        return redirect('purchase');
+        return redirect('purchases');
     }
 
     public function edit($id)
@@ -510,14 +580,12 @@ class PurchaseController extends Controller
             $lims_supplier_list = Supplier::where('is_active', true)->get();
             $lims_warehouse_list = Warehouse::where('is_active', true)->get();
             $lims_tax_list = Tax::where('is_active', true)->get();
-            $lims_product_list = Product::where([
-                                    ['is_active', true],
-                                    ['type', 'standard']
-                                ])->get();
+            $lims_product_list_without_variant = $this->productWithoutVariant();
+            $lims_product_list_with_variant = $this->productWithVariant();
             $lims_purchase_data = Purchase::find($id);
             $lims_product_purchase_data = ProductPurchase::where('purchase_id', $id)->get();
 
-            return view('purchase.edit', compact('lims_warehouse_list', 'lims_supplier_list', 'lims_product_list', 'lims_tax_list', 'lims_purchase_data', 'lims_product_purchase_data'));
+            return view('purchase.edit', compact('lims_warehouse_list', 'lims_supplier_list', 'lims_product_list_without_variant', 'lims_product_list_with_variant', 'lims_tax_list', 'lims_purchase_data', 'lims_product_purchase_data'));
         }
         else
             return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
@@ -544,6 +612,7 @@ class PurchaseController extends Controller
             $document->move('public/purchase/documents', $documentName);
             $data['document'] = $documentName;
         }
+        //return dd($data);
         $balance = $data['grand_total'] - $data['paid_amount'];
         if ($balance < 0 || $balance > 0) {
             $data['payment_status'] = 1;
@@ -555,6 +624,7 @@ class PurchaseController extends Controller
         $lims_product_purchase_data = ProductPurchase::where('purchase_id', $id)->get();
 
         $product_id = $data['product_id'];
+        $product_code = $data['product_code'];
         $qty = $data['qty'];
         $recieved = $data['recieved'];
         $purchase_unit = $data['purchase_unit'];
@@ -576,16 +646,26 @@ class PurchaseController extends Controller
                 $old_recieved_value = $old_recieved_value / $lims_purchase_unit_data->operation_value;
             }
             $lims_product_data = Product::find($product_purchase_data->product_id);
-            $lims_product_warehouse_data = Product_Warehouse::where([
+            if($lims_product_data->is_variant) {
+                $lims_product_variant_data = ProductVariant::select('id', 'variant_id', 'qty')->FindExactProduct($lims_product_data->id, $product_purchase_data->variant_id)->first();
+                $lims_product_warehouse_data = Product_Warehouse::where([
+                    ['product_id', $lims_product_data->id],
+                    ['variant_id', $product_purchase_data->variant_id],
+                    ['warehouse_id', $lims_purchase_data->warehouse_id]
+                ])->first();
+                $lims_product_variant_data->qty -= $old_recieved_value;
+                $lims_product_variant_data->save();
+            }
+            else {
+                $lims_product_warehouse_data = Product_Warehouse::where([
                     ['product_id', $product_purchase_data->product_id],
                     ['warehouse_id', $lims_purchase_data->warehouse_id],
                     ])->first();
+            }
 
             $lims_product_data->qty -= $old_recieved_value;
-            if($lims_product_warehouse_data){
-                $lims_product_warehouse_data->qty -= $old_recieved_value;
-                $lims_product_warehouse_data->save();
-            }
+            $lims_product_warehouse_data->qty -= $old_recieved_value;
+            $lims_product_warehouse_data->save();
             $lims_product_data->save();
             $product_purchase_data->delete();
         }
@@ -600,10 +680,25 @@ class PurchaseController extends Controller
             }
 
             $lims_product_data = Product::find($pro_id);
-            $lims_product_warehouse_data = Product_Warehouse::where([
-                ['product_id', $pro_id],
-                ['warehouse_id', $data['warehouse_id']],
+            if($lims_product_data->is_variant) {
+                $lims_product_variant_data = ProductVariant::select('id', 'variant_id', 'qty')->FindExactProductWithCode($pro_id, $product_code[$key])->first();
+                $lims_product_warehouse_data = Product_Warehouse::where([
+                    ['product_id', $pro_id],
+                    ['variant_id', $lims_product_variant_data->variant_id],
+                    ['warehouse_id', $data['warehouse_id']]
                 ])->first();
+                $product_purchase['variant_id'] = $lims_product_variant_data->variant_id;
+                //add quantity to product variant table
+                $lims_product_variant_data->qty += $new_recieved_value;
+                $lims_product_variant_data->save();
+            }
+            else {
+                $product_purchase['variant_id'] = null;
+                $lims_product_warehouse_data = Product_Warehouse::where([
+                    ['product_id', $pro_id],
+                    ['warehouse_id', $data['warehouse_id'] ],
+                ])->first();
+            }
 
             $lims_product_data->qty += $new_recieved_value;
             if($lims_product_warehouse_data){
@@ -613,6 +708,8 @@ class PurchaseController extends Controller
             else {
                 $lims_product_warehouse_data = new Product_Warehouse();
                 $lims_product_warehouse_data->product_id = $pro_id;
+                if($lims_product_data->is_variant)
+                    $lims_product_warehouse_data->variant_id = $lims_product_variant_data->variant_id;
                 $lims_product_warehouse_data->warehouse_id = $data['warehouse_id'];
                 $lims_product_warehouse_data->qty = $new_recieved_value;
                 $lims_product_warehouse_data->save();
@@ -634,7 +731,7 @@ class PurchaseController extends Controller
         }
 
         $lims_purchase_data->update($data);
-        return redirect('purchase')->with('message', 'Purchase updated successfully');
+        return redirect('purchases')->with('message', 'Purchase updated successfully');
     }
 
     public function addPayment(Request $request)
@@ -691,7 +788,7 @@ class PurchaseController extends Controller
         elseif ($paying_method == 'Cheque') {
             PaymentWithCheque::create($data);
         }
-        return redirect('purchase')->with('message', 'Payment created successfully');
+        return redirect('purchases')->with('message', 'Payment created successfully');
     }
 
     public function getPayment($id)
@@ -708,9 +805,8 @@ class PurchaseController extends Controller
         $paying_amount = [];
         $account_name = [];
         $account_id = [];
-        $general_setting = GeneralSetting::latest()->first();
         foreach ($lims_payment_list as $payment) {
-            $date[] = date($general_setting->date_format, strtotime($payment->created_at->toDateString())) . ' '. $payment->created_at->toTimeString();
+            $date[] = date(config('date_format'), strtotime($payment->created_at->toDateString())) . ' '. $payment->created_at->toTimeString();
             $payment_reference[] = $payment->payment_reference;
             $paid_amount[] = $payment->amount;
             $change[] = $payment->change;
@@ -816,7 +912,7 @@ class PurchaseController extends Controller
             }
         }
         $lims_payment_data->save();
-        return redirect('purchase')->with('message', 'Payment updated successfully');
+        return redirect('purchases')->with('message', 'Payment updated successfully');
     }
 
     public function deletePayment(Request $request)
@@ -846,7 +942,7 @@ class PurchaseController extends Controller
             $lims_payment_cheque_data->delete();
         }
         $lims_payment_data->delete();
-        return redirect('purchase')->with('not_permitted', 'Payment deleted successfully');
+        return redirect('purchases')->with('not_permitted', 'Payment deleted successfully');
     }
 
     public function deleteBySelection(Request $request)
@@ -864,16 +960,22 @@ class PurchaseController extends Controller
                     $recieved_qty = $product_purchase_data->recieved / $lims_purchase_unit_data->operation_value;
 
                 $lims_product_data = Product::find($product_purchase_data->product_id);
-                $lims_product_warehouse_data = Product_Warehouse::where([
-                        ['product_id', $product_purchase_data->product_id],
-                        ['warehouse_id', $lims_purchase_data->warehouse_id]
-                        ])->first();
+                if($product_purchase_data->variant_id) {
+                    $lims_product_variant_data = ProductVariant::select('id', 'qty')->FindExactProduct($lims_product_data->id, $product_purchase_data->variant_id)->first();
+                    $lims_product_warehouse_data = Product_Warehouse::FindProductWithVariant($product_purchase_data->product_id, $product_purchase_data->variant_id, $lims_purchase_data->warehouse_id)
+                        ->first();
+                    $lims_product_variant_data->qty -= $recieved_qty;
+                    $lims_product_variant_data->save();
+                }
+                else {
+                    $lims_product_warehouse_data = Product_Warehouse::FindProductWithoutVariant($product_purchase_data->product_id, $lims_purchase_data->warehouse_id)
+                        ->first();
+                }
 
                 $lims_product_data->qty -= $recieved_qty;
-                if($lims_product_warehouse_data){
-                    $lims_product_warehouse_data->qty -= $recieved_qty;
-                    $lims_product_warehouse_data->save();
-                }
+                $lims_product_warehouse_data->qty -= $recieved_qty;
+                
+                $lims_product_warehouse_data->save();
                 $lims_product_data->save();
                 $product_purchase_data->delete();
             }
@@ -915,16 +1017,22 @@ class PurchaseController extends Controller
                     $recieved_qty = $product_purchase_data->recieved / $lims_purchase_unit_data->operation_value;
 
                 $lims_product_data = Product::find($product_purchase_data->product_id);
-                $lims_product_warehouse_data = Product_Warehouse::where([
-                        ['product_id', $product_purchase_data->product_id],
-                        ['warehouse_id', $lims_purchase_data->warehouse_id]
-                        ])->first();
-
-                $lims_product_data->qty -= $recieved_qty;
-                if($lims_product_warehouse_data){
-                    $lims_product_warehouse_data->qty -= $recieved_qty;
-                    $lims_product_warehouse_data->save();
+                if($product_purchase_data->variant_id) {
+                    $lims_product_variant_data = ProductVariant::select('id', 'qty')->FindExactProduct($lims_product_data->id, $product_purchase_data->variant_id)->first();
+                    $lims_product_warehouse_data = Product_Warehouse::FindProductWithVariant($product_purchase_data->product_id, $product_purchase_data->variant_id, $lims_purchase_data->warehouse_id)
+                        ->first();
+                    $lims_product_variant_data->qty -= $recieved_qty;
+                    $lims_product_variant_data->save();
                 }
+                else {
+                    $lims_product_warehouse_data = Product_Warehouse::FindProductWithoutVariant($product_purchase_data->product_id, $lims_purchase_data->warehouse_id)
+                        ->first();
+                }
+                
+                $lims_product_data->qty -= $recieved_qty;
+                $lims_product_warehouse_data->qty -= $recieved_qty;
+
+                $lims_product_warehouse_data->save();
                 $lims_product_data->save();
                 $product_purchase_data->delete();
             }
@@ -947,7 +1055,7 @@ class PurchaseController extends Controller
             }
 
             $lims_purchase_data->delete();
-            return redirect('purchase')->with('not_permitted', 'Purchase deleted successfully');;
+            return redirect('purchases')->with('not_permitted', 'Purchase deleted successfully');;
         }
         
     }

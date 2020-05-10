@@ -22,11 +22,11 @@
                                         <input type="text" class="form-control" name="lims_customerSearch" id="lims_customerSearch" placeholder="Please type customer name or mobile no and select..." />
                                     </div>
                                     <div class="form-group twilio">
-                                        <label><strong>{{trans('file.Mobile')}} *</strong></label>
+                                        <label>{{trans('file.Mobile')}} *</label>
                                         <input type="text" name="mobile" id="mobile" class="form-control" placeholder="example : +8801*********,+8801*********" required />
                                     </div>
                                     <div class="form-group twilio">
-                                        <label><strong>{{trans('file.Message')}} *</strong></label>
+                                        <label>{{trans('file.Message')}} *</label>
                                         <textarea name="message" class="form-control" rows="3" required></textarea>
                                     </div>
                                     <div class="form-group">

@@ -377,6 +377,15 @@ class RoleController extends Controller
         else
             $role->revokePermissionTo('account-index');
 
+        if($request->has('money-transfer')){
+            $permission = Permission::firstOrCreate(['name' => 'money-transfer']);
+            if(!$role->hasPermissionTo('money-transfer')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('money-transfer');
+
         if($request->has('balance-sheet')){
             $permission = Permission::firstOrCreate(['name' => 'balance-sheet']);
             if(!$role->hasPermissionTo('balance-sheet')){
@@ -529,6 +538,42 @@ class RoleController extends Controller
         }
         else
             $role->revokePermissionTo('customers-delete');
+
+        if($request->has('billers-index')){
+            $permission = Permission::firstOrCreate(['name' => 'billers-index']);
+            if(!$role->hasPermissionTo('billers-index')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('billers-index');
+
+        if($request->has('billers-add')){
+            $permission = Permission::firstOrCreate(['name' => 'billers-add']);
+            if(!$role->hasPermissionTo('billers-add')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('billers-add');
+
+        if($request->has('billers-edit')){
+            $permission = Permission::firstOrCreate(['name' => 'billers-edit']);
+            if(!$role->hasPermissionTo('billers-edit')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('billers-edit');
+
+        if($request->has('billers-delete')){
+            $permission = Permission::firstOrCreate(['name' => 'billers-delete']);
+            if(!$role->hasPermissionTo('billers-delete')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('billers-delete');
 
         if($request->has('suppliers-index')){
             $permission = Permission::firstOrCreate(['name' => 'suppliers-index']);
@@ -809,6 +854,15 @@ class RoleController extends Controller
         else
             $role->revokePermissionTo('empty_database');
 
+        if($request->has('warehouse')){
+            $permission = Permission::firstOrCreate(['name' => 'warehouse']);
+            if(!$role->hasPermissionTo('warehouse')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('warehouse');
+
         if($request->has('customer_group')){
             $permission = Permission::firstOrCreate(['name' => 'customer_group']);
             if(!$role->hasPermissionTo('customer_group')){
@@ -817,6 +871,15 @@ class RoleController extends Controller
         }
         else
             $role->revokePermissionTo('customer_group');
+
+        if($request->has('brand')){
+            $permission = Permission::firstOrCreate(['name' => 'brand']);
+            if(!$role->hasPermissionTo('brand')){
+                $role->givePermissionTo($permission);
+            }
+        }
+        else
+            $role->revokePermissionTo('brand');
 
         if($request->has('unit')){
             $permission = Permission::firstOrCreate(['name' => 'unit']);

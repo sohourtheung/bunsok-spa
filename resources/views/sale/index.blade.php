@@ -9,12 +9,12 @@
 <section>
     <div class="container-fluid">
         @if(in_array("sales-add", $all_permission))
-            <a href="{{route('sale.create')}}" class="btn btn-info"><i class="fa fa-plus"></i> {{trans('file.Add Sale')}}</a>&nbsp;
-            <a href="{{url('sale/sale_by_csv')}}" class="btn btn-primary"><i class="fa fa-file"></i> {{trans('file.Import Sale')}}</a>
+            <a href="{{route('sales.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add Sale')}}</a>&nbsp;
+            <a href="{{url('sales/sale_by_csv')}}" class="btn btn-primary"><i class="dripicons-copy"></i> {{trans('file.Import Sale')}}</a>
         @endif
     </div>
     <div class="table-responsive">
-        <table id="sale-table" class="table table-striped sale-list" style="width: 100%">
+        <table id="sale-table" class="table sale-list" style="width: 100%">
             <thead>
                 <tr>
                     <th class="not-exported"></th>
@@ -54,18 +54,18 @@
             <div class="container mt-3 pb-2 border-bottom">
                 <div class="row">
                     <div class="col-md-3">
-                        <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i class="fa fa-print"></i> {{trans('file.Print')}}</button>
+                        <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i class="dripicons-print"></i> {{trans('file.Print')}}</button>
                         
                         {{ Form::open(['route' => 'sale.sendmail', 'method' => 'post', 'class' => 'sendmail-form'] ) }}
                             <input type="hidden" name="sale_id">
-                            <button class="btn btn-default btn-sm d-print-none"><i class="fa fa-envelope"></i> {{trans('file.Email')}}</button>
+                            <button class="btn btn-default btn-sm d-print-none"><i class="dripicons-mail"></i> {{trans('file.Email')}}</button>
                         {{ Form::close() }}
                     </div>
                     <div class="col-md-6">
                         <h3 id="exampleModalLabel" class="modal-title text-center container-fluid">{{$general_setting->site_title}}</h3>
                     </div>
                     <div class="col-md-3">
-                        <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close d-print-none"><span aria-hidden="true">×</span></button>
+                        <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close d-print-none"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                     </div>
                     <div class="col-md-12 text-center">
                         <i style="font-size: 15px;">{{trans('file.Sale Details')}}</i>
@@ -98,7 +98,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.All')}} {{trans('file.Payment')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
                 <table class="table table-hover payment-list">
@@ -125,26 +125,26 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Payment')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
                 {!! Form::open(['route' => 'sale.add-payment', 'method' => 'post', 'files' => true, 'class' => 'payment-form' ]) !!}
                     <div class="row">
                         <input type="hidden" name="balance">
                         <div class="col-md-6">
-                            <label><strong>{{trans('file.Recieved Amount')}} *</strong></label>
+                            <label>{{trans('file.Recieved Amount')}} *</label>
                             <input type="text" name="paying_amount" class="form-control numkey" step="any" required>
                         </div>
                         <div class="col-md-6">
-                            <label><strong>{{trans('file.Paying Amount')}} *</strong></label>
+                            <label>{{trans('file.Paying Amount')}} *</label>
                             <input type="text" id="amount" name="amount" class="form-control"  step="any" required>
                         </div>
                         <div class="col-md-6 mt-1">
-                            <label><strong>{{trans('file.Change')}} : </strong></label>
+                            <label>{{trans('file.Change')}} : </label>
                             <p class="change ml-2">0.00</p>
                         </div>
                         <div class="col-md-6 mt-1">
-                            <label><strong>{{trans('file.Paid By')}}</strong></label>
+                            <label>{{trans('file.Paid By')}}</label>
                             <select name="paid_by_id" class="form-control">
                                 <option value="1">Cash</option>
                                 <option value="2">Gift Card</option>
@@ -156,7 +156,7 @@
                         </div>
                     </div>
                     <div class="gift-card form-group">
-                        <label><strong> {{trans('file.Gift Card')}} *</strong></label>
+                        <label> {{trans('file.Gift Card')}} *</label>
                         <select id="gift_card_id" name="gift_card_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Gift Card...">
                             @php 
                                 $balance = [];
@@ -178,12 +178,12 @@
                     </div>
                     <div id="cheque">
                         <div class="form-group">
-                            <label><strong>{{trans('file.Cheque Number')}} *</strong></label>
+                            <label>{{trans('file.Cheque Number')}} *</label>
                             <input type="text" name="cheque_no" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label><strong> {{trans('file.Account')}}</strong></label>
+                        <label> {{trans('file.Account')}}</label>
                         <select class="form-control selectpicker" name="account_id">
                         @foreach($lims_account_list as $account)
                             @if($account->is_default)
@@ -195,7 +195,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label><strong>{{trans('file.Payment Note')}}</strong></label>
+                        <label>{{trans('file.Payment Note')}}</label>
                         <textarea rows="3" class="form-control" name="payment_note"></textarea>
                     </div>
 
@@ -213,25 +213,25 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Payment')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
                 {!! Form::open(['route' => 'sale.update-payment', 'method' => 'post', 'class' => 'payment-form' ]) !!}
                     <div class="row">
                         <div class="col-md-6">
-                            <label><strong>{{trans('file.Recieved Amount')}} *</strong></label>
+                            <label>{{trans('file.Recieved Amount')}} *</label>
                             <input type="text" name="edit_paying_amount" class="form-control numkey"  step="any" required>
                         </div>
                         <div class="col-md-6">
-                            <label><strong>{{trans('file.Paying Amount')}} *</strong></label>
+                            <label>{{trans('file.Paying Amount')}} *</label>
                             <input type="text" name="edit_amount" class="form-control"  step="any" required>
                         </div>
                         <div class="col-md-6 mt-1">
-                            <label><strong>{{trans('file.Change')}} : </strong></label>
+                            <label>{{trans('file.Change')}} : </label>
                             <p class="change ml-2">0.00</p>
                         </div>
                         <div class="col-md-6 mt-1">
-                            <label><strong>{{trans('file.Paid By')}}</strong></label>
+                            <label>{{trans('file.Paid By')}}</label>
                             <select name="edit_paid_by_id" class="form-control selectpicker">
                                 <option value="1">Cash</option>
                                 <option value="2">Gift Card</option>
@@ -243,7 +243,7 @@
                         </div>
                     </div>
                     <div class="gift-card form-group">
-                        <label><strong> {{trans('file.Gift Card')}} *</strong></label>
+                        <label> {{trans('file.Gift Card')}} *</label>
                         <select id="gift_card_id" name="gift_card_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Gift Card...">
                             @foreach($lims_gift_card_list as $gift_card)
                                 <option value="{{$gift_card->id}}">{{$gift_card->card_no}}</option>
@@ -257,12 +257,12 @@
                     </div>
                     <div id="edit-cheque">
                         <div class="form-group">
-                            <label><strong>{{trans('file.Cheque Number')}} *</strong></label>
+                            <label>{{trans('file.Cheque Number')}} *</label>
                             <input type="text" name="edit_cheque_no" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label><strong> {{trans('file.Account')}}</strong></label>
+                        <label> {{trans('file.Account')}}</label>
                         <select class="form-control selectpicker" name="account_id">
                         @foreach($lims_account_list as $account)
                             <option value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]</option>
@@ -270,7 +270,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label><strong>{{trans('file.Payment Note')}}</strong></label>
+                        <label>{{trans('file.Payment Note')}}</label>
                         <textarea rows="3" class="form-control" name="edit_payment_note"></textarea>
                     </div>
 
@@ -288,21 +288,21 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Delivery')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
                 {!! Form::open(['route' => 'delivery.store', 'method' => 'post', 'files' => true]) !!}
                 <div class="row">
                     <div class="col-md-6 form-group">
-                        <label><strong>{{trans('file.Delivery Reference')}}</strong></label>
+                        <label>{{trans('file.Delivery Reference')}}</label>
                         <p id="dr"></p>
                     </div>
                     <div class="col-md-6 form-group">
-                        <label><strong>{{trans('file.Sale Reference')}}</strong></label>
+                        <label>{{trans('file.Sale Reference')}}</label>
                         <p id="sr"></p>
                     </div>
                     <div class="col-md-12 form-group">
-                        <label><strong>{{trans('file.Status')}} *</strong></label>
+                        <label>{{trans('file.Status')}} *</label>
                         <select name="status" required class="form-control selectpicker">
                             <option value="1">{{trans('file.Packing')}}</option>
                             <option value="2">{{trans('file.Delivering')}}</option>
@@ -310,27 +310,27 @@
                         </select>
                     </div>
                     <div class="col-md-6 mt-2 form-group">
-                        <label><strong>{{trans('file.Delivered By')}}</strong></label>
+                        <label>{{trans('file.Delivered By')}}</label>
                         <input type="text" name="delivered_by" class="form-control">
                     </div>
                     <div class="col-md-6 mt-2 form-group">
-                        <label><strong>{{trans('file.Recieved By')}} </strong></label>
+                        <label>{{trans('file.Recieved By')}} </label>
                         <input type="text" name="recieved_by" class="form-control">
                     </div>
                     <div class="col-md-6 form-group">
-                        <label><strong>{{trans('file.customer')}} *</strong></label>
+                        <label>{{trans('file.customer')}} *</label>
                         <p id="customer"></p>
                     </div>
                     <div class="col-md-6 form-group">
-                        <label><strong>{{trans('file.Attach File')}}</strong></label>
+                        <label>{{trans('file.Attach File')}}</label>
                         <input type="file" name="file" class="form-control">
                     </div>
                     <div class="col-md-6 form-group">
-                        <label><strong>{{trans('file.Address')}} *</strong></label>
+                        <label>{{trans('file.Address')}} *</label>
                         <textarea rows="3" name="address" class="form-control" required></textarea>
                     </div>
                     <div class="col-md-6 form-group">
-                        <label><strong>{{trans('file.Note')}}</strong></label>
+                        <label>{{trans('file.Note')}}</label>
                         <textarea rows="3" name="note" class="form-control"></textarea>
                     </div>
                 </div>
@@ -416,7 +416,7 @@
         rowindex = $(this).closest('tr').index();
         deposit = $('table.sale-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.deposit').val();
         var id = $(this).data('id').toString();
-        $.get('sale/getpayment/' + id, function(data) {
+        $.get('sales/getpayment/' + id, function(data) {
             $(".payment-list tbody").remove();
             var newBody = $("<tbody>");
             payment_date  = data[0];
@@ -442,9 +442,9 @@
                 cols += '<td>' + paid_amount[index] + '</td>';
                 cols += '<td>' + paying_method[index] + '</td>';
                 if(paying_method[index] != 'Paypal')
-                    cols += '<td><div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans("file.action")}}<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button><ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu"><li><button type="button" class="btn btn-link edit-btn" data-id="' + payment_id[index] +'" data-clicked=false data-toggle="modal" data-target="#edit-payment"><i class="fa fa-edit"></i> {{trans("file.edit")}}</button></li><li class="divider"></li>{{ Form::open(['route' => 'sale.delete-payment', 'method' => 'post'] ) }}<li><input type="hidden" name="id" value="' + payment_id[index] + '" /> <button type="submit" class="btn btn-link" onclick="return confirmPaymentDelete()"><i class="fa fa-trash"></i> {{trans("file.delete")}}</button></li>{{ Form::close() }}</ul></div></td>';
+                    cols += '<td><div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans("file.action")}}<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button><ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu"><li><button type="button" class="btn btn-link edit-btn" data-id="' + payment_id[index] +'" data-clicked=false data-toggle="modal" data-target="#edit-payment"><i class="dripicons-document-edit"></i> {{trans("file.edit")}}</button></li><li class="divider"></li>{{ Form::open(['route' => 'sale.delete-payment', 'method' => 'post'] ) }}<li><input type="hidden" name="id" value="' + payment_id[index] + '" /> <button type="submit" class="btn btn-link" onclick="return confirmPaymentDelete()"><i class="dripicons-trash"></i> {{trans("file.delete")}}</button></li>{{ Form::close() }}</ul></div></td>';
                 else
-                    cols += '<td><div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans("file.action")}}<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button><ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">{{ Form::open(['route' => 'sale.delete-payment', 'method' => 'post'] ) }}<li><input type="hidden" name="id" value="' + payment_id[index] + '" /> <button type="submit" class="btn btn-link" onclick="return confirmPaymentDelete()"><i class="fa fa-trash"></i> {{trans("file.delete")}}</button></li>{{ Form::close() }}</ul></div></td>';
+                    cols += '<td><div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans("file.action")}}<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button><ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">{{ Form::open(['route' => 'sale.delete-payment', 'method' => 'post'] ) }}<li><input type="hidden" name="id" value="' + payment_id[index] + '" /> <button type="submit" class="btn btn-link" onclick="return confirmPaymentDelete()"><i class="dripicons-trash"></i> {{trans("file.delete")}}</button></li>{{ Form::close() }}</ul></div></td>';
 
                 newRow.append(cols);
                 newBody.append(newRow);
@@ -659,7 +659,7 @@
         "processing": true,
         "serverSide": true,
         "ajax":{
-            url:"sale/sale-data",
+            url:"sales/sale-data",
             data:{
                 all_permission: all_permission
             },
@@ -667,6 +667,7 @@
             type:"post"
         },
         "createdRow": function( row, data, dataIndex ) {
+            //alert(data);
             $(row).addClass('sale-link');
             $(row).attr('data-sale', data['sale']);
         },
@@ -684,13 +685,13 @@
             {"data": "options"},
         ],
         'language': {
-            'searchPlaceholder': "{{trans('file.Type date or sale reference...')}}",
+            
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         order:[['1', 'desc']],
@@ -700,10 +701,18 @@
                 'targets': [0, 3, 4, 5, 6, 9, 10]
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},
@@ -767,7 +776,7 @@
                         if(sale_id.length && confirm("Are you sure want to delete?")) {
                             $.ajax({
                                 type:'POST',
-                                url:'sale/deletebyselection',
+                                url:'sales/deletebyselection',
                                 data:{
                                     saleIdArray: sale_id
                                 },
@@ -815,7 +824,7 @@
         $("#sale-details input[name='sale_id']").val(sale[13]);
 
         var htmltext = '<strong>{{trans("file.Date")}}: </strong>'+sale[0]+'<br><strong>{{trans("file.reference")}}: </strong>'+sale[1]+'<br><strong>{{trans("file.Warehouse")}}: </strong>'+sale[27]+'<br><strong>{{trans("file.Sale Status")}}: </strong>'+sale[2]+'<br><br><div class="row"><div class="col-md-6"><strong>{{trans("file.From")}}:</strong><br>'+sale[3]+'<br>'+sale[4]+'<br>'+sale[5]+'<br>'+sale[6]+'<br>'+sale[7]+'<br>'+sale[8]+'</div><div class="col-md-6"><div class="float-right"><strong>{{trans("file.To")}}:</strong><br>'+sale[9]+'<br>'+sale[10]+'<br>'+sale[11]+'<br>'+sale[12]+'</div></div></div>';
-        $.get('sale/product_sale/' + sale[13], function(data){
+        $.get('sales/product_sale/' + sale[13], function(data){
             $(".product-sale-list tbody").remove();
             var name_code = data[0];
             var qty = data[1];

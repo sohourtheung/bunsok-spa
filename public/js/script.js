@@ -159,12 +159,6 @@ var Uploader = (function (window, document, Uploader) {
     return Uploader;
 })(window, document, Uploader);
 
-
-
-
-
-
-
 $(function(){
     Uploader.init();
 });

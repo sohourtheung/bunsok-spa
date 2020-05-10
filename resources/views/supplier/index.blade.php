@@ -8,12 +8,12 @@
 <section>
     <div class="container-fluid">
         @if(in_array("suppliers-add", $all_permission))
-        <a href="{{route('supplier.create')}}" class="btn btn-info"><i class="fa fa-plus"></i> {{trans('file.Add Supplier')}}</a>
-        <a href="#" data-toggle="modal" data-target="#importSupplier" class="btn btn-primary"><i class="fa fa-file"></i> {{trans('file.Import Supplier')}}</a>
+        <a href="{{route('supplier.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add Supplier')}}</a>
+        <a href="#" data-toggle="modal" data-target="#importSupplier" class="btn btn-primary"><i class="dripicons-copy"></i> {{trans('file.Import Supplier')}}</a>
         @endif
     </div>
     <div class="table-responsive">
-        <table id="supplier-table" class="table table-striped">
+        <table id="supplier-table" class="table">
             <thead>
                 <tr>
                     <th class="not-exported"></th>
@@ -49,21 +49,21 @@
                             @if($supplier->country){{ ', '.$supplier->country}}@endif</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 @if(in_array("suppliers-edit", $all_permission))
                                 <li>
-                                	<a href="{{ route('supplier.edit', ['id' => $supplier->id]) }}" class="btn btn-link"><i class="fa fa-edit"></i> {{trans('file.edit')}}</a>
+                                	<a href="{{ route('supplier.edit', ['id' => $supplier->id]) }}" class="btn btn-link"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</a>
                                 </li>
                                 @endif
                                 <li class="divider"></li>
                                 @if(in_array("suppliers-delete", $all_permission))
                                 {{ Form::open(['route' => ['supplier.destroy', $supplier->id], 'method' => 'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa fa-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                                 @endif
@@ -83,7 +83,7 @@
 	  	{!! Form::open(['route' => 'supplier.import', 'method' => 'post', 'files' => true]) !!}
 	    <div class="modal-header">
 	      <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Import Supplier')}}</h5>
-	      <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+	      <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
 	    </div>
 	    <div class="modal-body">
 	      <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
@@ -92,14 +92,14 @@
 	        <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label><strong>{{trans('file.Upload CSV File')}} *</strong></label>
+                        <label>{{trans('file.Upload CSV File')}} *</label>
                         {{Form::file('file', array('class' => 'form-control','required'))}}
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label><strong> {{trans('file.Sample File')}}</strong></label>
-                        <a href="public/sample_file/sample_supplier.csv" class="btn btn-info btn-block btn-md"><i class="fa fa-download"></i> {{trans('file.Download')}}</a>
+                        <label> {{trans('file.Sample File')}}</label>
+                        <a href="public/sample_file/sample_supplier.csv" class="btn btn-info btn-block btn-md"><i class="dripicons-download"></i> {{trans('file.Download')}}</a>
                     </div>
                 </div>
             </div>
@@ -137,11 +137,11 @@
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [

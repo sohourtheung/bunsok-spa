@@ -9,11 +9,11 @@
 <section>
     <div class="container-fluid">
         @if(in_array("purchase-return-add", $all_permission))
-            <a href="{{route('return-purchase.create')}}" class="btn btn-info"><i class="fa fa-plus"></i> {{trans('file.Add Return')}}</a>
+            <a href="{{route('return-purchase.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add Return')}}</a>
         @endif
     </div>
     <div class="table-responsive">
-        <table id="return-table" class="table table-striped return-list">
+        <table id="return-table" class="table return-list">
             <thead>
                 <tr>
                     <th class="not-exported"></th>
@@ -29,26 +29,22 @@
             <tbody>
                 @foreach($lims_return_all as $key=>$return)
                 <?php 
-                    $supplier = DB::table('suppliers')->find($return->supplier_id);
-                    if(!$supplier){
+                    $supplier = $return->supplier;
+                    if(!$supplier)
                         $supplier = new App\Supplier();
-                        $supplier->name = $supplier->company_name = $supplier->email = $supplier->phone_number = $supplier->address = $supplier->city = '';
-                    }
-                    $warehouse = DB::table('warehouses')->where('id', $return->warehouse_id)->first();
                     $account = DB::table('accounts')->find($return->account_id);
-                    $user = DB::table('users')->find($return->user_id);
                 ?>
-                <tr class="return-link" data-return='["{{date($general_setting->date_format, strtotime($return->created_at->toDateString()))}}", "{{$return->reference_no}}", "{{$warehouse->name}}", "{{$warehouse->phone}}", "{{$warehouse->address}}", "{{$supplier->name}}", "{{$supplier->company_name}}","{{$supplier->email}}", "{{$supplier->phone_number}}", "{{$supplier->address}}", "{{$supplier->city}}", "{{$return->id}}", "{{$return->total_tax}}", "{{$return->total_discount}}", "{{$return->total_cost}}", "{{$return->order_tax}}", "{{$return->order_tax_rate}}", "{{$return->grand_total}}", "{{$return->return_note}}", "{{$return->staff_note}}", "{{$user->name}}", "{{$user->email}}"]'>
+                <tr class="return-link" data-return='["{{date($general_setting->date_format, strtotime($return->created_at->toDateString()))}}", "{{$return->reference_no}}", "{{$return->warehouse->name}}", "{{$return->warehouse->phone}}", "{{$return->warehouse->address}}", "{{$supplier->name}}", "{{$supplier->company_name}}","{{$supplier->email}}", "{{$supplier->phone_number}}", "{{$supplier->address}}", "{{$supplier->city}}", "{{$return->id}}", "{{$return->total_tax}}", "{{$return->total_discount}}", "{{$return->total_cost}}", "{{$return->order_tax}}", "{{$return->order_tax_rate}}", "{{$return->grand_total}}", "{{$return->return_note}}", "{{$return->staff_note}}", "{{$return->user->name}}", "{{$return->user->email}}"]'>
                     <td>{{$key}}</td>
                     <td>{{ date($general_setting->date_format, strtotime($return->created_at->toDateString())) . ' '. $return->created_at->toTimeString() }}</td>
                     <td>{{ $return->reference_no }}</td>
-                    <td>{{ $warehouse->name }}</td>
+                    <td>{{ $return->warehouse->name }}</td>
                     <td>{{ $supplier->name }}</td>
                     <td>{{$account->name}}</td>
                     <td class="grand-total">{{ $return->grand_total }}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
@@ -58,14 +54,14 @@
                                 </li>
                                 @if(in_array("purchase-return-edit", $all_permission))
                                 <li>
-                                    <a href="{{ route('return-purchase.edit', ['id' => $return->id]) }}" class="btn btn-link"><i class="fa fa-edit"></i> {{trans('file.edit')}}</a>
+                                    <a href="{{ route('return-purchase.edit', ['id' => $return->id]) }}" class="btn btn-link"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</a>
                                 </li>
                                 @endif
                                 <li class="divider"></li>
                                 @if(in_array("purchase-return-delete", $all_permission))
                                 {{ Form::open(['route' => ['return-purchase.destroy', $return->id], 'method' => 'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa fa-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                                 @endif
@@ -93,17 +89,17 @@
             <div class="container mt-3 pb-2 border-bottom">
             <div class="row">
                 <div class="col-md-3">
-                    <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i class="fa fa-print"></i> {{trans('file.Print')}}</button>
+                    <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i class="dripicons-print"></i> {{trans('file.Print')}}</button>
                     {{ Form::open(['route' => 'return-purchase.sendmail', 'method' => 'post', 'class' => 'sendmail-form'] ) }}
                         <input type="hidden" name="return_id">
-                        <button class="btn btn-default btn-sm d-print-none"><i class="fa fa-envelope"></i> {{trans('file.Email')}}</button>
+                        <button class="btn btn-default btn-sm d-print-none"><i class="dripicons-mail"></i> {{trans('file.Email')}}</button>
                     {{ Form::close() }}
                 </div>
                 <div class="col-md-6">
                     <h3 id="exampleModalLabel" class="modal-title text-center container-fluid">{{$general_setting->site_title}}</h3>
                 </div>
                 <div class="col-md-3">
-                    <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close d-print-none"><span aria-hidden="true">×</span></button>
+                    <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close d-print-none"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                 </div>
                 <div class="col-md-12 text-center">
                     <i style="font-size: 15px;">{{trans('file.Return Details')}}</i>
@@ -175,11 +171,11 @@
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -188,10 +184,18 @@
                 'targets': [0, 7]
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},

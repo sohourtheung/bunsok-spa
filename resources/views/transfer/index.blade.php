@@ -9,12 +9,12 @@
 <section>
     <div class="container-fluid">
         @if(in_array("transfers-add", $all_permission))
-            <a href="{{route('transfers.create')}}" class="btn btn-info"><i class="fa fa-plus"></i> {{trans('file.add')}} {{trans('file.Transfer')}}</a>
-            <a href="{{url('transfers/transfer_by_csv')}}" class="btn btn-primary"><i class="fa fa-file"></i> {{trans('file.import')}} {{trans('file.Transfer')}}</a>
+            <a href="{{route('transfers.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.add')}} {{trans('file.Transfer')}}</a>
+            <a href="{{url('transfers/transfer_by_csv')}}" class="btn btn-primary"><i class="dripicons-copy"></i> {{trans('file.import')}} {{trans('file.Transfer')}}</a>
         @endif
     </div>
     <div class="table-responsive">
-        <table id="transfer-table" class="table table-striped transfer-list">
+        <table id="transfer-table" class="table transfer-list">
             <thead>
                 <tr>
                     <th class="not-exported"></th>
@@ -31,10 +31,7 @@
             </thead>
             <tbody>
                 @foreach($lims_transfer_all as $key=>$transfer)
-                <?php 
-                    $from_warehouse = DB::table('warehouses')->find($transfer->from_warehouse_id);
-                    $to_warehouse = DB::table('warehouses')->find($transfer->to_warehouse_id);
-                    $user = DB::table('users')->find($transfer->user_id);
+                <?php                     
                     if($transfer->status == 1)
                         $status = trans('file.Completed');
                     elseif($transfer->status == 2)
@@ -42,12 +39,12 @@
                     elseif($transfer->status == 3)
                         $status = trans('file.Sent');
                 ?>
-                <tr class="transfer-link" data-transfer='["{{date($general_setting->date_format, strtotime($transfer->created_at->toDateString()))}}", "{{$transfer->reference_no}}", "{{$status}}", "{{$transfer->id}}", "{{$from_warehouse->name}}", "{{$from_warehouse->phone}}", "{{$from_warehouse->address}}", "{{$to_warehouse->name}}", "{{$to_warehouse->phone}}", "{{$to_warehouse->address}}", "{{$transfer->total_tax}}", "{{$transfer->total_cost}}", "{{$transfer->shipping_cost}}", "{{$transfer->grand_total}}", "{{$transfer->note}}", "{{$user->name}}", "{{$user->email}}"]'>
+                <tr class="transfer-link" data-transfer='["{{date($general_setting->date_format, strtotime($transfer->created_at->toDateString()))}}", "{{$transfer->reference_no}}", "{{$status}}", "{{$transfer->id}}", "{{$transfer->fromWarehouse->name}}", "{{$transfer->fromWarehouse->phone}}", "{{$transfer->fromWarehouse->address}}", "{{$transfer->toWarehouse->name}}", "{{$transfer->toWarehouse->phone}}", "{{$transfer->toWarehouse->address}}", "{{$transfer->total_tax}}", "{{$transfer->total_cost}}", "{{$transfer->shipping_cost}}", "{{$transfer->grand_total}}", "{{$transfer->note}}", "{{$transfer->user->name}}", "{{$transfer->user->email}}"]'>
                     <td>{{$key}}</td>
                     <td>{{ date($general_setting->date_format, strtotime($transfer->created_at->toDateString())) . ' '. $transfer->created_at->toTimeString() }}</td>
                     <td>{{ $transfer->reference_no }}</td>
-                    <td>{{ $from_warehouse->name }}</td>
-                    <td>{{ $to_warehouse->name }}</td>
+                    <td>{{ $transfer->fromWarehouse->name }}</td>
+                    <td>{{ $transfer->toWarehouse->name }}</td>
                     <td class="total-cost">{{ $transfer->total_cost }}</td>
                     <td class="total-tax">{{ $transfer->total_tax }}</td>
                     <td class="grand-total">{{ $transfer->grand_total }}</td>
@@ -60,7 +57,7 @@
                     @endif
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 <li>
@@ -68,14 +65,14 @@
                                 </li>
                                 @if(in_array("transfers-edit", $all_permission))
                                 <li>
-                                    <a href="{{ route('transfers.edit', ['id' => $transfer->id]) }}" class="btn btn-link"><i class="fa fa-edit"></i> {{trans('file.edit')}}</a> 
+                                    <a href="{{ route('transfers.edit', ['id' => $transfer->id]) }}" class="btn btn-link"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</a> 
                                 </li>
                                 @endif
                                 <li class="divider"></li>
                                 @if(in_array("transfers-delete", $all_permission))
                                 {{ Form::open(['route' => ['transfers.destroy', $transfer->id], 'method' => 'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa fa-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                                 @endif
@@ -107,13 +104,13 @@
         <div class="container mt-3 pb-2 border-bottom">
             <div class="row">
                 <div class="col-md-3">
-                    <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i class="fa fa-print"></i> {{trans('file.Print')}}</button>
+                    <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i class="dripicons-print"></i> {{trans('file.Print')}}</button>
                 </div>
                 <div class="col-md-6">
                     <h3 id="exampleModalLabel" class="modal-title text-center container-fluid">{{$general_setting->site_title}}</h3>
                 </div>
                 <div class="col-md-3">
-                    <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close d-print-none"><span aria-hidden="true">×</span></button>
+                    <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close d-print-none"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                 </div>
                 <div class="col-md-12 text-center">
                     <i style="font-size: 15px;">{{trans('file.Transfer Details')}}</i>
@@ -185,11 +182,11 @@
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -198,10 +195,18 @@
                 'targets': [0, 9]
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},

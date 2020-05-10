@@ -2,37 +2,39 @@
 
 <section class="forms">
     <div class="container-fluid">
-        <div class="card">
-            <div class="card-header mt-2">
-	           <h4 class="text-center">{{trans('file.Product Quantity Alert')}}</h4>
-           </div>
-        	<div class="table-responsive mb-4">
-                <table id="report-table" class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th class="not-exported"></th>
-                            <th>{{trans('file.Image')}}</th>
-                            <th>{{trans('file.Product Name')}}</th>
-                            <th>{{trans('file.Product Code')}}</th>
-                            <th>{{trans('file.Quantity')}}</th>
-                            <th>{{trans('file.Alert Quantity')}}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($lims_product_data as $key=>$product)
-                        <tr>
-                            <td>{{$key}}</td>
-                            <td> <img src="{{url('public/images/product',$product->image)}}" height="80" width="80"> </td>
-                            <td>{{$product->name}}</td>
-                            <td>{{$product->code}}</td>
-                            <td>{{number_format((float)($product->qty), 2, '.', '')}}</td>
-                            <td>{{number_format((float)($product->alert_quantity), 2, '.', '')}}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
+	    <h4 class="text-center">{{trans('file.Product Quantity Alert')}}</h4>
+    </div>
+    <div class="table-responsive mb-4">
+        <table id="report-table" class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="not-exported"></th>
+                    <th>{{trans('file.Image')}}</th>
+                    <th>{{trans('file.Product Name')}}</th>
+                    <th>{{trans('file.Product Code')}}</th>
+                    <th>{{trans('file.Quantity')}}</th>
+                    <th>{{trans('file.Alert Quantity')}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($lims_product_data as $key=>$product)
+                <tr>
+                    <td>{{$key}}</td>
+                    <td>
+                    <?php
+                        $images = explode(",", $product->image);
+                        $product->base_image = $images[0];
+                    ?> 
+                        <img src="{{url('public/images/product',$product->base_image)}}" height="80" width="80">
+                    </td>
+                    <td>{{$product->name}}</td>
+                    <td>{{$product->code}}</td>
+                    <td>{{number_format((float)($product->qty), 2, '.', '')}}</td>
+                    <td>{{number_format((float)($product->alert_quantity), 2, '.', '')}}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 </section>
 
@@ -45,11 +47,11 @@
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -58,10 +60,18 @@
                 'targets': 0
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},

@@ -9,6 +9,7 @@ use App\Returns;
 use App\ReturnPurchase;
 use App\Expense;
 use App\Payroll;
+use App\MoneyTransfer;
 use DB;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
@@ -111,9 +112,14 @@ class AccountsController extends Controller
                 $return_purchase = DB::table('return_purchases')->where('account_id', $account->id)->sum('grand_total');
                 $expenses = DB::table('expenses')->where('account_id', $account->id)->sum('amount');
                 $payrolls = DB::table('payrolls')->where('account_id', $account->id)->sum('amount');
+                $sent_money_via_transfer = MoneyTransfer::where('from_account_id', $account->id)->sum('amount');
+                $recieved_money_via_transfer = MoneyTransfer::where('to_account_id', $account->id)->sum('amount');
 
-                $credit[] = $payment_recieved + $return_purchase + $account->initial_balance;
-                $debit[] = $payment_sent + $returns + $expenses + $payrolls;
+                $credit[] = $payment_recieved + $return_purchase + $recieved_money_via_transfer + $account->initial_balance;
+                $debit[] = $payment_sent + $returns + $expenses + $payrolls + $sent_money_via_transfer;
+
+                /*$credit[] = $payment_recieved + $return_purchase + $account->initial_balance;
+                $debit[] = $payment_sent + $returns + $expenses + $payrolls;*/
             }
             return view('account.balance_sheet', compact('lims_account_list', 'debit', 'credit'));
         }
@@ -129,8 +135,15 @@ class AccountsController extends Controller
         $debit_list = [];
         $expense_list = [];
         $return_list = [];
-        if($data['type'] == '0' || $data['type'] == '2'){
+        $purchase_return_list = [];
+        $payroll_list = [];
+        $recieved_money_transfer_list = [];
+        $sent_money_transfer_list = [];
+        
+        if($data['type'] == '0' || $data['type'] == '2') {
             $credit_list = Payment::whereNotNull('sale_id')->where('account_id', $data['account_id'])->whereDate('created_at', '>=' , $data['start_date'])->whereDate('created_at', '<=' , $data['end_date'])->get();
+
+            $recieved_money_transfer_list = MoneyTransfer::where('to_account_id', $data['account_id'])->get();
         }
         if($data['type'] == '0' || $data['type'] == '1'){
             $debit_list = Payment::whereNotNull('purchase_id')->where('account_id', $data['account_id'])->whereDate('created_at', '>=' , $data['start_date'])->whereDate('created_at', '<=' , $data['end_date'])->get();
@@ -142,9 +155,11 @@ class AccountsController extends Controller
             $purchase_return_list = ReturnPurchase::where('account_id', $data['account_id'])->whereDate('created_at', '>=' , $data['start_date'])->whereDate('created_at', '<=' , $data['end_date'])->get();
 
             $payroll_list = Payroll::where('account_id', $data['account_id'])->whereDate('created_at', '>=' , $data['start_date'])->whereDate('created_at', '<=' , $data['end_date'])->get();
+
+            $sent_money_transfer_list = MoneyTransfer::where('from_account_id', $data['account_id'])->get();
         }
         $balance = 0;
-        return view('account.account_statement', compact('lims_account_data', 'credit_list', 'debit_list', 'expense_list', 'return_list', 'purchase_return_list', 'payroll_list', 'balance'));
+        return view('account.account_statement', compact('lims_account_data', 'credit_list', 'debit_list', 'expense_list', 'return_list', 'purchase_return_list', 'payroll_list', 'recieved_money_transfer_list', 'sent_money_transfer_list', 'balance'));
     }
 
     public function destroy($id)

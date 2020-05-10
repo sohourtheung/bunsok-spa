@@ -9,10 +9,16 @@
 
 <section class="forms pos-section">
     <div class="row">
+        <audio id="mysoundclip1" preload="auto">
+            <source src="{{url('public/beep/beep-timber.mp3')}}"></source>
+        </audio>
+        <audio id="mysoundclip2" preload="auto">
+            <source src="{{url('public/beep/beep-07.mp3')}}"></source>
+        </audio>
         <div class="col-md-7 pr-0">
             <div class="card">
                 <div class="card-body">
-                    {!! Form::open(['route' => 'sale.store', 'method' => 'post', 'files' => true, 'class' => 'payment-form']) !!}
+                    {!! Form::open(['route' => 'sales.store', 'method' => 'post', 'files' => true, 'class' => 'payment-form']) !!}
                     @php
                         if($lims_pos_setting_data)
                             $keybord_active = $lims_pos_setting_data->keybord_active;
@@ -68,7 +74,7 @@
                                             @endforeach
                                             </select>
                                             @if($customer_active)
-                                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addCustomer"><i class="fa fa-plus"></i></button>
+                                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addCustomer"><i class="dripicons-plus"></i></button>
                                             @endif
                                         </div>
                                     </div>
@@ -88,7 +94,7 @@
                                                 <th class="col-sm-2">{{trans('file.Price')}}</th>
                                                 <th class="col-sm-3">{{trans('file.Quantity')}}</th>
                                                 <th class="col-sm-2">{{trans('file.Subtotal')}}</th>
-                                                <th class="col-sm-1"><i class="fa fa-trash"></i></th>
+                                                <th class="col-sm-1"><i class="dripicons-trash"></i></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -101,7 +107,11 @@
                                             <tr>
                                             <?php 
                                                 $product_data = DB::table('products')->find($product_sale->product_id);
-
+                                                if($product_sale->variant_id) {
+                                                    $product_variant_data = \App\ProductVariant::select('id', 'item_code')->FindExactProduct($product_data->id, $product_sale->variant_id)->first();
+                                                    $product_data->code = $product_variant_data->item_code;
+                                                }
+                                                
                                                 if($product_data->tax_method == 1){
                                                     $product_price = $product_sale->net_unit_price + ($product_sale->discount / $product_sale->qty);
                                                 }
@@ -147,9 +157,9 @@
 
                                                 $temp_unit_operation_value = $unit_operation_value =  implode(",",$unit_operation_value) . ',';
                                             ?>
-                                                <td class="col-sm-4 product-title"><strong>{{$product_data->name}}</strong> [{{$product_data->code}}] <button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="fa fa-edit"></i></button> </td>
+                                                <td class="col-sm-4 product-title"><strong>{{$product_data->name}}</strong> [{{$product_data->code}}] <button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="dripicons-document-edit"></i></button> </td>
                                                 <td class="col-sm-2 product-price">{{ number_format((float)($product_sale->total / $product_sale->qty), 2, '.', '') }}</td>
-                                                <td class="col-sm-3"><div class="input-group"><span class="input-group-btn"><button type="button" class="btn btn-default minus"><span class="fa fa-minus"></span></button></span><input type="text" name="qty[]" class="form-control qty numkey input-number" value="{{$product_sale->qty}}" step="any" required><span class="input-group-btn"><button type="button" class="btn btn-default plus"><span class="fa fa-plus"></span></button></span></div></td>
+                                                <td class="col-sm-3"><div class="input-group"><span class="input-group-btn"><button type="button" class="btn btn-default minus"><span class="dripicons-minus"></span></button></span><input type="text" name="qty[]" class="form-control qty numkey input-number" value="{{$product_sale->qty}}" step="any" required><span class="input-group-btn"><button type="button" class="btn btn-default plus"><span class="dripicons-plus"></span></button></span></div></td>
                                                 <td class="col-sm-2 sub-total">{{ number_format((float)$product_sale->total, 2, '.', '') }}</td>
                                                 <td class="col-sm-1"><button type="button" class="ibtnDel btn btn-danger btn-sm">X</button></td>
                                                 <input type="hidden" class="product-code" name="product_code[]" value="{{$product_data->code}}"/>
@@ -236,23 +246,23 @@
                                         <span id="subtotal">{{number_format((float)($lims_sale_data->total_price), 2, '.', '')}}</span>
                                         </td>
                                         <td style="width:15%; padding: 0 0 0 10px; color: #000;"><strong>{{trans('file.Discount')}}</strong>
-                                            <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#order-discount"> <i class="fa fa-edit"></i></button><br>
+                                            <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#order-discount"> <i class="dripicons-document-edit"></i></button><br>
                                             <span id="discount">{{number_format((float)$lims_sale_data->order_discount, 2, '.', '') }}</span>
                                         </td>
                                         <td style="width:15%; padding: 0 0 0 10px; color: #000;"><strong>{{trans('file.Coupon')}}</strong>
                                             @if($lims_sale_data->coupon_id)
-                                            <button type="button" class="btn btn-link btn-sm" disabled><i class="fa fa-edit"></i></button><br>
+                                            <button type="button" class="btn btn-link btn-sm" disabled><i class="dripicons-document-edit"></i></button><br>
                                             @else
-                                            <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#coupon-modal"><i class="fa fa-edit"></i></button><br>
+                                            <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#coupon-modal"><i class="dripicons-document-edit"></i></button><br>
                                             @endif
                                             <span id="coupon-text">{{number_format((float)$lims_sale_data->coupon_discount, 2, '.', '') }}</span>
                                         </td>
                                         <td style="width:15%; padding: 0 0 0 10px; color: #000;"><strong>{{trans('file.Tax')}}</strong>
-                                        <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#order-tax"><i class="fa fa-edit"></i></button><br>
+                                        <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#order-tax"><i class="dripicons-document-edit"></i></button><br>
                                         <span id="tax">{{number_format((float)$lims_sale_data->order_tax, 2, '.', '')}}</span>
                                         </td>
                                         <td style="width:15%; padding: 0 0 0 10px; color: #000;"><strong>{{trans('file.Shipping')}}</strong>
-                                            <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#shipping-cost-modal"><i class="fa fa-edit"></i></button><br>
+                                            <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#shipping-cost-modal"><i class="dripicons-document-edit"></i></button><br>
                                             <span id="shipping-cost">{{number_format((float)($lims_sale_data->shipping_cost), 2, '.', '')}}</span>
                                         </td>
                                         <td style="width:15%; padding: 0 0 0 10px; color: #000;"><strong>{{trans('file.grand total')}}</strong><br>
@@ -262,28 +272,28 @@
                                 </table>
                             </div>
                             <div class="column-5">
-                                <button style="background: #0066cc" type="button" class="btn btn-custom" data-toggle="modal" data-target="#add-payment" id="credit-card-btn"><i class="fa fa-credit-card"></i> Card</button>   
+                                <button style="background: #0066cc" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="credit-card-btn"><i class="fa fa-credit-card"></i> Card</button>   
                             </div>
                             <div class="column-5">
-                                <button style="background: #47d147" type="button" class="btn btn-custom" data-toggle="modal" data-target="#add-payment" id="cash-btn"><i class="fa fa-money"></i> Cash</button>
+                                <button style="background: #47d147" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="cash-btn"><i class="fa fa-money"></i> Cash</button>
                             </div>
                             <div class="column-5">
-                                <button style="background-color: #6666ff" type="button" class="btn btn-custom" data-toggle="modal" data-target="#add-payment" id="paypal-btn"><i class="fa fa-paypal"></i> Paypal</button>
+                                <button style="background-color: #6666ff" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="paypal-btn"><i class="fa fa-paypal"></i> Paypal</button>
                             </div>
                             <div class="column-5">
-                                <button style="background-color: #e28d02" type="button" class="btn btn-custom" id="draft-btn"><i class="ion-android-drafts"></i> Draft</button>
+                                <button style="background-color: #e28d02" type="button" class="btn btn-custom payment-btn" id="draft-btn"><i class="dripicons-flag"></i> Draft</button>
                             </div>
                             <div class="column-5">
-                                <button style="background-color: #163951" type="button" class="btn btn-custom" data-toggle="modal" data-target="#add-payment" id="cheque-btn"><i class="ion-cash"></i> Cheque</button>
+                                <button style="background-color: #163951" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="cheque-btn"><i class="fa fa-money"></i> Cheque</button>
                             </div>
                             <div class="column-5">
-                                <button style="background-color: #800080" type="button" class="btn btn-custom" data-toggle="modal" data-target="#add-payment" id="gift-card-btn"><i class="ion-card"></i> GiftCard</button>
+                                <button style="background-color: #800080" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="gift-card-btn"><i class="fa fa-credit-card"></i> GiftCard</button>
                             </div>
                             <div class="column-5">
-                                <button style="background-color: #7f4f01" type="button" class="btn btn-custom" data-toggle="modal" data-target="#add-payment" id="deposit-btn"><i class="fa fa-university"></i> Deposit</button>
+                                <button style="background-color: #7f4f01" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="deposit-btn"><i class="fa fa-university"></i> Deposit</button>
                             </div>
                             <div class="column-5">
-                                <button style="background-color: #cc0000;" type="button" class="btn btn-custom" id="cancel-btn" onclick="return confirmCancel()"><i class="ion-android-cancel"></i> Cancel</button>
+                                <button style="background-color: #cc0000;" type="button" class="btn btn-custom payment-btn" id="cancel-btn" onclick="return confirmCancel()"><i class="ion-android-cancel"></i> Cancel</button>
                             </div>
                         </div>
                     </div>                        
@@ -296,7 +306,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">{{trans('file.Order Discount')}}</h5>
-                        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -313,7 +323,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">{{trans('file.Coupon Code')}}</h5>
-                        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -334,7 +344,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">{{trans('file.Order Tax')}}</h5>
-                        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -357,7 +367,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">{{trans('file.Shipping Cost')}}</h5>
-                        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
@@ -374,66 +384,80 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Finalize Sale')}}</h5>
-                        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-md-6">
-                                <label><strong>{{trans('file.Recieved Amount')}} *</strong></label>
-                                <input type="text" name="paying_amount" class="form-control numkey"  step="any">
+                            <div class="col-md-10">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>{{trans('file.Recieved Amount')}} *</label>
+                                        <input type="text" name="paying_amount" class="form-control numkey"  step="any">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>{{trans('file.Paying Amount')}} *</label>
+                                        <input type="text" name="paid_amount" class="form-control numkey"  step="any">
+                                    </div>
+                                    <div class="col-md-6 mt-1">
+                                        <label>{{trans('file.Change')}} : </label>
+                                        <p id="change" class="ml-2">0.00</p>
+                                    </div>
+                                    <div class="col-md-6 mt-1">
+                                        <label>{{trans('file.Paid By')}}</label>
+                                        <select name="paid_by_id" class="form-control">
+                                            <option value="1">Cash</option>
+                                            <option value="2">Gift Card</option>
+                                            <option value="3">Credit Card</option>
+                                            <option value="4">Cheque</option>
+                                            <option value="5">Paypal</option>
+                                            <option value="6">Deposit</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-12 mt-3">
+                                        <div class="card-element form-control">
+                                        </div>
+                                        <div class="card-errors" role="alert"></div>
+                                    </div>
+                                    <div class="form-group col-md-12" id="gift-card">
+                                        <label> {{trans('file.Gift Card')}} *</label>
+                                        <input type="hidden" name="gift_card_id">
+                                        <select id="gift_card_id_select" name="gift_card_id_select" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Gift Card..."></select>
+                                    </div>
+                                    <div class="form-group col-md-12" id="cheque">
+                                        <div class="form-group">
+                                            <label>{{trans('file.Cheque Number')}} *</label>
+                                            <input type="text" name="cheque_no" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label>{{trans('file.Payment Note')}}</label>
+                                        <textarea id="payment_note" rows="2" class="form-control" name="payment_note"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                   <div class="col-md-6 form-group">
+                                        <label>{{trans('file.Sale Note')}}</label>
+                                        <textarea rows="3" class="form-control" name="sale_note"></textarea>
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label>{{trans('file.Staff Note')}}</label>
+                                        <textarea rows="3" class="form-control" name="staff_note"></textarea>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <button id="submit-btn" type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label><strong>{{trans('file.Paying Amount')}} *</strong></label>
-                                <input type="text" name="paid_amount" class="form-control numkey"  step="any">
+                            <div class="col-md-2 qc" data-initial="1">
+                                <h4><strong>{{trans('file.Quick Cash')}}</strong></h4>
+                                <button class="btn btn-block btn-primary qc-btn sound-btn" data-amount="10" type="button">10</button>
+                                <button class="btn btn-block btn-primary qc-btn sound-btn" data-amount="20" type="button">20</button>
+                                <button class="btn btn-block btn-primary qc-btn sound-btn" data-amount="50" type="button">50</button>
+                                <button class="btn btn-block btn-primary qc-btn sound-btn" data-amount="100" type="button">100</button>
+                                <button class="btn btn-block btn-primary qc-btn sound-btn" data-amount="500" type="button">500</button>
+                                <button class="btn btn-block btn-primary qc-btn sound-btn" data-amount="1000" type="button">1000</button>
+                                <button class="btn btn-block btn-danger qc-btn sound-btn" data-amount="0" type="button">{{trans('file.Clear')}}</button>
                             </div>
-                            <div class="col-md-6 mt-1">
-                                <label><strong>{{trans('file.Change')}} : </strong></label>
-                                <p id="change" class="ml-2">0.00</p>
-                            </div>
-                            <div class="col-md-6 mt-1">
-                                <label><strong>{{trans('file.Paid By')}}</strong></label>
-                                <select name="paid_by_id" class="form-control">
-                                    <option value="1">Cash</option>
-                                    <option value="2">Gift Card</option>
-                                    <option value="3">Credit Card</option>
-                                    <option value="4">Cheque</option>
-                                    <option value="5">Paypal</option>
-                                    <option value="6">Deposit</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="card-element form-control">
-                            </div>
-                            <div class="card-errors" role="alert"></div>
-                        </div>
-                        <div class="form-group" id="gift-card">
-                            <label><strong> {{trans('file.Gift Card')}} *</strong></label>
-                            <input type="hidden" name="gift_card_id">
-                            <select id="gift_card_id_select" name="gift_card_id_select" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Gift Card..."></select>
-                        </div>
-                        <div id="cheque">
-                            <div class="form-group">
-                                <label><strong>{{trans('file.Cheque Number')}} *</strong></label>
-                                <input type="text" name="cheque_no" class="form-control">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label><strong>{{trans('file.Payment Note')}}</strong></label>
-                            <textarea id="payment_note" rows="2" class="form-control" name="payment_note"></textarea>
-                        </div>
-                        <div class="row">
-                           <div class="col-md-6 form-group">
-                                <label><strong>{{trans('file.Sale Note')}}</strong></label>
-                                <textarea rows="3" class="form-control" name="sale_note"></textarea>
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label><strong>{{trans('file.Staff Note')}}</strong></label>
-                                <textarea rows="3" class="form-control" name="staff_note"></textarea>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <button id="submit-btn" type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
                         </div>
                     </div>
                 </div>
@@ -497,32 +521,32 @@
                                 <tbody>
                                 @for ($i=0; $i < ceil($product_number/5); $i++)
                                     <tr>
-                                        <td class="product-img" title="{{$lims_product_list[0+$i*5]->name}}" data-product ="{{$lims_product_list[0+$i*5]->code . ' (' . $lims_product_list[0+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[0+$i*5]->image)}}" width="100%" />
+                                        <td class="product-img sound-btn" title="{{$lims_product_list[0+$i*5]->name}}" data-product ="{{$lims_product_list[0+$i*5]->code . ' (' . $lims_product_list[0+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[0+$i*5]->base_image)}}" width="100%" />
                                             <p>{{$lims_product_list[0+$i*5]->name}}</p>
                                         </td>
                                         @if(!empty($lims_product_list[1+$i*5]))
-                                        <td class="product-img" title="{{$lims_product_list[1+$i*5]->name}}" data-product ="{{$lims_product_list[1+$i*5]->code . ' (' . $lims_product_list[1+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[1+$i*5]->image)}}" width="100%" />
+                                        <td class="product-img sound-btn" title="{{$lims_product_list[1+$i*5]->name}}" data-product ="{{$lims_product_list[1+$i*5]->code . ' (' . $lims_product_list[1+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[1+$i*5]->base_image)}}" width="100%" />
                                             <p>{{$lims_product_list[1+$i*5]->name}}</p>
                                         </td>
                                         @else
                                         <td></td>
                                         @endif
                                         @if(!empty($lims_product_list[2+$i*5]))
-                                        <td class="product-img" title="{{$lims_product_list[2+$i*5]->name}}" data-product ="{{$lims_product_list[2+$i*5]->code . ' (' . $lims_product_list[2+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[2+$i*5]->image)}}" width="100%" />
+                                        <td class="product-img sound-btn" title="{{$lims_product_list[2+$i*5]->name}}" data-product ="{{$lims_product_list[2+$i*5]->code . ' (' . $lims_product_list[2+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[2+$i*5]->base_image)}}" width="100%" />
                                             <p>{{$lims_product_list[2+$i*5]->name}}</p>
                                         </td>
                                         @else
                                         <td></td>
                                         @endif
                                         @if(!empty($lims_product_list[3+$i*5]))
-                                        <td class="product-img" title="{{$lims_product_list[3+$i*5]->name}}" data-product ="{{$lims_product_list[3+$i*5]->code . ' (' . $lims_product_list[3+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[3+$i*5]->image)}}" width="100%" />
+                                        <td class="product-img sound-btn" title="{{$lims_product_list[3+$i*5]->name}}" data-product ="{{$lims_product_list[3+$i*5]->code . ' (' . $lims_product_list[3+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[3+$i*5]->base_image)}}" width="100%" />
                                             <p>{{$lims_product_list[3+$i*5]->name}}</p>
                                         </td>
                                         @else
                                         <td></td>
                                         @endif
                                         @if(!empty($lims_product_list[4+$i*5]))
-                                        <td class="product-img" title="{{$lims_product_list[4+$i*5]->name}}" data-product ="{{$lims_product_list[4+$i*5]->code . ' (' . $lims_product_list[4+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[4+$i*5]->image)}}" width="100%" />
+                                        <td class="product-img sound-btn" title="{{$lims_product_list[4+$i*5]->name}}" data-product ="{{$lims_product_list[4+$i*5]->code . ' (' . $lims_product_list[4+$i*5]->name . ')'}}"><img  src="{{url('public/images/product',$lims_product_list[4+$i*5]->base_image)}}" width="100%" />
                                             <p>{{$lims_product_list[4+$i*5]->name}}</p>
                                         </td>
                                         @else
@@ -543,20 +567,20 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 id="modal_header" class="modal-title"></h5>
-                        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                     </div>
                     <div class="modal-body">
                         <form>
                             <div class="form-group">
-                                <label><strong>{{trans('file.Quantity')}}</strong></label>
+                                <label>{{trans('file.Quantity')}}</label>
                                 <input type="text" name="edit_qty" class="form-control numkey">
                             </div>
                             <div class="form-group">
-                                <label><strong>{{trans('file.Unit Discount')}}</strong></label>
+                                <label>{{trans('file.Unit Discount')}}</label>
                                 <input type="text" name="edit_discount" class="form-control numkey">
                             </div>
                             <div class="form-group">
-                                <label><strong>{{trans('file.Unit Price')}}</strong></label>
+                                <label>{{trans('file.Unit Price')}}</label>
                                 <input type="text" name="edit_unit_price" class="form-control numkey" step="any">
                             </div>
                             <?php
@@ -568,16 +592,16 @@
                     }
                 ?>
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Tax Rate')}}</strong></label>
-                                    <select name="edit_tax_rate" class="form-control">
+                                    <label>{{trans('file.Tax Rate')}}</label>
+                                    <select name="edit_tax_rate" class="form-control selectpicker">
                                         @foreach($tax_name_all as $key => $name)
                                         <option value="{{$key}}">{{$name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div id="edit_unit" class="form-group">
-                                    <label><strong>{{trans('file.Product Unit')}}</strong></label>
-                                    <select name="edit_unit" class="form-control">
+                                    <label>{{trans('file.Product Unit')}}</label>
+                                    <select name="edit_unit" class="form-control selectpicker">
                                     </select>
                                 </div>
                                 <button type="button" name="update_btn" class="btn btn-primary">{{trans('file.update')}}</button>
@@ -593,12 +617,12 @@
                 {!! Form::open(['route' => 'customer.store', 'method' => 'post', 'files' => true]) !!}
                 <div class="modal-header">
                   <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Customer')}}</h5>
-                  <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                  <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                 </div>
                 <div class="modal-body">
                   <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
                     <div class="form-group">
-                        <label><strong>{{trans('file.Customer Group')}} *</strong> </label>
+                        <label>{{trans('file.Customer Group')}} *</strong> </label>
                         <select required class="form-control selectpicker" name="customer_group_id">
                             @foreach($lims_customer_group_all as $customer_group)
                                 <option value="{{$customer_group->id}}">{{$customer_group->name}}</option>
@@ -606,23 +630,23 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label><strong>{{trans('file.name')}} *</strong> </label>
+                        <label>{{trans('file.name')}} *</strong> </label>
                         <input type="text" name="name" required class="form-control">
                     </div>
                     <div class="form-group">
-                        <label><strong>{{trans('file.Email')}}</strong></label>
+                        <label>{{trans('file.Email')}}</label>
                         <input type="text" name="email" placeholder="example@example.com" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label><strong>{{trans('file.Phone Number')}} *</strong></label>
+                        <label>{{trans('file.Phone Number')}} *</label>
                         <input type="text" name="phone_number" required class="form-control">
                     </div>
                     <div class="form-group">
-                        <label><strong>{{trans('file.Address')}} *</strong></label>
+                        <label>{{trans('file.Address')}} *</label>
                         <input type="text" name="address" required class="form-control">
                     </div>
                     <div class="form-group">
-                        <label><strong>{{trans('file.City')}} *</strong></label>
+                        <label>{{trans('file.City')}} *</label>
                         <input type="text" name="city" required class="form-control">
                     </div>
                     <div class="form-group">
@@ -684,7 +708,7 @@ var role_id = <?php echo json_encode(\Auth::user()->role_id) ?>;
 var coupon_list = <?php echo json_encode($lims_coupon_list) ?>;
 var currency = <?php echo json_encode($general_setting->currency) ?>;
 
-if(role_id > 2){
+if(role_id > 2) {
     $('#biller_id').addClass('d-none');
     $('#warehouse_id').addClass('d-none');
 }
@@ -880,10 +904,10 @@ $('.category-img').on('click', function(){
             $.each(data['name'], function(index) {
                 var product_info = data['code'][index]+' (' + data['name'][index] + ')';
                 if(index % 5 == 0 && index != 0){
-                    tableData += '</tr><tr><td class="product-img" title="'+data['name'][index]+'" data-product = "'+product_info+'"><img  src="../../public/images/product/'+data['image'][index]+'" width="100%" /><p>'+data['name'][index]+'</p></td>';
+                    tableData += '</tr><tr><td class="product-img sound-btn" title="'+data['name'][index]+'" data-product = "'+product_info+'"><img  src="../../public/images/product/'+data['image'][index]+'" width="100%" /><p>'+data['name'][index]+'</p></td>';
                 }
                 else
-                    tableData += '<td class="product-img" title="'+data['name'][index]+'" data-product = "'+product_info+'"><img  src="../../public/images/product/'+data['image'][index]+'" width="100%" /><p>'+data['name'][index]+'</p></td>';
+                    tableData += '<td class="product-img sound-btn" title="'+data['name'][index]+'" data-product = "'+product_info+'"><img  src="../../public/images/product/'+data['image'][index]+'" width="100%" /><p>'+data['name'][index]+'</p></td>';
             });
 
             if(data['name'].length % 5){
@@ -936,10 +960,10 @@ $('.brand-img').on('click', function(){
             $.each(data['name'], function(index) {
                 var product_info = data['code'][index]+' (' + data['name'][index] + ')';
                 if(index % 5 == 0 && index != 0){
-                    tableData += '</tr><tr><td class="product-img" title="'+data['name'][index]+'" data-product = "'+product_info+'"><img  src="../../public/images/product/'+data['image'][index]+'" width="100%" /><p>'+data['name'][index]+'</p></td>';
+                    tableData += '</tr><tr><td class="product-img sound-btn" title="'+data['name'][index]+'" data-product = "'+product_info+'"><img  src="../../public/images/product/'+data['image'][index]+'" width="100%" /><p>'+data['name'][index]+'</p></td>';
                 }
                 else
-                    tableData += '<td class="product-img" title="'+data['name'][index]+'" data-product = "'+product_info+'"><img  src="../../public/images/product/'+data['image'][index]+'" width="100%" /><p>'+data['name'][index]+'</p></td>';
+                    tableData += '<td class="product-img sound-btn" title="'+data['name'][index]+'" data-product = "'+product_info+'"><img  src="../../public/images/product/'+data['image'][index]+'" width="100%" /><p>'+data['name'][index]+'</p></td>';
             });
 
             if(data['name'].length % 5){
@@ -982,10 +1006,10 @@ $('#featured-filter').on('click', function(){
             $.each(data['name'], function(index) {
                 var product_info = data['code'][index]+' (' + data['name'][index] + ')';
                 if(index % 5 == 0 && index != 0){
-                    tableData += '</tr><tr><td class="product-img" title="'+data['name'][index]+'" data-product = "'+product_info+'"><img  src="../../public/images/product/'+data['image'][index]+'" width="100%" /><p>'+data['name'][index]+'</p></td>';
+                    tableData += '</tr><tr><td class="product-img sound-btn" title="'+data['name'][index]+'" data-product = "'+product_info+'"><img  src="../../public/images/product/'+data['image'][index]+'" width="100%" /><p>'+data['name'][index]+'</p></td>';
                 }
                 else
-                    tableData += '<td class="product-img" title="'+data['name'][index]+'" data-product = "'+product_info+'"><img  src="../../public/images/product/'+data['image'][index]+'" width="100%" /><p>'+data['name'][index]+'</p></td>';
+                    tableData += '<td class="product-img sound-btn" title="'+data['name'][index]+'" data-product = "'+product_info+'"><img  src="../../public/images/product/'+data['image'][index]+'" width="100%" /><p>'+data['name'][index]+'</p></td>';
             });
 
             if(data['name'].length % 5){
@@ -1096,6 +1120,10 @@ $("#myTable").on('click', '.qty', function() {
     rowindex = $(this).closest('tr').index();
 });
 
+$(document).on('click', '.sound-btn', function() {
+    var audio = $("#mysoundclip1")[0];
+    audio.play();
+});
 
 $(document).on('click', '.product-img', function(){
     var customer_id = $('#customer_id').val();
@@ -1118,6 +1146,8 @@ $(document).on('click', '.product-img', function(){
 
 //Delete product
 $("table.order-list tbody").on("click", ".ibtnDel", function(event) {
+    var audio = $("#mysoundclip2")[0];
+    audio.play();
     rowindex = $(this).closest('tr').index();
     product_price.splice(rowindex, 1);
     product_discount.splice(rowindex, 1);
@@ -1197,7 +1227,17 @@ $(".coupon-check").on("click",function() {
     couponDiscount();
 });
 
+$(".payment-btn").on("click", function() {
+    var audio = $("#mysoundclip2")[0];
+    audio.play();
+    $('input[name="paid_amount"]').val($("#grand-total").text());
+    $('input[name="paying_amount"]').val($("#grand-total").text());
+    $('.qc').data('initial', 1);
+});
+
 $("#draft-btn").on("click",function(){
+    var audio = $("#mysoundclip2")[0];
+    audio.play();
     $('input[name="sale_status"]').val(3);
     $('input[name="paying_amount"]').prop('required',false);
     $('input[name="paid_amount"]').prop('required',false);
@@ -1270,6 +1310,11 @@ $('select[name="paid_by_id"]').on("change", function() {
     }
 });
 
+
+$('#add-payment input[name="paying_amount"]').on("input", function() {
+    change($(this).val(), $('input[name="paid_amount"]').val());
+});
+
 $('#add-payment select[name="gift_card_id_select"]').on("change", function() {
     var balance = gift_card_amount[$(this).val()] - gift_card_expense[$(this).val()];
     $('#add-payment input[name="gift_card_id"]').val($(this).val());
@@ -1288,8 +1333,7 @@ $('input[name="paid_amount"]').on("input", function() {
         $(this).val('');
     }
 
-    var change = $('input[name="paying_amount"]').val() - $(this).val();
-    $("#change").text(parseFloat(change).toFixed(2));
+    change( $('input[name="paying_amount"]').val(), $(this).val() );
     var id = $('select[name="paid_by_id"]').val();
     if(id == 2){
         var balance = gift_card_amount[$("#gift_card_id_select").val()] - gift_card_expense[$("#gift_card_id_select").val()];
@@ -1302,11 +1346,6 @@ $('input[name="paid_amount"]').on("input", function() {
     }
 });
 
-$('input[name="paying_amount"]').on("input", function() {
-    var change = $(this).val() - $('input[name="paid_amount"]').val();
-    $("#change").text(parseFloat(change).toFixed(2));
-});
-
 $('.transaction-btn-plus').on("click", function() {
     $(this).addClass('d-none');
     $('.transaction-btn-close').removeClass('d-none');
@@ -1316,6 +1355,25 @@ $('.transaction-btn-close').on("click", function() {
     $(this).addClass('d-none');
     $('.transaction-btn-plus').removeClass('d-none');
 });
+
+$(document).on('click', '.qc-btn', function(e) {
+    if($(this).data('amount')) {
+        if($('.qc').data('initial')) {
+            $('input[name="paying_amount"]').val( $(this).data('amount').toFixed(2) );
+            $('.qc').data('initial', 0);
+        }
+        else {
+            $('input[name="paying_amount"]').val( (parseFloat($('input[name="paying_amount"]').val()) + $(this).data('amount')).toFixed(2) );
+        }
+    }
+    else
+        $('input[name="paying_amount"]').val('0.00');
+    change( $('input[name="paying_amount"]').val(), $('input[name="paid_amount"]').val() );
+});
+
+function change(paying_amount, paid_amount) {
+    $("#change").text( parseFloat(paying_amount - paid_amount).toFixed(2) );
+}
 
 function confirmDelete() {
     if (confirm("Are you sure want to delete?")) {
@@ -1355,9 +1413,9 @@ function addNewProduct(data){
     var newRow = $("<tr>");
     var cols = '';
     temp_unit_name = (data[6]).split(',');
-    cols += '<td class="col-sm-4 product-title"><strong>' + data[0] + '</strong> [' + data[1] + ']<button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="fa fa-edit"></i></button></td>';
+    cols += '<td class="col-sm-4 product-title"><strong>' + data[0] + '</strong> [' + data[1] + ']<button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="dripicons-document-edit"></i></button></td>';
     cols += '<td class="col-sm-2 product-price"></td>';
-    cols += '<td class="col-sm-3"><div class="input-group"><span class="input-group-btn"><button type="button" class="btn btn-default minus"><span class="fa fa-minus"></span></button></span><input type="text" name="qty[]" class="form-control qty numkey input-number" value="1" step="any" required><span class="input-group-btn"><button type="button" class="btn btn-default plus"><span class="fa fa-plus"></span></button></span></div></td>';
+    cols += '<td class="col-sm-3"><div class="input-group"><span class="input-group-btn"><button type="button" class="btn btn-default minus"><span class="dripicons-minus"></span></button></span><input type="text" name="qty[]" class="form-control qty numkey input-number" value="1" step="any" required><span class="input-group-btn"><button type="button" class="btn btn-default plus"><span class="dripicons-plus"></span></button></span></div></td>';
     cols += '<td class="col-sm-2 sub-total"></td>';
     cols += '<td class="col-sm-1"><button type="button" class="ibtnDel btn btn-danger btn-sm">X</button></td>';
     cols += '<input type="hidden" class="product-code" name="product_code[]" value="' + data[1] + '"/>';
@@ -1423,6 +1481,7 @@ function edit(){
     }
 
     $('input[name="edit_unit_price"]').val(row_product_price.toFixed(2));
+    $('.selectpicker').selectpicker('refresh');
 }
 
 function couponDiscount() {
@@ -1695,7 +1754,7 @@ function cheque() {
 }
 
 function creditCard() {
-    $.getScript( "public/vendor/stripe/checkout.js" );
+    $.getScript( "../../public/vendor/stripe/checkout.js" );
     $(".card-element").show();
     $(".card-errors").show();
     $("#cheque").hide();
@@ -1730,6 +1789,8 @@ function cancel(rownumber) {
 }
 
 function confirmCancel() {
+    var audio = $("#mysoundclip2")[0];
+    audio.play();
     if (confirm("Are you sure want to cancel?")){
         cancel($('table.order-list tbody tr:last').index());
     }

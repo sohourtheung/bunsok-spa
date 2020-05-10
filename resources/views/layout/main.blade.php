@@ -15,15 +15,14 @@
     <link rel="stylesheet" href="<?php echo asset('public/vendor/bootstrap-toggle/css/bootstrap-toggle.min.css') ?>" type="text/css">
     <link rel="stylesheet" href="<?php echo asset('public/vendor/bootstrap/css/bootstrap-datepicker.min.css') ?>" type="text/css">
     <link rel="stylesheet" href="<?php echo asset('public/vendor/jquery-timepicker/jquery.timepicker.min.css') ?>" type="text/css">
+    <link rel="stylesheet" href="<?php echo asset('public/vendor/bootstrap/css/awesome-bootstrap-checkbox.css') ?>" type="text/css">
     <link rel="stylesheet" href="<?php echo asset('public/vendor/bootstrap/css/bootstrap-select.min.css') ?>" type="text/css">
     <!-- Font Awesome CSS-->
     <link rel="stylesheet" href="<?php echo asset('public/vendor/font-awesome/css/font-awesome.min.css') ?>" type="text/css">
-    <!-- Fontastic Custom icon font-->
-    <link rel="stylesheet" href="<?php echo asset('public/css/fontastic.css') ?>" type="text/css">
-    <!-- Ion icon font-->
-    <link rel="stylesheet" href="<?php echo asset('public/css/ionicons.min.css') ?>" type="text/css">
+    <!-- Drip icon font-->
+    <link rel="stylesheet" href="<?php echo asset('public/vendor/dripicons/webfont.css') ?>" type="text/css">
     <!-- Google fonts - Roboto -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:400,500,700">
     <!-- jQuery Circle-->
     <link rel="stylesheet" href="<?php echo asset('public/css/grasp_mobile_progress_circle-1.0.0.min.css') ?>" type="text/css">
     <!-- Custom Scrollbar-->
@@ -34,15 +33,11 @@
     <link rel="stylesheet" href="<?php echo asset('public/vendor/daterange/css/daterangepicker.min.css') ?>" type="text/css">
     <!-- table sorter stylesheet-->
     <link rel="stylesheet" type="text/css" href="<?php echo asset('public/vendor/datatable/dataTables.bootstrap4.min.css') ?>">
-    <link rel="stylesheet" type="text/css" href="<?php echo asset('public/vendor/datatable/buttons.bootstrap4.min.css') ?>">
-    <link rel="stylesheet" type="text/css" href="<?php echo asset('public/vendor/datatable/select.bootstrap4.min.css') ?>">
-    <link rel="stylesheet" type="text/css" href="<?php echo asset('public/vendor/datatable/dataTables.checkboxes.css') ?>">
-    <!-- theme stylesheet-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.6/css/fixedHeader.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo asset('public/css/style.default.css') ?>" id="theme-stylesheet" type="text/css">
-    <!-- Custom stylesheet - for your changes-->
-    <link rel="stylesheet" href="<?php echo asset('public/css/custom-'.$general_setting->theme) ?>" type="text/css" id="custom-style">
-    <link rel="stylesheet" href="<?php echo asset('public/css/dropzone.css') ?>"></link>
-    <link rel="stylesheet" href="<?php echo asset('public/css/style.css') ?>"></link>
+    <link rel="stylesheet" href="<?php echo asset('public/css/dropzone.css') ?>">
+    <link rel="stylesheet" href="<?php echo asset('public/css/style.css') ?>">
     <!-- Tweaks for older IEs--><!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
@@ -82,9 +77,14 @@
     <script type="text/javascript" src="<?php echo asset('public/vendor/datatable/buttons.colVis.min.js') ?>"></script>
     <script type="text/javascript" src="<?php echo asset('public/vendor/datatable/buttons.html5.min.js') ?>"></script>
     <script type="text/javascript" src="<?php echo asset('public/vendor/datatable/buttons.print.min.js') ?>"></script>
-    <script type="text/javascript" src="<?php echo asset('public/vendor/datatable/dataTables.select.min.js') ?>"></script>
+
     <script type="text/javascript" src="<?php echo asset('public/vendor/datatable/sum().js') ?>"></script>
     <script type="text/javascript" src="<?php echo asset('public/vendor/datatable/dataTables.checkboxes.min.js') ?>"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.6/js/dataTables.fixedHeader.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap.min.js"></script> 
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="<?php echo asset('public/css/custom-'.$general_setting->theme) ?>" type="text/css" id="custom-style">
   </head>
   
   <body onload="myFunction()">
@@ -96,7 +96,7 @@
           <!-- Sidebar Navigation Menus-->
           <div class="main-menu">
             <ul id="side-main-menu" class="side-menu list-unstyled">                  
-              <li><a href="{{url('/')}}"> <i class="icon ion-ios-speedometer-outline"></i><span>{{ __('file.dashboard') }}</span></a></li>
+              <li><a href="{{url('/')}}"> <i class="dripicons-meter"></i><span>{{ __('file.dashboard') }}</span></a></li>
               <?php
                 $role = DB::table('roles')->find(Auth::user()->role_id);
                 $index_permission = DB::table('permissions')->where('name', 'products-index')->first();
@@ -124,7 +124,7 @@
                     ])->first();
               ?>
               
-              <li><a href="#product" aria-expanded="false" data-toggle="collapse"> <i class="icon-list"></i><span>{{__('file.product')}}</span><span></a>
+              <li><a href="#product" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-list"></i><span>{{__('file.product')}}</span><span></a>
                 <ul id="product" class="collapse list-unstyled ">
                   <li id="category-menu"><a href="{{route('category.index')}}">{{__('file.category')}}</a></li>
                   @if($index_permission_active)
@@ -160,9 +160,9 @@
                     ])->first();
               ?>
               @if($index_permission_active)
-              <li><a href="#purchase" aria-expanded="false" data-toggle="collapse"> <i class="icon-bill"></i><span>{{trans('file.Purchase')}}</span></a>
+              <li><a href="#purchase" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-card"></i><span>{{trans('file.Purchase')}}</span></a>
                 <ul id="purchase" class="collapse list-unstyled ">
-                  <li id="purchase-list-menu"><a href="{{route('purchase.index')}}">{{trans('file.Purchase List')}}</a></li>
+                  <li id="purchase-list-menu"><a href="{{route('purchases.index')}}">{{trans('file.Purchase List')}}</a></li>
                   <?php 
                     $add_permission = DB::table('permissions')->where('name', 'purchases-add')->first();
                     $add_permission_active = DB::table('role_has_permissions')->where([
@@ -171,8 +171,8 @@
                     ])->first();
                   ?>
                   @if($add_permission_active)
-                  <li id="purchase-create-menu"><a href="{{route('purchase.create')}}">{{trans('file.Add Purchase')}}</a></li>
-                  <li id="purchase-import-menu"><a href="{{url('purchase/purchase_by_csv')}}">{{trans('file.Import Purchase By CSV')}}</a></li>
+                  <li id="purchase-create-menu"><a href="{{route('purchases.create')}}">{{trans('file.Add Purchase')}}</a></li>
+                  <li id="purchase-import-menu"><a href="{{url('purchases/purchase_by_csv')}}">{{trans('file.Import Purchase By CSV')}}</a></li>
                   @endif
                 </ul>
               </li>
@@ -197,10 +197,10 @@
                     ])->first();
               ?>
               
-              <li><a href="#sale" aria-expanded="false" data-toggle="collapse"> <i class="icon ion-ios-cart-outline"></i><span>{{trans('file.Sale')}}</span></a>
+              <li><a href="#sale" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-cart"></i><span>{{trans('file.Sale')}}</span></a>
                 <ul id="sale" class="collapse list-unstyled ">
                   @if($index_permission_active)
-                  <li id="sale-list-menu"><a href="{{route('sale.index')}}">{{trans('file.Sale List')}}</a></li>
+                  <li id="sale-list-menu"><a href="{{route('sales.index')}}">{{trans('file.Sale List')}}</a></li>
                   <?php 
                     $add_permission = DB::table('permissions')->where('name', 'sales-add')->first();
                     $add_permission_active = DB::table('role_has_permissions')->where([
@@ -210,8 +210,8 @@
                   ?>
                   @if($add_permission_active)
                   <li><a href="{{route('sale.pos')}}">POS</a></li>
-                  <li id="sale-create-menu"><a href="{{route('sale.create')}}">{{trans('file.Add Sale')}}</a></li>
-                  <li id="sale-import-menu"><a href="{{url('sale/sale_by_csv')}}">{{trans('file.Import Sale By CSV')}}</a></li>
+                   <li id="sale-create-menu"><a href="{{route('sales.create')}}">{{trans('file.Add Sale')}}</a></li>
+                  <li id="sale-import-menu"><a href="{{url('sales/sale_by_csv')}}">{{trans('file.Import Sale By CSV')}}</a></li>
                   @endif
                   @endif
                   @if($gift_card_permission_active)
@@ -231,7 +231,7 @@
                     ])->first();
               ?>
               @if($index_permission_active)
-              <li><a href="#expense" aria-expanded="false" data-toggle="collapse"> <i class="icon ion-calculator"></i><span>{{trans('file.Expense')}}</span></a>
+              <li><a href="#expense" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-wallet"></i><span>{{trans('file.Expense')}}</span></a>
                 <ul id="expense" class="collapse list-unstyled ">
                   <li id="exp-cat-menu"><a href="{{route('expense_categories.index')}}">{{trans('file.Expense Category')}}</a></li>
                   <li id="exp-list-menu"><a href="{{route('expenses.index')}}">{{trans('file.Expense List')}}</a></li>
@@ -256,7 +256,7 @@
                     ])->first();
               ?>
               @if($index_permission_active)
-              <li><a href="#quotation" aria-expanded="false" data-toggle="collapse"> <i class="icon-page"></i><span>{{trans('file.Quotation')}}</span><span></a>
+              <li><a href="#quotation" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-document"></i><span>{{trans('file.Quotation')}}</span><span></a>
                 <ul id="quotation" class="collapse list-unstyled ">
                   <li id="quotation-list-menu"><a href="{{route('quotations.index')}}">{{trans('file.Quotation List')}}</a></li>
                   <?php 
@@ -280,7 +280,7 @@
                     ])->first();
               ?>
               @if($index_permission_active)
-              <li><a href="#transfer" aria-expanded="false" data-toggle="collapse"> <i class="icon ion-share"></i><span>{{trans('file.Transfer')}}</span></a>
+              <li><a href="#transfer" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-export"></i><span>{{trans('file.Transfer')}}</span></a>
                 <ul id="transfer" class="collapse list-unstyled ">
                   <li id="transfer-list-menu"><a href="{{route('transfers.index')}}">{{trans('file.Transfer List')}}</a></li>
                   <?php 
@@ -298,7 +298,7 @@
               </li>
               @endif
               
-              <li><a href="#return" aria-expanded="false" data-toggle="collapse"> <i class="icon ion-archive"></i><span>{{trans('file.return')}}</span></a>
+              <li><a href="#return" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-archive"></i><span>{{trans('file.return')}}</span></a>
                 <ul id="return" class="collapse list-unstyled ">
                   <?php 
                     $index_permission = DB::table('permissions')->where('name', 'returns-index')->first();
@@ -329,6 +329,12 @@
                         ['role_id', $role->id]
                     ])->first();
 
+                $money_transfer_permission = DB::table('permissions')->where('name', 'money-transfer')->first();
+                $money_transfer_permission_active = DB::table('role_has_permissions')->where([
+                        ['permission_id', $money_transfer_permission->id],
+                        ['role_id', $role->id]
+                    ])->first();
+
                 $balance_sheet_permission = DB::table('permissions')->where('name', 'balance-sheet')->first();
                 $balance_sheet_permission_active = DB::table('role_has_permissions')->where([
                         ['permission_id', $balance_sheet_permission->id],
@@ -343,11 +349,14 @@
 
               ?>
               @if($index_permission_active || $balance_sheet_permission_active || $account_statement_permission_active)
-              <li class=""><a href="#account" aria-expanded="false" data-toggle="collapse"> <i class="fa fa-university"></i><span>{{trans('file.Accounting')}}</span></a>
+              <li class=""><a href="#account" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-briefcase"></i><span>{{trans('file.Accounting')}}</span></a>
                 <ul id="account" class="collapse list-unstyled ">
                   @if($index_permission_active)
                   <li id="account-list-menu"><a href="{{route('accounts.index')}}">{{trans('file.Account List')}}</a></li>
                   <li><a id="add-account" href="">{{trans('file.Add Account')}}</a></li>
+                  @endif
+                  @if($money_transfer_permission_active)
+                  <li id="money-transfer-menu"><a href="{{route('money-transfers.index')}}">{{trans('file.Money Transfer')}}</a></li>
                   @endif
                   @if($balance_sheet_permission_active)
                   <li id="balance-sheet-menu"><a href="{{route('accounts.balancesheet')}}">{{trans('file.Balance Sheet')}}</a></li>
@@ -356,7 +365,7 @@
                   <li id="account-statement-menu"><a id="account-statement" href="">{{trans('file.Account Statement')}}</a></li>
                   @endif
                 </ul>
-              </li>
+              </li> 
               @endif
               <?php 
                 $department = DB::table('permissions')->where('name', 'department')->first();
@@ -381,7 +390,7 @@
                     ])->first();
               ?>
               
-              <li class=""><a href="#hrm" aria-expanded="false" data-toggle="collapse"> <i class="ion-person-stalker"></i><span>HRM</span></a>
+              <li class=""><a href="#hrm" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-user-group"></i><span>HRM</span></a>
                 <ul id="hrm" class="collapse list-unstyled ">
                   @if($department_active)
                   <li id="dept-menu"><a href="{{route('departments.index')}}">{{trans('file.Department')}}</a></li>
@@ -399,7 +408,7 @@
                 </ul>
               </li>
               
-              <li><a href="#people" aria-expanded="false" data-toggle="collapse"> <i class="icon-user"></i><span>{{trans('file.People')}}</span></a>
+              <li><a href="#people" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-user"></i><span>{{trans('file.People')}}</span></a>
                 <ul id="people" class="collapse list-unstyled ">
                   <?php $index_permission_active = DB::table('permissions')
                         ->join('role_has_permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
@@ -439,8 +448,26 @@
                   <li id="customer-create-menu"><a href="{{route('customer.create')}}">{{trans('file.Add Customer')}}</a></li>
                   @endif
                   @endif
+                  <?php 
+                    $index_permission = DB::table('permissions')->where('name', 'billers-index')->first();
+                    $index_permission_active = DB::table('role_has_permissions')->where([
+                            ['permission_id', $index_permission->id],
+                            ['role_id', $role->id]
+                        ])->first();
+                  ?>
+                  @if($index_permission_active)
                   <li id="biller-list-menu"><a href="{{route('biller.index')}}">{{trans('file.Biller List')}}</a></li>
+                  <?php 
+                    $add_permission = DB::table('permissions')->where('name', 'billers-add')->first();
+                    $add_permission_active = DB::table('role_has_permissions')->where([
+                        ['permission_id', $add_permission->id],
+                        ['role_id', $role->id]
+                    ])->first();
+                  ?>
+                  @if($add_permission_active)
                   <li id="biller-create-menu"><a href="{{route('biller.create')}}">{{trans('file.Add Biller')}}</a></li>
+                  @endif
+                  @endif
                   <?php 
                     $index_permission = DB::table('permissions')->where('name', 'suppliers-index')->first();
                     $index_permission_active = DB::table('role_has_permissions')->where([
@@ -463,7 +490,7 @@
                   @endif
                 </ul>
               </li>
-              <li><a href="#report" aria-expanded="false" data-toggle="collapse"> <i class="icon ion-ios-paper-outline"></i><span>{{trans('file.Reports')}}</span></a>
+              <li><a href="#report" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-document-remove"></i><span>{{trans('file.Reports')}}</span></a>
                 <?php
                   $profit_loss_active = DB::table('permissions')
                         ->join('role_has_permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
@@ -667,13 +694,25 @@
                   @endif
                 </ul>
               </li>
-              <li><a href="#setting" aria-expanded="false" data-toggle="collapse"> <i class="icon ion-ios-gear-outline"></i><span>{{trans('file.settings')}}</span></a>
+              <li><a href="#setting" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-gear"></i><span>{{trans('file.settings')}}</span></a>
                 <ul id="setting" class="collapse list-unstyled ">
                   <?php
+
+                      $warehouse_permission = DB::table('permissions')->where('name', 'warehouse')->first();
+                      $warehouse_permission_active = DB::table('role_has_permissions')->where([
+                                  ['permission_id', $warehouse_permission->id],
+                                  ['role_id', $role->id]
+                              ])->first();
 
                       $customer_group_permission = DB::table('permissions')->where('name', 'customer_group')->first();
                       $customer_group_permission_active = DB::table('role_has_permissions')->where([
                                   ['permission_id', $customer_group_permission->id],
+                                  ['role_id', $role->id]
+                              ])->first();
+
+                      $brand_permission = DB::table('permissions')->where('name', 'brand')->first();
+                      $brand_permission_active = DB::table('role_has_permissions')->where([
+                                  ['permission_id', $brand_permission->id],
                                   ['role_id', $role->id]
                               ])->first();
 
@@ -728,11 +767,15 @@
                   @if($role->id <= 2)
                   <li id="role-menu"><a href="{{route('role.index')}}">{{trans('file.Role Permission')}}</a></li>
                   @endif
+                  @if($warehouse_permission_active)
                   <li id="warehouse-menu"><a href="{{route('warehouse.index')}}">{{trans('file.Warehouse')}}</a></li>
+                  @endif
                   @if($customer_group_permission_active)
                   <li id="customer-group-menu"><a href="{{route('customer_group.index')}}">{{trans('file.Customer Group')}}</a></li>
                   @endif
+                  @if($brand_permission_active)
                   <li id="brand-menu"><a href="{{route('brand.index')}}">{{trans('file.Brand')}}</a></li>
+                  @endif
                   @if($unit_permission_active)
                   <li id="unit-menu"><a href="{{route('unit.index')}}">{{trans('file.Unit')}}</a></li>
                   @endif
@@ -770,7 +813,7 @@
           <div class="container-fluid">
             <div class="navbar-holder d-flex align-items-center justify-content-between">
               <a id="toggle-btn" href="#" class="menu-btn"><i class="fa fa-bars"> </i></a>
-              <span class="brand-big">@if($general_setting->site_logo)<img src="{{url('public/logo', $general_setting->site_logo)}}" width="50">&nbsp;&nbsp;@endif<h1 class="d-inline">{{$general_setting->site_title}}</h1></span>
+              <span class="brand-big">@if($general_setting->site_logo)<img src="{{url('public/logo', $general_setting->site_logo)}}" width="50">&nbsp;&nbsp;@endif<a href="{{url('/')}}"><h1 class="d-inline">{{$general_setting->site_title}}</h1></a></span>
               
               <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
                 <?php 
@@ -787,29 +830,33 @@
                   ])->first();
                 ?>
                 @if($add_permission_active)
-                <li class="nav-item"><a class="dropdown-item" href="{{route('sale.pos')}}"><i class="fa fa-th-large"></i><span> POS</span></a></li>
-                @endif            
+                <li class="nav-item"><a class="dropdown-item btn-pos btn-sm" href="{{route('sale.pos')}}"><i class="dripicons-shopping-bag"></i><span> POS</span></a></li>
+                @endif      
+                <li class="nav-item"><a id="btnFullscreen"><i class="dripicons-expand"></i></a></li>    
                 @if($alert_product > 0)
                 <li class="nav-item">
-                      <a rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-item"><i class="fa fa-bell"></i><span class="badge badge-danger">{{$alert_product}}</span>
+                      <a rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-item"><i class="dripicons-bell"></i><span class="badge badge-danger">{{$alert_product}}</span>
                       </a>
                       <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default notifications" user="menu">
                           <li class="notifications">
-                            <a href="{{route('report.qtyAlert')}}" class="btn btn-link"> <i class="fa fa-exclamation-triangle"></i> {{$alert_product}} product exceeds alert quantity</a>
+                            <a href="{{route('report.qtyAlert')}}" class="btn btn-link"> {{$alert_product}} product exceeds alert quantity</a>
                           </li>
                       </ul>
                 </li>
                 @endif
                 <li class="nav-item">
-                      <a rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-item"><i class="fa fa-language"></i> <span>{{__('file.language')}}</span> <i class="fa fa-angle-down"></i></a>
+                      <a rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-item"><i class="dripicons-web"></i> <span>{{__('file.language')}}</span> <i class="fa fa-angle-down"></i></a>
                       <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                           <li>
                             <a href="{{ url('language_switch/en') }}" class="btn btn-link"> English</a>
                           </li>
                           <li>
+                            <a href="{{ url('language_switch/fr') }}" class="btn btn-link"> Khmer</a>
+                          </li>
+                         <!-- <li>
                             <a href="{{ url('language_switch/es') }}" class="btn btn-link"> Español</a>
                           </li>
-                          <li>
+                           <li>
                             <a href="{{ url('language_switch/ar') }}" class="btn btn-link"> عربى</a>
                           </li>
                           <li>
@@ -828,6 +875,9 @@
                             <a href="{{ url('language_switch/hi') }}" class="btn btn-link"> हिंदी</a>
                           </li>
                           <li>
+                            <a href="{{ url('language_switch/vi') }}" class="btn btn-link"> Tiếng Việt</a>
+                          </li>
+                          <li>
                             <a href="{{ url('language_switch/ru') }}" class="btn btn-link"> русский</a>
                           </li>
                           <li>
@@ -839,45 +889,48 @@
                           <li>
                             <a href="{{ url('language_switch/nl') }}" class="btn btn-link"> Nederlands</a>
                           </li>
+                          <li>
+                            <a href="{{ url('language_switch/lao') }}" class="btn btn-link"> Lao</a>
+                          </li> -->
                       </ul>
                 </li>
-                <li class="nav-item"> 
-                    <a class="dropdown-item" href="{{ url('read_me') }}" target="_blank"><i class="fa fa-info-circle"></i> {{trans('file.Help')}}</a>
-                </li>&nbsp;
+                <!-- <li class="nav-item"> 
+                    <a class="dropdown-item" href="{{ url('read_me') }}" target="_blank"><i class="dripicons-information"></i> {{trans('file.Help')}}</a>
+                </li> -->
                 <li class="nav-item">
-                      <a rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-item"><i class="fa fa-user"></i> <span>{{ucfirst(Auth::user()->name)}}</span> <i class="fa fa-angle-down"></i>
-                      </a>
-                      <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
-                          <li> 
-                            <a href="{{route('user.profile', ['id' => Auth::id()])}}"><i class="fa fa-user"></i> {{trans('file.profile')}}</a>
-                          </li>
-                          @if($general_setting_permission_active)
-                          <li> 
-                            <a href="{{route('setting.general')}}"><i class="fa fa-cog"></i> {{trans('file.settings')}}</a>
-                          </li>
-                          @endif
-                          <li> 
-                            <a href="{{url('my-transactions/'.date('Y').'/'.date('m'))}}"><i class="ion-arrow-swap"></i> {{trans('file.My Transaction')}}</a>
-                          </li>
-                          <li> 
-                            <a href="{{url('holidays/my-holiday/'.date('Y').'/'.date('m'))}}"><i class="fa fa-plane"></i> {{trans('file.My Holiday')}}</a>
-                          </li>
-                          @if($empty_database_permission_active)
-                          <li>
-                            <a onclick="return confirm('Are you sure want to delete? If you do this all of your data will be lost.')" href="{{route('setting.emptyDatabase')}}"><i class="fa fa-database"></i> {{trans('file.Empty Database')}}</a>
-                          </li>
-                          @endif
-                          <li>
-                            <a href="{{ route('logout') }}"
-                               onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i>
-                                {{trans('file.logout')}}
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                          </li>
-                      </ul>
+                  <a rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-item"><i class="dripicons-user"></i> <span>{{ucfirst(Auth::user()->name)}}</span> <i class="fa fa-angle-down"></i>
+                  </a>
+                  <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
+                      <li> 
+                        <a href="{{route('user.profile', ['id' => Auth::id()])}}"><i class="dripicons-user"></i> {{trans('file.profile')}}</a>
+                      </li>
+                      @if($general_setting_permission_active)
+                      <li> 
+                        <a href="{{route('setting.general')}}"><i class="dripicons-gear"></i> {{trans('file.settings')}}</a>
+                      </li>
+                      @endif
+                      <li> 
+                        <a href="{{url('my-transactions/'.date('Y').'/'.date('m'))}}"><i class="dripicons-swap"></i> {{trans('file.My Transaction')}}</a>
+                      </li>
+                      <li> 
+                        <a href="{{url('holidays/my-holiday/'.date('Y').'/'.date('m'))}}"><i class="dripicons-vibrate"></i> {{trans('file.My Holiday')}}</a>
+                      </li>
+                     <!--  @if($empty_database_permission_active)
+                      <li>
+                        <a onclick="return confirm('Are you sure want to delete? If you do this all of your data will be lost.')" href="{{route('setting.emptyDatabase')}}"><i class="dripicons-stack"></i> {{trans('file.Empty Database')}}</a>
+                      </li>
+                      @endif -->
+                      <li>
+                        <a href="{{ route('logout') }}"
+                           onclick="event.preventDefault();
+                                         document.getElementById('logout-form').submit();"><i class="dripicons-power"></i>
+                            {{trans('file.logout')}}
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                      </li>
+                  </ul>
                 </li> 
               </ul>
             </div>
@@ -892,7 +945,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Expense')}}</h5>
-                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                 </div>
                 <div class="modal-body">
                   <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
@@ -905,7 +958,7 @@
                     ?>
                       <div class="row">
                         <div class="col-md-6 form-group">
-                            <label><strong>{{trans('file.Expense Category')}} *</strong></label>
+                            <label>{{trans('file.Expense Category')}} *</label>
                             <select name="expense_category_id" class="selectpicker form-control" required data-live-search="true" data-live-search-style="begins" title="Select Expense Category...">
                                 @foreach($lims_expense_category_list as $expense_category)
                                 <option value="{{$expense_category->id}}">{{$expense_category->name . ' (' . $expense_category->code. ')'}}</option>
@@ -913,7 +966,7 @@
                             </select>
                         </div>
                         <div class="col-md-6 form-group">
-                            <label><strong>{{trans('file.Warehouse')}} *</strong></label>
+                            <label>{{trans('file.Warehouse')}} *</label>
                             <select name="warehouse_id" class="selectpicker form-control" required data-live-search="true" data-live-search-style="begins" title="Select Warehouse...">
                                 @foreach($lims_warehouse_list as $warehouse)
                                 <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
@@ -921,11 +974,11 @@
                             </select>
                         </div>
                         <div class="col-md-6 form-group">
-                            <label><strong>{{trans('file.Amount')}} *</strong></label>
+                            <label>{{trans('file.Amount')}} *</label>
                             <input type="number" name="amount" step="any" required class="form-control">
                         </div>
                         <div class="col-md-6 form-group">
-                            <label><strong> {{trans('file.Account')}}</strong></label>
+                            <label> {{trans('file.Account')}}</label>
                             <select class="form-control selectpicker" name="account_id">
                             @foreach($lims_account_list as $account)
                                 @if($account->is_default)
@@ -938,7 +991,7 @@
                         </div>
                       </div>
                       <div class="form-group">
-                          <label><strong>{{trans('file.Note')}}</strong></label>
+                          <label>{{trans('file.Note')}}</label>
                           <textarea name="note" rows="3" class="form-control"></textarea>
                       </div>
                       <div class="form-group">
@@ -956,25 +1009,25 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Account')}}</h5>
-                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                 </div>
                 <div class="modal-body">
                   <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
                     {!! Form::open(['route' => 'accounts.store', 'method' => 'post']) !!}
                       <div class="form-group">
-                          <label><strong>{{trans('file.Account No')}} *</strong></label>
+                          <label>{{trans('file.Account No')}} *</label>
                           <input type="text" name="account_no" required class="form-control">
                       </div>
                       <div class="form-group">
-                          <label><strong>{{trans('file.name')}} *</strong></label>
+                          <label>{{trans('file.name')}} *</label>
                           <input type="text" name="name" required class="form-control">
                       </div>
                       <div class="form-group">
-                          <label><strong>{{trans('file.Initial Balance')}}</strong></label>
+                          <label>{{trans('file.Initial Balance')}}</label>
                           <input type="number" name="initial_balance" step="any" class="form-control">
                       </div>
                       <div class="form-group">
-                          <label><strong>{{trans('file.Note')}}</strong></label>
+                          <label>{{trans('file.Note')}}</label>
                           <textarea name="note" rows="3" class="form-control"></textarea>
                       </div>
                       <div class="form-group">
@@ -992,14 +1045,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Account Statement')}}</h5>
-                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                 </div>
                 <div class="modal-body">
                   <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
                     {!! Form::open(['route' => 'accounts.statement', 'method' => 'post']) !!}
                       <div class="row">
                         <div class="col-md-6 form-group">
-                            <label><strong> {{trans('file.Account')}}</strong></label>
+                            <label> {{trans('file.Account')}}</label>
                             <select class="form-control selectpicker" name="account_id">
                             @foreach($lims_account_list as $account)
                                 <option value="{{$account->id}}">{{$account->name}} [{{$account->account_no}}]</option>
@@ -1007,7 +1060,7 @@
                             </select>
                         </div>
                         <div class="col-md-6 form-group">
-                            <label><strong> {{trans('file.Type')}}</strong></label>
+                            <label> {{trans('file.Type')}}</label>
                             <select class="form-control selectpicker" name="type">
                                 <option value="0">{{trans('file.All')}}</option>
                                 <option value="1">{{trans('file.Debit')}}</option>
@@ -1015,7 +1068,7 @@
                             </select>
                         </div>
                         <div class="col-md-12 form-group">
-                            <label><strong>{{trans('file.Choose Your Date')}}</strong></label>
+                            <label>{{trans('file.Choose Your Date')}}</label>
                             <div class="input-group">
                                 <input type="text" class="daterangepicker-field form-control" required />
                                 <input type="hidden" name="start_date" />
@@ -1038,7 +1091,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Warehouse Report')}}</h5>
-                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                 </div>
                 <div class="modal-body">
                   <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
@@ -1047,7 +1100,7 @@
                       $lims_warehouse_list = DB::table('warehouses')->where('is_active', true)->get();
                     ?>
                       <div class="form-group">
-                          <label><strong>{{trans('file.Warehouse')}} *</strong></label>
+                          <label>{{trans('file.Warehouse')}} *</label>
                           <select name="warehouse_id" class="selectpicker form-control" required data-live-search="true" id="warehouse-id" data-live-search-style="begins" title="Select warehouse...">
                               @foreach($lims_warehouse_list as $warehouse)
                               <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
@@ -1073,7 +1126,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="exampleModalLabel" class="modal-title">{{trans('file.User Report')}}</h5>
-                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                 </div>
                 <div class="modal-body">
                   <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
@@ -1082,7 +1135,7 @@
                       $lims_user_list = DB::table('users')->where('is_active', true)->get();
                     ?>
                       <div class="form-group">
-                          <label><strong>{{trans('file.User')}} *</strong></label>
+                          <label>{{trans('file.User')}} *</label>
                           <select name="user_id" class="selectpicker form-control" required data-live-search="true" id="user-id" data-live-search-style="begins" title="Select user...">
                               @foreach($lims_user_list as $user)
                               <option value="{{$user->id}}">{{$user->name . ' (' . $user->phone. ')'}}</option>
@@ -1108,7 +1161,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Customer Report')}}</h5>
-                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                 </div>
                 <div class="modal-body">
                   <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
@@ -1117,7 +1170,7 @@
                       $lims_customer_list = DB::table('customers')->where('is_active', true)->get();
                     ?>
                       <div class="form-group">
-                          <label><strong>{{trans('file.customer')}} *</strong></label>
+                          <label>{{trans('file.customer')}} *</label>
                           <select name="customer_id" class="selectpicker form-control" required data-live-search="true" id="customer-id" data-live-search-style="begins" title="Select customer...">
                               @foreach($lims_customer_list as $customer)
                               <option value="{{$customer->id}}">{{$customer->name . ' (' . $customer->phone_number. ')'}}</option>
@@ -1143,7 +1196,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Supplier Report')}}</h5>
-                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                 </div>
                 <div class="modal-body">
                   <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
@@ -1152,7 +1205,7 @@
                       $lims_supplier_list = DB::table('suppliers')->where('is_active', true)->get();
                     ?>
                       <div class="form-group">
-                          <label><strong>{{trans('file.Supplier')}} *</strong></label>
+                          <label>{{trans('file.Supplier')}} *</label>
                           <select name="supplier_id" class="selectpicker form-control" required data-live-search="true" id="supplier-id" data-live-search-style="begins" title="Select Supplier...">
                               @foreach($lims_supplier_list as $supplier)
                               <option value="{{$supplier->id}}">{{$supplier->name . ' (' . $supplier->phone_number. ')'}}</option>
@@ -1179,11 +1232,8 @@
       <footer class="main-footer">
         <div class="container-fluid">
           <div class="row">
-            <div class="col-sm-6">
-              <p>&copy; {{$general_setting->site_title}}</p>
-            </div>
-            <div class="col-sm-6 text-right">
-              <p>{{trans('file.Developed')}} {{trans('file.By')}} <a href="http://lion-coders.com" class="external">LionCoders</a></p>
+            <div class="col-sm-12">
+              <p>&copy; {{$general_setting->site_title}} | {{trans('file.Developed')}} {{trans('file.By')}} <a href="#" class="external">Samut Soft</a></p>
             </div>
           </div>
         </div>
@@ -1191,15 +1241,19 @@
     </div>
     @yield('scripts')
     <script type="text/javascript">
-
-      function myFunction() {
-          setTimeout(showPage, 200);
+      if ($(window).outerWidth() > 1199) {
+          $('nav.side-navbar').removeClass('shrink');
       }
 
+      function myFunction() {
+          setTimeout(showPage, 150);
+      }
       function showPage() {
         document.getElementById("loader").style.display = "none";
         document.getElementById("content").style.display = "block";
       }
+
+      $("div.alert").delay(3000).slideUp(750);
 
       function confirmDelete() {
           if (confirm("Are you sure want to delete?")) {

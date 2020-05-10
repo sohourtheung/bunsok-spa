@@ -3,7 +3,7 @@
 <section>
 	<h4 class="text-center">{{trans('file.My Holiday')}}</h4>
 	<div class="table-responsive mt-3">
-		<table class="table table-bordered table-striped" style="border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">
+		<table class="table table-bordered" style="border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">
 			<thead>
 				<tr>
 					<th><a href="{{url('holidays/my-holiday/'.$prev_year.'/'.$prev_month)}}"><i class="fa fa-arrow-left"></i> {{trans('file.Previous')}}</a></th>

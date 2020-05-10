@@ -7,11 +7,13 @@
 @endif
 <section>
     <div class="container-fluid">
-        <a href="{{route('biller.create')}}" class="btn btn-info"><i class="fa fa-plus"></i> {{trans('file.Add Biller')}}</a>&nbsp;
-        <a href="#" data-toggle="modal" data-target="#importbiller" class="btn btn-primary"><i class="fa fa-file"></i> {{trans('file.Import Biller')}}</a>
+        @if(in_array("billers-add", $all_permission))
+        <a href="{{route('biller.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add Biller')}}</a>&nbsp;
+        <a href="#" data-toggle="modal" data-target="#importbiller" class="btn btn-primary"><i class="dripicons-copy"></i> {{trans('file.Import Biller')}}</a>
+        @endif
     </div>
     <div class="table-responsive">
-        <table id="biller-table" class="table table-striped">
+        <table id="biller-table" class="table">
             <thead>
                 <tr>
                     <th class="not-exported"></th>
@@ -47,20 +49,25 @@
                             @if($biller->country){{ ', '.$biller->country}}@endif</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
+                                @if(in_array("billers-edit", $all_permission))
                                 <li>
-                                    <a href="{{ route('biller.edit', ['id' => $biller->id]) }}" class="btn btn-link"><i class="fa fa-edit"></i> {{trans('file.edit')}}</a> 
+                                    <a href="{{ route('biller.edit', ['id' => $biller->id]) }}" class="btn btn-link"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</a> 
                                 </li>
+                                @endif
                                 <li class="divider"></li>
+                                @if(in_array("billers-delete", $all_permission))
+
                                 {{ Form::open(['route' => ['biller.destroy', $biller->id], 'method' => 'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa fa-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
+                                @endif
                             </ul>
                         </div>
                     </td>
@@ -77,7 +84,7 @@
         {!! Form::open(['route' => 'biller.import', 'method' => 'post', 'files' => true]) !!}
         <div class="modal-header">
           <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Import Biller')}}</h5>
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
         </div>
         <div class="modal-body">
           <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
@@ -86,14 +93,14 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label><strong>{{trans('file.Upload CSV File')}} *</strong></label>
+                        <label>{{trans('file.Upload CSV File')}} *</label>
                         {{Form::file('file', array('class' => 'form-control','required'))}}
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label><strong> {{trans('file.Sample File')}}</strong></label>
-                        <a href="public/sample_file/sample_biller.csv" class="btn btn-info btn-block btn-md"><i class="fa fa-download"></i> {{trans('file.Download')}}</a>
+                        <label> {{trans('file.Sample File')}}</label>
+                        <a href="public/sample_file/sample_biller.csv" class="btn btn-info btn-block btn-md"><i class="dripicons-download"></i> {{trans('file.Download')}}</a>
                     </div>
                 </div>
             </div>
@@ -113,6 +120,7 @@
 
     var biller_id = [];
     var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
+    var all_permission = <?php echo json_encode($all_permission) ?>;
     
     $.ajaxSetup({
         headers: {
@@ -126,15 +134,15 @@
         }
         return false;
     }
-    $('#biller-table').DataTable( {
+    var table = $('#biller-table').DataTable( {
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -143,10 +151,18 @@
                 'targets': [0, 1, 8]
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},
@@ -246,6 +262,9 @@
             },
         ],
     } );
+
+    if(all_permission.indexOf("billers-delete") == -1)
+        $('.buttons-delete').addClass('d-none');
 
     $("#export").on("click", function(e){
         e.preventDefault();

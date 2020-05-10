@@ -11,9 +11,10 @@ class LanguageController extends Controller
 {
     public function switchLanguage($locale)
     {
-        $language = Language::firstOrNew(['id' => 1]);
+    	setcookie('language', $locale, time() + (86400 * 365), "/");
+        /*$language = Language::firstOrNew(['id' => 1]);
         $language->code = $locale;
-        $language->save();
+        $language->save();*/
     	return Redirect::back();
     }
 }

@@ -8,10 +8,10 @@
 
 <section>
     <div class="container-fluid">
-        <button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="fa fa-plus"></i> {{trans('file.Count Stock')}} </button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="dripicons-plus"></i> {{trans('file.Count Stock')}} </button>
     </div>
     <div class="table-responsive">
-        <table id="stock-count-table" class="table table-striped stock-count-list">
+        <table id="stock-count-table" class="table stock-count-list">
             <thead>
                 <tr>
                     <th class="not-exported"></th>
@@ -78,11 +78,11 @@
                         <td><div class="badge badge-info">{{trans('file.Partial')}}</div></td>
                     @endif
                     <td class="text-center">
-                        <a download href="{{'public/stock_count/'.$stock_count->initial_file}}" title="{{trans('file.Download')}}"><i class="fa fa-file"></i></a>
+                        <a download href="{{'public/stock_count/'.$stock_count->initial_file}}" title="{{trans('file.Download')}}"><i class="dripicons-copy"></i></a>
                     </td>
                     <td class="text-center">
                         @if($stock_count->final_file)
-                        <a download href="{{'public/stock_count/'.$stock_count->final_file}}" title="{{trans('file.Download')}}"><i class="fa fa-file"></i></a>
+                        <a download href="{{'public/stock_count/'.$stock_count->final_file}}" title="{{trans('file.Download')}}"><i class="dripicons-copy"></i></a>
                         @endif
                     </td>
                     <td>
@@ -119,13 +119,13 @@
         {!! Form::open(['route' => 'stock-count.store', 'method' => 'post', 'files' => true]) !!}
         <div class="modal-header">
           <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Count Stock')}}</h5>
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
         </div>
         <div class="modal-body">
           <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
             <div class="row">
                 <div class="col-md-6 form-group">
-                    <label><strong>{{trans('file.Warehouse')}} *</strong></label>
+                    <label>{{trans('file.Warehouse')}} *</label>
                     <select required name="warehouse_id" id="warehouse_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select warehouse...">
                         @foreach($lims_warehouse_list as $warehouse)
                         <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
@@ -133,14 +133,14 @@
                     </select>
                 </div>
                 <div class="col-md-6 form-group">
-                    <label><strong>{{trans('file.Type')}} *</strong></label>
+                    <label>{{trans('file.Type')}} *</label>
                     <select class="form-control" name="type">
                         <option value="full">{{trans('file.Full')}}</option>
                         <option value="partial">{{trans('file.Partial')}}</option>
                     </select>
                 </div>
                 <div class="col-md-6 form-group" id="category">
-                    <label><strong>{{trans('file.category')}}</strong></label>
+                    <label>{{trans('file.category')}}</label>
                     <select name="category_id[]" id="category_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Category..." multiple>
                         @foreach($lims_category_list as $category)
                         <option value="{{$category->id}}">{{$category->name}}</option>
@@ -148,7 +148,7 @@
                     </select>
                 </div>
                 <div class="col-md-6 form-group" id="brand">
-                    <label><strong>{{trans('file.Brand')}}</strong></label>
+                    <label>{{trans('file.Brand')}}</label>
                     <select name="brand_id[]" id="brand_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Brand..." multiple>
                         @foreach($lims_brand_list as $brand)
                         <option value="{{$brand->id}}">{{$brand->title}}</option>
@@ -171,17 +171,17 @@
         {{ Form::open(['route' => 'stock-count.finalize', 'method' => 'POST', 'files' => true] ) }}
       <div class="modal-header">
         <h5 id="exampleModalLabel" class="modal-title"> {{trans('file.Finalize Stock Count')}}</h5>
-        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
       </div>
         <div class="modal-body">
             <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.<strong>{{trans('file.You just need to update the Counted column in the initial file')}}</strong> </small></p>
             <div class="form-group">
-                <label><strong>{{trans('file.Upload File')}} *</strong></label>
+                <label>{{trans('file.Upload File')}} *</label>
                 <input required type="file" name="final_file" class="form-control" />
             </div>
             <input type="hidden" name="stock_count_id">
             <div class="form-group">
-                <label><strong>{{trans('file.Note')}}</strong></label>
+                <label>{{trans('file.Note')}}</label>
                 <textarea rows="3" name="note" class="form-control"></textarea>
             </div>
             <div class="form-group">       
@@ -199,13 +199,13 @@
             <div class="container mt-3 pb-3">
                 <div class="row border-bottom pb-2">
                     <div class="col-md-3">
-                        <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i class="fa fa-print"></i> {{trans('file.Print')}}</button>
+                        <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i class="dripicons-print"></i> {{trans('file.Print')}}</button>
                     </div>
                     <div class="col-md-6">
                         <h3 id="exampleModalLabel" class="modal-title text-center container-fluid">{{$general_setting->site_title}}</h3>
                     </div>
                     <div class="col-md-3">
-                        <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close d-print-none"><span aria-hidden="true">×</span></button>
+                        <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close d-print-none"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                     </div>
                     <div class="col-md-12 text-center">
                         <i style="font-size: 15px;">{{trans('file.Stock Count')}}</i>
@@ -261,7 +261,7 @@
             htmltext += '<br><strong>{{trans("file.category")}}: </strong>'+stock_count[4];
         if(stock_count[5])
             htmltext += '<br><strong>{{trans("file.Brand")}}: </strong>'+stock_count[5];
-        htmltext += '<br><span class="d-print-none mt-1"><strong>{{trans("file.Files")}}: </strong>&nbsp;&nbsp;<a href="'+stock_count[6]+'" class="btn btn-sm btn-primary"><i class="fa fa-download"></i> {{trans("file.Initial File")}}</a>&nbsp;&nbsp;<a href="'+stock_count[7]+'" class="btn btn-sm btn-info"><i class="fa fa-download"></i> {{trans("file.Final File")}}</a></span>';
+        htmltext += '<br><span class="d-print-none mt-1"><strong>{{trans("file.Files")}}: </strong>&nbsp;&nbsp;<a href="'+stock_count[6]+'" class="btn btn-sm btn-primary"><i class="dripicons-download"></i> {{trans("file.Initial File")}}</a>&nbsp;&nbsp;<a href="'+stock_count[7]+'" class="btn btn-sm btn-info"><i class="dripicons-download"></i> {{trans("file.Final File")}}</a></span>';
         $.get('stock-count/stockdif/' + stock_count[8], function(data){
             $(".stockdif-list tbody").remove();
             var name_code = data[0];
@@ -286,7 +286,7 @@
                 });
 
                 if( !parseInt(data[5]) ) {
-                    htmlFooter = '<a class="btn btn-primary d-print-none" href="stock-count/'+stock_count[8]+'/qty_adjustment"><i class="fa fa-plus"></i> {{trans("file.Add Adjustment")}}</a>';
+                    htmlFooter = '<a class="btn btn-primary d-print-none" href="stock-count/'+stock_count[8]+'/qty_adjustment"><i class="dripicons-plus"></i> {{trans("file.Add Adjustment")}}</a>';
                     $('#stock-count-footer').html(htmlFooter);
                 }
             }
@@ -326,11 +326,11 @@
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -339,10 +339,18 @@
                 'targets': [0, 7, 8, 9]
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},

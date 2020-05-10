@@ -8,126 +8,207 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <!-- Bootstrap CSS-->
-    <link rel="stylesheet" href="<?php echo asset('public/vendor/bootstrap/css/bootstrap.min.css') ?>" type="text/css">
-    <link rel="stylesheet" href="<?php echo asset('public/vendor/font-awesome/css/font-awesome.min.css') ?>" type="text/css">
-    <!-- theme stylesheet-->
 
     <style type="text/css">
-        #receipt-data { font-size: 14px; }
+        * {
+            font-size: 14px;
+            line-height: 24px;
+            font-family: 'Ubuntu', sans-serif;
+            text-transform: capitalize;
+        }
+        .btn {
+            padding: 7px 10px;
+            text-decoration: none;
+            border: none;
+            display: block;
+            text-align: center;
+            margin: 7px;
+            cursor:pointer;
+        }
+
+        .btn-info {
+            background-color: #999;
+            color: #FFF;
+        }
+
+        .btn-primary {
+            background-color: #6449e7;
+            color: #FFF;
+            width: 100%;
+        }
+        td,
+        th,
+        tr,
+        table {
+            border-collapse: collapse;
+        }
+        tr {border-bottom: 1px dotted #ddd;}
+        td,th {padding: 7px 0;width: 50%;}
+
+        table {width: 100%;}
+        tfoot tr th:first-child {text-align: left;}
+
+        .centered {
+            text-align: center;
+            align-content: center;
+        }
+        small{font-size:11px;}
+
         @media print {
-            @page { size: portrait; }
+            * {
+                font-size:12px;
+                line-height: 20px;
+            }
+            td,th {padding: 5px 0;}
+            .hidden-print {
+                display: none !important;
+            }
+            @page { margin: 0; } body { margin: 0.5cm; margin-bottom:1.6cm; } 
         }
     </style>
-
-    <script type="text/javascript" src="<?php echo asset('public/vendor/jquery/jquery.min.js') ?>"></script>
-    <script type="text/javascript" src="<?php echo asset('public/vendor/bootstrap/js/bootstrap.min.js') ?>"></script>
-    </script>
   </head>
-@if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center d-print-none"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div> 
-@endif
 <body>
-<div style="max-width: 300px; margin: 0 auto;">
+
+<div style="max-width:600px;margin:0 auto">
     @if(preg_match('~[0-9]~', url()->previous()))
         @php $url = '../../pos'; @endphp
     @else
         @php $url = url()->previous(); @endphp
     @endif
-    <div class="row d-print-none">
-        <span class="col-md-6">
-            <a href="{{$url}}" class="btn btn-block btn-info"><i class="fa fa-arrow-left"></i> {{trans('file.Back')}}</a> 
-        </span>
-        <span class="col-md-6">
-            <button onclick="window.print();" class="btn btn-block btn-primary"><i class="fa fa-print"></i> {{trans('file.Print')}}</button> 
-        </span>
+    <div class="hidden-print">
+        <table>
+            <tr>
+                <td><a href="{{$url}}" class="btn btn-info"><i class="fa fa-arrow-left"></i> {{trans('file.Back')}}</a> </td>
+                <td><button onclick="window.print();" class="btn btn-primary"><i class="dripicons-print"></i> {{trans('file.Print')}}</button></td>
+            </tr>
+        </table>
+        <br>
     </div>
-        <div id="receipt-data" style="padding-top: 20px">
-            <div class="text-center">
-                @if($general_setting->site_logo)
-                    <img src="{{url('public/logo', $general_setting->site_logo)}}" height="42" width="42">
-                @endif
-                <h4 style="text-transform:uppercase;">{{$lims_biller_data->company_name}}</h4>
-                <p>{{$lims_warehouse_data->address}}
-                    <br>{{trans('file.Phone Number')}}: {{$lims_warehouse_data->phone}}
-                </p>
-            </div>
-            <p>{{trans('file.reference')}}: {{$lims_sale_data->reference_no}}<br>
-                {{trans('file.Date')}}: {{$lims_sale_data->created_at}}<br>
-                {{trans('file.customer')}}: {{$lims_customer_data->name}}
+        
+    <div id="receipt-data">
+        <div class="centered">
+            @if($general_setting->site_logo)
+                <img src="{{url('public/logo', $general_setting->site_logo)}}" height="42" width="42" style="margin:10px 0;filter: brightness(0);">
+            @endif
+            
+             {{-- <h2>{{$lims_biller_data->company_name}}</h2>  --}}
+            <h2>SPA</h2>
+            
+            <p>{{trans('file.Address')}}: {{$lims_warehouse_data->address}}
+                <br>{{trans('file.Phone Number')}}: {{$lims_warehouse_data->phone}}
             </p>
-            <table class="table table-condensed">
-                <tbody>
-                    @foreach($lims_product_sale_data as $product_sale_data)
-                    @php $lims_product_data = \App\Product::find($product_sale_data->product_id) @endphp
-                    <tr class="border-bottom">
-                        <td>{{$lims_product_data->name}}</td>
-                        <td class="text-center">{{$product_sale_data->qty}} x {{number_format((float)($product_sale_data->total / $product_sale_data->qty), 2, '.', '')}}</td>
-                        <td class="text-right">{{number_format((float)$product_sale_data->total, 2, '.', '')}}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th colspan="2">{{trans('file.Total')}}</th>
-                        <th class="text-right">{{number_format((float)$lims_sale_data->total_price, 2, '.', '')}}</th>
-                    </tr>
-                    @if($lims_sale_data->order_tax)
-                    <tr>
-                        <th colspan="2">{{trans('file.Order Tax')}}</th>
-                        <th class="text-right">{{number_format((float)$lims_sale_data->order_tax, 2, '.', '')}}</th>
-                    </tr>
-                    @endif
-                    @if($lims_sale_data->order_discount)
-                    <tr>
-                        <th colspan="2">{{trans('file.Order Discount')}}</th>
-                        <th class="text-right">{{number_format((float)$lims_sale_data->order_discount, 2, '.', '')}}</th>
-                    </tr>
-                    @endif
-                    @if($lims_sale_data->coupon_discount)
-                    <tr>
-                        <th colspan="2">{{trans('file.Coupon Discount')}}</th>
-                        <th class="text-right">{{number_format((float)$lims_sale_data->coupon_discount, 2, '.', '')}}</th>
-                    </tr>
-                    @endif
-                    @if($lims_sale_data->shipping_cost)
-                    <tr>
-                        <th colspan="2">{{trans('file.Shipping Cost')}}</th>
-                        <th class="text-right">{{number_format((float)$lims_sale_data->shipping_cost, 2, '.', '')}}</th>
-                    </tr>
-                    @endif
-                    <tr>
-                        <th colspan="2">{{trans('file.grand total')}}</th>
-                        <th class="text-right">{{number_format((float)$lims_sale_data->grand_total, 2, '.', '')}}</th>
-                    </tr>
-                    @if($general_setting->currency_position == 'prefix')
-                    <tr>
-                        <th colspan="3" class="text-center">{{trans('file.In Words')}}: <span style="text-transform: uppercase">{{$general_setting->currency}}</span> <span style="text-transform: capitalize">{{str_replace("-"," ",$numberInWords)}}</span></th>
-                    </tr>
-                    @else
-                    <tr>
-                        <th colspan="3" class="text-center">{{trans('file.In Words')}}: <span style="text-transform: capitalize">{{str_replace("-"," ",$numberInWords)}}</span> <span style="text-transform: uppercase">{{$general_setting->currency}}</span></th>
-                    </tr>
-                    @endif
-                </tfoot>
-            </table>
-            <table class="table table-striped table-condensed">
-                <tbody>
-                    @foreach($lims_payment_data as $payment_data)
-                    <tr>
-                        <td>{{trans('file.Paid By')}}: {{$payment_data->paying_method}}</td>
-                        <td colspan="2">{{trans('file.Amount')}}: {{number_format((float)$payment_data->amount, 2, '.', '')}}</td>
-                        <td>{{trans('file.Change')}}: {{number_format((float)$payment_data->change, 2, '.', '')}}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <p  class="text-center" style="font-size: 12px; padding-top:15px; ">
-                {{trans('file.Invoice Generated By')}} <strong>{{$general_setting->site_title}}</strong>.
-                {{trans('file.Developed By')}} <a style="text-decoration: none; color: #60bf62;" href="http://lion-coders.com"><strong>LionCoders</strong></a>
-            </p>
+            {{-- <p>អាស័យដ្ឋាន: {{$lims_warehouse_data->address}}
+                <br>ទំនាក់ទំនង: {{$lims_warehouse_data->phone}}
+            </p> --}}
         </div>
+        <p>{{trans('file.Date')}}: {{$lims_sale_data->created_at}}<br>
+            {{trans('file.reference')}}: {{$lims_sale_data->reference_no}}<br>
+            {{trans('file.customer')}}: {{$lims_customer_data->name}}
+        </p>
+
+        {{-- <p>ថ្ងៃលក់: {{$lims_sale_data->created_at}}<br>
+            លេខវិក័យបត្រ: {{$lims_sale_data->reference_no}}<br>
+            អតិថិជន: {{$lims_customer_data->name}}
+        </p> --}}
+        <table>
+            <tbody>
+                @foreach($lims_product_sale_data as $product_sale_data)
+                @php 
+                    $lims_product_data = \App\Product::find($product_sale_data->product_id);
+                    if($product_sale_data->variant_id) {
+                        $variant_data = \App\Variant::find($product_sale_data->variant_id);
+                        $product_name = $lims_product_data->name.' ['.$variant_data->name.']';
+                    }
+                    else
+                        $product_name = $lims_product_data->name;
+                @endphp
+                <tr><td colspan="2">{{$product_name}}<br>{{$product_sale_data->qty}} x {{number_format((float)($product_sale_data->total / $product_sale_data->qty), 2, '.', '')}}</td>
+                    <td style="text-align:right;vertical-align:bottom">{{number_format((float)$product_sale_data->total, 2, '.', '')}}</td>
+                </tr>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="2">{{trans('file.Total')}}</th>
+                    {{-- <th colspan="2">សរុប</th> --}}
+                    <th style="text-align:right">{{number_format((float)$lims_sale_data->total_price, 2, '.', '')}}</th>
+                </tr>
+                @if($lims_sale_data->order_tax)
+                <tr>
+                    {{-- <th colspan="2">គិតពន្ធ</th> --}}
+                    <th colspan="2">{{trans('file.Order Tax')}}</th>
+                    <th style="text-align:right">{{number_format((float)$lims_sale_data->order_tax, 2, '.', '')}}</th>
+                </tr>
+                @endif
+                @if($lims_sale_data->order_discount)
+                <tr>
+                    {{-- <th colspan="2">បញ្ចុះតម្លៃ</th> --}}
+                    <th colspan="2">{{trans('file.Order Discount')}}</th>
+                    <th style="text-align:right">{{number_format((float)$lims_sale_data->order_discount, 2, '.', '')}}</th>
+                </tr>
+                @endif
+                @if($lims_sale_data->coupon_discount)
+                <tr>
+                    {{-- <th colspan="2">កាតបញ្ចុះតម្លៃ</th> --}}
+                    <th colspan="2">{{trans('file.Coupon Discount')}}</th>
+                    <th style="text-align:right">{{number_format((float)$lims_sale_data->coupon_discount, 2, '.', '')}}</th>
+                </tr>
+                @endif
+                @if($lims_sale_data->shipping_cost)
+                <tr>
+                    {{-- <th colspan="2">ថ្លៃដឹកជញ្ជូន</th> --}}
+                    <th colspan="2">{{trans('file.Shipping Cost')}}</th>
+                    <th style="text-align:right">{{number_format((float)$lims_sale_data->shipping_cost, 2, '.', '')}}</th>
+                </tr>
+                @endif
+                <tr>
+                    {{-- <th colspan="2">សរុបចុងក្រោយ</th> --}}
+                    <th colspan="2">{{trans('file.grand total')}}</th>
+                    <th style="text-align:right">{{number_format((float)$lims_sale_data->grand_total, 2, '.', '')}}</th>
+                </tr>
+                {{-- <tr>
+                    @if($general_setting->currency_position == 'prefix')
+                    <th class="centered" colspan="3">{{trans('file.In Words')}}: <span>{{$general_setting->currency}}</span> <span>{{str_replace("-"," ",$numberInWords)}}</span></th>
+                    @else
+                    <th class="centered" colspan="3">{{trans('file.In Words')}}: <span>{{str_replace("-"," ",$numberInWords)}}</span> <span>{{$general_setting->currency}}</span></th>
+                    @endif
+                </tr> --}}
+                {{-- <tr>
+                    @if($general_setting->currency_position == 'prefix')
+                    <th class="centered" colspan="3">ជាអក្សរ: <span>{{$general_setting->currency}}</span> <span>{{str_replace("-"," ",$numberInWords)}}</span></th>
+                    @else
+                    <th class="centered" colspan="3">ជាអក្សរ: <span>{{str_replace("-"," ",$numberInWords)}}</span> <span>{{$general_setting->currency}}</span></th>
+                    @endif
+                </tr> --}}
+            </tfoot>
+        </table>
+        <table>
+            <tbody>
+                @foreach($lims_payment_data as $payment_data)
+                <tr style="background-color:#ddd;">
+                    <td style="padding: 5px;width:30%">{{trans('file.Paid By')}}: {{$payment_data->paying_method}}</td>
+                    <td style="padding: 5px;width:40%">{{trans('file.Amount')}}: {{number_format((float)$payment_data->amount, 2, '.', '')}}</td>
+                    <td style="padding: 5px;width:30%">{{trans('file.Change')}}: {{number_format((float)$payment_data->change, 2, '.', '')}}</td>
+                </tr>
+                
+                {{-- <tr><td class="centered" colspan="3">អរគុណសម្រាប់ការបញ្ជាទិញរបស់លោកអ្នក។ សូមអញ្ជើញមកម្តងទៀត​ ។</td></tr> --}}
+                <tr><td class="centered" colspan="3">{{trans('file.Thank you for shopping with us. Please come again')}}</td></tr>
+                <tr >
+                    <td style="padding: 5px;width:40%">{{trans('file.Review by')}}</td>
+                    <td style="padding: 5px;width:40%">{{trans('file.Customer')}}</td>
+                    <td style="padding: 5px;width:40%">{{trans('file.Accounting')}}</td>
+                </tr>
+             
+                
+                
+                @endforeach
+            </tbody>
+        </table>
+        <!-- <div class="centered" style="margin:30px 0 50px">
+            <small>{{trans('file.Invoice Generated By')}} {{$general_setting->site_title}}.
+            {{trans('file.Developed By')}} Samut Soft</strong></small>
+        </div> -->
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -136,5 +217,6 @@
     }
     setTimeout(auto_print, 1000);
 </script>
+
 </body>
 </html>

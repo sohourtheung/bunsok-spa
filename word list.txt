@@ -442,7 +442,6 @@ Change
 Back
 Role Permission
 Exclusive: Poduct price = Actual product price + Tax. Inclusive: Actual product price = Product price - Tax
-	Accounting
 Accounting
 Account
 Account List
@@ -533,3 +532,19 @@ Warehouse Report
 Quick Cash
 Clear
 You can upload multiple image. Only .jpeg, .jpg, .png, .gif file can be uploaded. First image will be base image.
+This product has variant
+Enter variant seperated by comma
+Item Code
+Additional Price
+Variant
+Warehouse Quantity
+Warehouse quantity of product variants
+Thank you for shopping with us. Please come again
+Money Transfer
+Add Money Transfer
+From Account
+To Account
+Update Money Transfer
+Stock Quantity
+Stock Worth (Price/Cost)
+Number of Product

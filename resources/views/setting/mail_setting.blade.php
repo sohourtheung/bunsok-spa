@@ -20,15 +20,15 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Mail Host')}} *</strong></label>
+                                        <label>{{trans('file.Mail Host')}} *</label>
                                         <input type="text" name="mail_host" class="form-control" value="{{env('MAIL_HOST')}}" required />
                                     </div>
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Mail Address')}} *</strong></label>
+                                        <label>{{trans('file.Mail Address')}} *</label>
                                         <input type="text" name="mail_address" class="form-control" value="{{env('MAIL_FROM_ADDRESS')}}" required />
                                     </div>
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Mail From Name')}} *</strong></label>
+                                        <label>{{trans('file.Mail From Name')}} *</label>
                                         <input type="text" name="mail_name" class="form-control" value="{{env('MAIL_FROM_NAME')}}" required />
                                     </div>
                                     <div class="form-group">
@@ -37,15 +37,15 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Mail Port')}} *</strong></label>
+                                        <label>{{trans('file.Mail Port')}} *</label>
                                         <input type="text" name="port" class="form-control" value="{{env('MAIL_PORT')}}" required />
                                     </div>
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Password')}} *</strong></label>
-                                        <input type="password" name="password" class="form-control" value="" required />
+                                        <label>{{trans('file.Password')}} *</label>
+                                        <input type="password" name="password" class="form-control" value="{{env('MAIL_PASSWORD')}}" required />
                                     </div>
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Encryption')}} *</strong></label>
+                                        <label>{{trans('file.Encryption')}} *</label>
                                         <input type="text" name="encryption" class="form-control" value="{{env('MAIL_ENCRYPTION')}}" required />
                                     </div>
                                 </div>
@@ -63,9 +63,7 @@
     $("ul#setting").addClass("show");
     $("ul#setting #mail-setting-menu").addClass("active");
 
-    $('.selectpicker').selectpicker({
-      style: 'btn-link',
-    });
+    
 
 </script>
 @endsection

@@ -74,8 +74,8 @@ class HomeController extends Controller
 
         while($start < $end)
         {
-            $start_date = date("Y").'-'.date('m', $start).'-'.'01';
-            $end_date = date("Y").'-'.date('m', $start).'-'.'31';
+            $start_date = date("Y-m", $start).'-'.'01';
+            $end_date = date("Y-m", $start).'-'.'31';
 
             if(Auth::user()->role_id > 2 && $general_setting->staff_access == 'own') {
                 $recieved_amount = DB::table('payments')->whereNotNull('sale_id')->whereDate('created_at', '>=' , $start_date)->whereDate('created_at', '<=' , $end_date)->where('user_id', Auth::id())->sum('amount');
@@ -119,7 +119,7 @@ class HomeController extends Controller
             $yearly_purchase_amount[] = number_format((float)$purchase_amount, 2, '.', '');
             $start = strtotime("+1 month", $start);
         }
-
+        //return $month;
         return view('index', compact('revenue', 'purchase', 'expense', 'return', 'purchase_return', 'profit', 'payment_recieved', 'payment_sent', 'month', 'yearly_sale_amount', 'yearly_purchase_amount', 'recent_sale', 'recent_purchase', 'recent_quotation', 'recent_payment', 'best_selling_qty', 'yearly_best_selling_qty', 'yearly_best_selling_price'));
     }
 

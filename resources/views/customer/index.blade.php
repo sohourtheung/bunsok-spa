@@ -15,12 +15,12 @@
 <section>
     <div class="container-fluid">
         @if(in_array("customers-add", $all_permission))
-            <a href="{{route('customer.create')}}" class="btn btn-info"><i class="fa fa-plus"></i> {{trans('file.Add Customer')}}</a>&nbsp;
-            <a href="#" data-toggle="modal" data-target="#importCustomer" class="btn btn-primary"><i class="fa fa-file"></i> {{trans('file.Import Customer')}}</a>
+            <a href="{{route('customer.create')}}" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add Customer')}}</a>&nbsp;
+            <a href="#" data-toggle="modal" data-target="#importCustomer" class="btn btn-primary"><i class="dripicons-copy"></i> {{trans('file.Import Customer')}}</a>
         @endif
     </div>
     <div class="table-responsive">
-        <table id="customer-table" class="table table-striped">
+        <table id="customer-table" class="table">
             <thead>
                 <tr>
                     <th class="not-exported"></th>
@@ -52,18 +52,18 @@
                     <td>{{ number_format($customer->deposit - $customer->expense, 2) }}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 @if(in_array("customers-edit", $all_permission))
                                 <li> 
-                                    <a href="{{ route('customer.edit', ['id' => $customer->id]) }}" class="btn btn-link"><i class="fa fa-edit"></i> {{trans('file.edit')}}</a>
+                                    <a href="{{ route('customer.edit', ['id' => $customer->id]) }}" class="btn btn-link"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</a>
                                 </li>
                                 @endif
                                 <li>
-                                    <button type="button" data-id="{{$customer->id}}" class="deposit btn btn-link" data-toggle="modal" data-target="#depositModal" ><i class="fa fa-plus"></i> {{trans('file.Add Deposit')}}</button>
+                                    <button type="button" data-id="{{$customer->id}}" class="deposit btn btn-link" data-toggle="modal" data-target="#depositModal" ><i class="dripicons-plus"></i> {{trans('file.Add Deposit')}}</button>
                                 </li>
                                 <li>
                                     <button type="button" data-id="{{$customer->id}}" class="getDeposit btn btn-link"><i class="fa fa-money"></i> {{trans('file.View Deposit')}}</button>
@@ -72,7 +72,7 @@
                                 @if(in_array("customers-delete", $all_permission))
                                 {{ Form::open(['route' => ['customer.destroy', $customer->id], 'method' => 'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa fa-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                                 @endif
@@ -92,7 +92,7 @@
         {!! Form::open(['route' => 'customer.import', 'method' => 'post', 'files' => true]) !!}
         <div class="modal-header">
           <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Import Customer')}}</h5>
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
         </div>
         <div class="modal-body">
           <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
@@ -100,14 +100,14 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label><strong>{{trans('file.Upload CSV File')}} *</strong></label>
+                        <label>{{trans('file.Upload CSV File')}} *</label>
                         {{Form::file('file', array('class' => 'form-control','required'))}}
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label><strong> {{trans('file.Sample File')}}</strong></label>
-                        <a href="public/sample_file/sample_customer.csv" class="btn btn-info btn-block btn-md"><i class="fa fa-download"></i>  {{trans('file.Download')}}</a>
+                        <label> {{trans('file.Sample File')}}</label>
+                        <a href="public/sample_file/sample_customer.csv" class="btn btn-info btn-block btn-md"><i class="dripicons-download"></i>  {{trans('file.Download')}}</a>
                     </div>
                 </div>
             </div>
@@ -124,17 +124,17 @@
         {!! Form::open(['route' => 'customer.addDeposit', 'method' => 'post']) !!}
         <div class="modal-header">
           <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Deposit')}}</h5>
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
         </div>
         <div class="modal-body">
           <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
             <div class="form-group">
                 <input type="hidden" name="customer_id">
-                <label><strong>{{trans('file.Amount')}} *</strong></label>
+                <label>{{trans('file.Amount')}} *</label>
                 <input type="number" name="amount" step="any" class="form-control" required>
             </div>
             <div class="form-group">
-                <label><strong>{{trans('file.Note')}}</strong></label>
+                <label>{{trans('file.Note')}}</label>
                 <textarea name="note" rows="4" class="form-control"></textarea>
             </div>
             <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary" id="submit-button">
@@ -149,7 +149,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.All Deposit')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
                 <table class="table table-hover deposit-list">
@@ -175,16 +175,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Deposit')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
                 {!! Form::open(['route' => 'customer.updateDeposit', 'method' => 'post']) !!}
                     <div class="form-group">
-                        <label><strong>{{trans('file.Amount')}} *</strong></label>
+                        <label>{{trans('file.Amount')}} *</label>
                         <input type="number" name="amount" step="any" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label><strong>{{trans('file.Note')}}</strong></label>
+                        <label>{{trans('file.Note')}}</label>
                         <textarea name="note" rows="4" class="form-control"></textarea>
                     </div>
                     <input type="hidden" name="deposit_id">
@@ -209,6 +209,7 @@
 
     var customer_id = [];
     var user_verified = <?php echo json_encode(env('USER_VERIFIED')) ?>;
+    var all_permission = <?php echo json_encode($all_permission) ?>;
     
     $.ajaxSetup({
         headers: {
@@ -237,7 +238,7 @@
                 else
                     cols += '<td>N/A</td>';
                 cols += '<td>' + data[4][index] + '<br>' + data[5][index] + '</td>';
-                cols += '<td><div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans("file.action")}}<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button><ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu"><li><button type="button" class="btn btn-link edit-btn" data-id="' + data[0][index] +'" data-toggle="modal" data-target="#edit-deposit"><i class="fa fa-edit"></i> {{trans("file.edit")}}</button></li><li class="divider"></li>{{ Form::open(['route' => 'customer.deleteDeposit', 'method' => 'post'] ) }}<li><input type="hidden" name="id" value="' + data[0][index] + '" /> <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa fa-trash"></i> {{trans("file.delete")}}</button></li>{{ Form::close() }}</ul></div></td>'
+                cols += '<td><div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans("file.action")}}<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button><ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu"><li><button type="button" class="btn btn-link edit-btn" data-id="' + data[0][index] +'" data-toggle="modal" data-target="#edit-deposit"><i class="dripicons-document-edit"></i> {{trans("file.edit")}}</button></li><li class="divider"></li>{{ Form::open(['route' => 'customer.deleteDeposit', 'method' => 'post'] ) }}<li><input type="hidden" name="id" value="' + data[0][index] + '" /> <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans("file.delete")}}</button></li>{{ Form::close() }}</ul></div></td>'
                 newRow.append(cols);
                 newBody.append(newRow);
                 $("table.deposit-list").append(newBody);
@@ -260,15 +261,15 @@
         $('#view-deposit').modal('hide');
     });
 
-  $('#customer-table').DataTable( {
+    var table = $('#customer-table').DataTable( {
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -277,10 +278,18 @@
                 'targets': [0, 9]
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},

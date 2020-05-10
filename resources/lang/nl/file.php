@@ -534,5 +534,21 @@ return [
 	"Quick Cash" => "Snel geld",
 	"Clear" => "Doorzichtig",
 	"You can upload multiple image. Only .jpeg, .jpg, .png, .gif file can be uploaded. First image will be base image." => "U kunt meerdere afbeeldingen uploaden. Alleen .jpeg-, .jpg-, .png-, .gif-bestanden kunnen worden geüpload. De eerste afbeelding is de basisafbeelding.",
-	];
+	"This product has variant" => "Dit product heeft een variant",
+	"Enter variant seperated by comma" => "Voer de variant in, gescheiden door een komma",
+	"Item Code" => "Artikelcode",
+	"Additional Price" => "Extra prijs",
+	"Variant" => "Variant",
+	"Warehouse Quantity" => "Magazijn hoeveelheid",
+	"Warehouse quantity of product variants" => "Magazijnhoeveelheid productvarianten",
+	"Thank you for shopping with us. Please come again" => "Bedankt om bij ons te winkelen. Kom alstublieft nog eens",
+	"Money Transfer" => "Overschrijving",
+	"Add Money Transfer" => "Geldoverdracht toevoegen",
+	"From Account" => "Van account",
+	"To Account" => "Verklaren",
+	"Update Money Transfer" => "Geldoverdracht bijwerken",
+	"Stock Quantity" => "Voorraad Aantal",
+	"Stock Worth (Price/Cost)" => "Voorraadwaarde (prijs / kosten)",
+	"Number of Product" => "Aantal product",
+];
 ?>

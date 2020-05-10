@@ -27,7 +27,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.UserName')}} *</strong> </label>
+                                    <label>{{trans('file.UserName')}} *</strong> </label>
                                     <input type="text" name="name" value="{{$lims_user_data->name}}" required class="form-control" />
                                     @if($errors->has('name'))
                                     <span>
@@ -36,7 +36,7 @@
                                     @endif
                                 </div>
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Email')}} *</strong> </label>
+                                    <label>{{trans('file.Email')}} *</strong> </label>
                                     <input type="email" name="email" value="{{$lims_user_data->email}}" required class="form-control">
                                     @if($errors->has('email'))
                                     <span>
@@ -45,11 +45,11 @@
                                     @endif
                                 </div>
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Phone Number')}} *</strong> </label>
+                                    <label>{{trans('file.Phone Number')}} *</strong> </label>
                                     <input type="text" name="phone" value="{{$lims_user_data->phone}}" required class="form-control" />
                                 </div>
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Company Name')}}</strong> </label>
+                                    <label>{{trans('file.Company Name')}}</strong> </label>
                                     <input type="text" name="company_name" value="{{$lims_user_data->company_name}}" class="form-control" />
                                 </div>
                                 <div class="form-group">
@@ -72,15 +72,15 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Current Password')}} *</strong> </label>
+                                    <label>{{trans('file.Current Password')}} *</strong> </label>
                                     <input type="password" name="current_pass" required class="form-control" />
                                 </div>
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.New Password')}} *</strong> </label>
+                                    <label>{{trans('file.New Password')}} *</strong> </label>
                                     <input type="password" name="new_pass" required class="form-control">
                                 </div>
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Confirm Password')}} *</strong> </label>
+                                    <label>{{trans('file.Confirm Password')}} *</strong> </label>
                                     <input type="password" name="confirm_pass" id="confirm_pass" required class="form-control">
                                 </div>
                                 <div class="form-group">
@@ -105,9 +105,7 @@
     $("ul#setting").addClass("show");
     $("ul#setting #user-menu").addClass("active");
 
-    $('.selectpicker').selectpicker({
-      style: 'btn-link',
-    });
+    
 
     $('#confirm_pass').on('input', function(){
 

@@ -10,6 +10,7 @@
                 <div class="card">
                     <div class="card-header d-flex align-items-center">
                         <h4>{{trans('file.print_barcode')}}</h4>
+                        <a href="{{url('products/getbarcode')}}">Madarchod</a>
                     </div>
                     <div class="card-body">
                         <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
@@ -17,7 +18,7 @@
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-6">
-                                    	<label><strong>{{trans('file.add_product')}} *</strong></label>
+                                    	<label>{{trans('file.add_product')}} *</label>
                                         <div class="search-box input-group">
                                         	
                                             <button type="button" class="btn btn-secondary btn-lg"><i class="fa fa-barcode"></i></button>
@@ -34,7 +35,7 @@
                                                         <th>{{trans('file.name')}}</th>
                                                         <th>{{trans('file.Code')}}</th>
                                                         <th>{{trans('file.Quantity')}}</th>
-                                                        <th><i class="fa fa-trash"></i></th>
+                                                        <th><i class="dripicons-trash"></i></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -65,8 +66,8 @@
 	        <div class="modal-content">
 		        <div class="modal-header">
 		          <h5 id="modal_header" class="modal-title">{{trans('file.Barcode')}}</h5>&nbsp;&nbsp;
-		          <button id="print-btn" type="button" class="btn btn-default btn-sm"><i class="fa fa-print"></i> {{trans('file.Print')}}</button>
-		          <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+		          <button id="print-btn" type="button" class="btn btn-default btn-sm"><i class="dripicons-print"></i> {{trans('file.Print')}}</button>
+		          <button type="button" id="close-btn" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
 		        </div>
 		        <div class="modal-body">
 	        		<div id="label-content">

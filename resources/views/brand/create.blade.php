@@ -16,11 +16,11 @@
 
 <section>
     <div class="container-fluid">
-        <button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="fa fa-plus"></i> {{trans('file.Add Brand')}} </button>&nbsp;
-        <button class="btn btn-primary" data-toggle="modal" data-target="#importBrand"><i class="fa fa-file"></i> {{trans('file.Import Brand')}}</button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="dripicons-plus"></i> {{trans('file.Add Brand')}} </button>&nbsp;
+        <button class="btn btn-primary" data-toggle="modal" data-target="#importBrand"><i class="dripicons-copy"></i> {{trans('file.Import Brand')}}</button>
     </div>
     <div class="table-responsive">
-        <table id="biller-table" class="table table-striped">
+        <table id="biller-table" class="table">
             <thead>
                 <tr>
                     <th class="not-exported"></th>
@@ -42,16 +42,16 @@
                     <td>{{ $brand->title }}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
-                                <li><button type="button" data-id="{{$brand->id}}" class="open-EditbrandDialog btn btn-link" data-toggle="modal" data-target="#editModal"><i class="fa fa-edit"></i> {{trans('file.edit')}}</button></li>
+                                <li><button type="button" data-id="{{$brand->id}}" class="open-EditbrandDialog btn btn-link" data-toggle="modal" data-target="#editModal"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</button></li>
                                 <li class="divider"></li>
                                 {{ Form::open(['route' => ['brand.destroy', $brand->id], 'method' => 'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirm('Are you sure want to delete?')"><i class="fa fa-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirm('Are you sure want to delete?')"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                             </ul>
@@ -70,16 +70,16 @@
         {!! Form::open(['route' => 'brand.store', 'method' => 'post', 'files' => true]) !!}
         <div class="modal-header">
           <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Brand')}}</h5>
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
         </div>
         <div class="modal-body">
           <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
             <div class="form-group">
-                <label><strong>{{trans('file.Title')}} *</strong></label>
+                <label>{{trans('file.Title')}} *</label>
                 {{Form::text('title',null,array('required' => 'required', 'class' => 'form-control', 'placeholder' => 'Type brand title...'))}}
             </div>
             <div class="form-group">
-                <label><strong>{{trans('file.Image')}}</strong></label>
+                <label>{{trans('file.Image')}}</label>
                 {{Form::file('image', array('class' => 'form-control'))}}
             </div>                
             <div class="form-group">       
@@ -97,7 +97,7 @@
         {!! Form::open(['route' => 'brand.import', 'method' => 'post', 'files' => true]) !!}
         <div class="modal-header">
           <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Import Brand')}}</h5>
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
         </div>
         <div class="modal-body">
             <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
@@ -106,14 +106,14 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label><strong>{{trans('file.Upload CSV File')}} *</strong></label>
+                        <label>{{trans('file.Upload CSV File')}} *</label>
                         {{Form::file('file', array('class' => 'form-control','required'))}}
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label><strong> {{trans('file.Sample File')}}</strong></label>
-                        <a href="public/sample_file/sample_brand.csv" class="btn btn-info btn-block btn-md"><i class="fa fa-download"></i>  {{trans('file.Download')}}</a>
+                        <label> {{trans('file.Sample File')}}</label>
+                        <a href="public/sample_file/sample_brand.csv" class="btn btn-info btn-block btn-md"><i class="dripicons-download"></i>  {{trans('file.Download')}}</a>
                     </div>
                 </div>
             </div>
@@ -130,17 +130,17 @@
         {{ Form::open(['route' => ['brand.update', 1], 'method' => 'PUT', 'files' => true] ) }}
       <div class="modal-header">
         <h5 id="exampleModalLabel" class="modal-title"> {{trans('file.Update Brand')}}</h5>
-        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
       </div>
       <div class="modal-body">
         <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
           <div class="form-group">
-            <label><strong>{{trans('file.Title')}} *</strong></label>
+            <label>{{trans('file.Title')}} *</label>
             {{Form::text('title',null, array('required' => 'required', 'class' => 'form-control'))}}
         </div>
         <input type="hidden" name="brand_id">
         <div class="form-group">
-            <label><strong>{{trans('file.Image')}}</strong></label>
+            <label>{{trans('file.Image')}}</label>
             {{Form::file('image', array('class' => 'form-control'))}}
         </div>
         <div class="form-group">       
@@ -168,58 +168,58 @@
         }
     });
 
-$( "#select_all" ).on( "change", function() {
-    if ($(this).is(':checked')) {
-        $("tbody input[type='checkbox']").prop('checked', true);
-    } 
-    else {
-        $("tbody input[type='checkbox']").prop('checked', false);
-    }
-});
-
-$("#export").on("click", function(e){
-    e.preventDefault();
-    var brand = [];
-    $(':checkbox:checked').each(function(i){
-      brand[i] = $(this).val();
+    $( "#select_all" ).on( "change", function() {
+        if ($(this).is(':checked')) {
+            $("tbody input[type='checkbox']").prop('checked', true);
+        } 
+        else {
+            $("tbody input[type='checkbox']").prop('checked', false);
+        }
     });
-    $.ajax({
-       type:'POST',
-       url:'/exportbrand',
-       data:{
 
-            brandArray: brand
-        },
-       success:function(data){
-        alert('Exported to CSV file successfully! Click Ok to download file');
-        window.location.href = data;
-       }
-    });
-});
+    $("#export").on("click", function(e){
+        e.preventDefault();
+        var brand = [];
+        $(':checkbox:checked').each(function(i){
+          brand[i] = $(this).val();
+        });
+        $.ajax({
+           type:'POST',
+           url:'/exportbrand',
+           data:{
 
-$(document).ready(function() {
-    $('.open-EditbrandDialog').on('click', function() {
-        var url = "brand/"
-        var id = $(this).data('id').toString();
-        url = url.concat(id).concat("/edit");
-
-        $.get(url, function(data) {
-            $("input[name='title']").val(data['title']);
-            $("input[name='brand_id']").val(data['id']);
-
+                brandArray: brand
+            },
+           success:function(data){
+            alert('Exported to CSV file successfully! Click Ok to download file');
+            window.location.href = data;
+           }
         });
     });
-})
+
+    $(document).ready(function() {
+        $('.open-EditbrandDialog').on('click', function() {
+            var url = "brand/"
+            var id = $(this).data('id').toString();
+            url = url.concat(id).concat("/edit");
+
+            $.get(url, function(data) {
+                $("input[name='title']").val(data['title']);
+                $("input[name='brand_id']").val(data['id']);
+
+            });
+        });
+    });
 
     $('#biller-table').DataTable( {
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -228,10 +228,18 @@ $(document).ready(function() {
                 'targets': [0, 1, 3]
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},

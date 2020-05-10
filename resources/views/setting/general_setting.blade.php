@@ -20,13 +20,13 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Site Title')}} *</strong></label>
+                                        <label>{{trans('file.Site Title')}} *</label>
                                         <input type="text" name="site_title" class="form-control" value="@if($lims_general_setting_data){{$lims_general_setting_data->site_title}}@endif" required />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Site Logo')}}</strong></label>
+                                        <label>{{trans('file.Site Logo')}}</label>
                                         <input type="file" name="site_logo" class="form-control" value=""/>
                                     </div>
                                     @if($errors->has('site_logo'))
@@ -37,13 +37,13 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Currency')}} *</strong></label>
+                                        <label>{{trans('file.Currency')}} *</label>
                                         <input type="text" name="currency" class="form-control" value="@if($lims_general_setting_data){{$lims_general_setting_data->currency}}@endif" required />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Currency Position')}} *</strong></label><br>
+                                        <label>{{trans('file.Currency Position')}} *</label><br>
                                         @if($lims_general_setting_data->currency_position == 'prefix')
                                         <label class="radio-inline">
                                             <input type="radio" name="currency_position" value="prefix" checked> {{trans('file.Prefix')}}
@@ -63,7 +63,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Time Zone')}}</strong></label>
+                                        <label>{{trans('file.Time Zone')}}</label>
                                         @if($lims_general_setting_data)
                                         <input type="hidden" name="timezone_hidden" value="{{env('APP_TIMEZONE')}}">
                                         @endif
@@ -74,9 +74,9 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 d-none">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Theme')}} *</strong></label>
+                                        <label>{{trans('file.Theme')}} *</label>
                                         <div class="row ml-1">
                                             <div class="col-md-3 theme-option" data-color="default.css" style="background: #7c5cc4; min-height: 40px; max-width: 50px;" title="Purple"></div>&nbsp;&nbsp;
                                             <div class="col-md-3 theme-option" data-color="green.css" style="background: #1abc9c; min-height: 40px;max-width: 50px;" title="Green"></div>&nbsp;&nbsp;
@@ -87,7 +87,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Staff Access')}} *</strong></label>
+                                        <label>{{trans('file.Staff Access')}} *</label>
                                         @if($lims_general_setting_data)
                                         <input type="hidden" name="staff_access_hidden" value="{{$lims_general_setting_data->staff_access}}">
                                         @endif
@@ -96,13 +96,11 @@
                                             <option value="own"> {{trans('file.Own Records')}}</option>
                                         </select>
                                     </div>
-                                    <div class="form-group">
-                                        <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
-                                    </div>
+                                    
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Date Format')}} *</strong></label>
+                                        <label>{{trans('file.Date Format')}} *</label>
                                         @if($lims_general_setting_data)
                                         <input type="hidden" name="date_format_hidden" value="{{$lims_general_setting_data->date_format}}">
                                         @endif
@@ -117,6 +115,9 @@
                                             <option value="Y/m/d"> yyy/mm/dd</option>
                                             <option value="Y.m.d"> yyy.mm.dd</option>
                                         </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
                                     </div>
                                 </div>             
                             </div>
@@ -147,8 +148,6 @@
         $('#custom-style').attr('href', style_link);
     });
 
-    $('.selectpicker').selectpicker({
-      style: 'btn-link',
-    });
+    
 </script>
 @endsection

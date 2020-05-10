@@ -21,7 +21,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Default Customer')}} *</strong></label>
+                                        <label>{{trans('file.Default Customer')}} *</label>
                                         @if($lims_pos_setting_data)
                                         <input type="hidden" name="customer_id_hidden" value="{{$lims_pos_setting_data->customer_id}}">
                                         @endif
@@ -32,7 +32,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Default Biller')}} *</strong></label>
+                                        <label>{{trans('file.Default Biller')}} *</label>
                                         @if($lims_pos_setting_data)
                                         <input type="hidden" name="biller_id_hidden" value="{{$lims_pos_setting_data->biller_id}}">
                                         @endif
@@ -43,15 +43,15 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label><strong>Stripe Publishable key</strong></label>
+                                        <label>Stripe Publishable key</label>
                                         <input type="text" name="stripe_public_key" class="form-control" value="@if($lims_pos_setting_data){{$lims_pos_setting_data->stripe_public_key}}@endif" required />
                                     </div>
                                     <div class="form-group">
-                                        <label><strong>Paypal Pro API Username</strong></label>
+                                        <label>Paypal Pro API Username</label>
                                         <input type="text" name="paypal_username" class="form-control" value="{{env('PAYPAL_SANDBOX_API_USERNAME')}}" />
                                     </div>
                                     <div class="form-group">
-                                        <label><strong>Paypal Pro API Signature</strong></label>
+                                        <label>Paypal Pro API Signature</label>
                                         <input type="text" name="paypal_signature" class="form-control" value="{{env('PAYPAL_SANDBOX_API_SECRET')}}" />
                                     </div>
                                     <div class="form-group">
@@ -60,7 +60,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Default Warehouse')}} *</strong></label>
+                                        <label>{{trans('file.Default Warehouse')}} *</label>
                                         @if($lims_pos_setting_data)
                                         <input type="hidden" name="warehouse_id_hidden" value="{{$lims_pos_setting_data->warehouse_id}}">
                                         @endif
@@ -71,15 +71,15 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Displayed Number of Product Row')}} *</strong></label>
+                                        <label>{{trans('file.Displayed Number of Product Row')}} *</label>
                                         <input type="number" name="product_number" class="form-control" value="@if($lims_pos_setting_data){{$lims_pos_setting_data->product_number}}@endif" required />
                                     </div>
                                     <div class="form-group">
-                                        <label><strong>Stripe Secret key *</strong></label>
+                                        <label>Stripe Secret key *</label>
                                         <input type="text" name="stripe_secret_key" class="form-control" value="@if($lims_pos_setting_data){{$lims_pos_setting_data->stripe_secret_key}}@endif"required />
                                     </div>
                                     <div class="form-group">
-                                        <label><strong>Paypal Pro API Password</strong></label>
+                                        <label>Paypal Pro API Password</label>
                                         <input type="password" name="paypal_password" class="form-control" value="{{env('PAYPAL_SANDBOX_API_PASSWORD')}}" />
                                     </div>
                                     <div class="form-group">
@@ -88,7 +88,7 @@
                                         @else
                                         <input class="mt-2" type="checkbox" name="keybord_active" value="1">
                                         @endif
-                                        <label class="mt-2"><strong>{{trans('file.Touchscreen keybord')}}</strong></label>
+                                        <label class="mt-2"><strong>{{trans('file.Touchscreen keybord')}}</label>
                                     </div>
                                 </div>                              
                             </div>
@@ -106,9 +106,7 @@
     $("ul#setting").addClass("show");
     $("ul#setting #pos-setting-menu").addClass("active");
 
-    $('.selectpicker').selectpicker({
-      style: 'btn-link',
-    });
+    
 
     $('select[name="customer_id"]').val($("input[name='customer_id_hidden']").val());
     $('select[name="biller_id"]').val($("input[name='biller_id_hidden']").val());

@@ -20,13 +20,13 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Default CheckIn')}} *</strong></label>
+                                        <label>{{trans('file.Default CheckIn')}} *</label>
                                         <input type="text" name="checkin" id="checkin" class="form-control" value="@if($lims_hrm_setting_data){{$lims_hrm_setting_data->checkin}}@endif" required />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Default CheckOut')}}</strong></label>
+                                        <label>{{trans('file.Default CheckOut')}}</label>
                                         <input type="text" name="checkout" id="checkout" class="form-control" value="@if($lims_hrm_setting_data){{$lims_hrm_setting_data->checkout}}@endif" required />
                                     </div>
                                 </div>

@@ -534,6 +534,22 @@ return [
 	"Quick Cash" => "النقد السريع",
 	"Clear" => "واضح",
 	"You can upload multiple image. Only .jpeg, .jpg, .png, .gif file can be uploaded. First image will be base image." => "يمكنك تحميل صورة متعددة. يمكن فقط رفع ملف .jpeg و .jpg و .png و. gif. الصورة الأولى ستكون الصورة الأساسية.",
+	"This product has variant" => "هذا المنتج لديه البديل",
+	"Enter variant seperated by comma" => "أدخل البديل مفصولة بفاصلة",
+	"Item Code" => "رمز الصنف",
+	"Additional Price" => "سعر إضافي",
+	"Variant" => "مختلف",
+	"Warehouse Quantity" => "مستودع الكمية",
+	"Warehouse quantity of product variants" => "كمية المستودعات من المنتجات المختلفة",
+	"Thank you for shopping with us. Please come again" => "شكرا للتسوق معنا. ارجوك عد مجددا",
+	"Money Transfer" => "تحويل المال",
+	"Add Money Transfer" => "إضافة تحويل أموال",
+	"From Account" => "من حساب",
+	"To Account" => "إلى الحساب",
+	"Update Money Transfer" => "تحديث تحويل الأموال",
+	"Stock Quantity" => "كمية المخزون",
+	"Stock Worth (Price/Cost)" => "قيمة الأسهم (السعر / التكلفة)",
+	"Number of Product" => "رقم المنتج",
 	
 	];
 ?>

@@ -18,7 +18,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.From Warehouse')}} *</strong></label>
+                                            <label>{{trans('file.From Warehouse')}} *</label>
                                             <select required name="from_warehouse_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select warehouse...">
                                                 @foreach($lims_warehouse_list as $warehouse)
                                                 <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
@@ -28,7 +28,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.To Warehouse')}} *</strong></label>
+                                            <label>{{trans('file.To Warehouse')}} *</label>
                                             <select required name="to_warehouse_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select warehouse...">
                                                 @foreach($lims_warehouse_list as $warehouse)
                                                 <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
@@ -38,7 +38,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label><strong>{{trans("file.Status")}}</strong></label>
+                                            <label>{{trans("file.Status")}}</label>
                                             <select name="status" class="form-control selectpicker">
                                                 <option value="1">{{trans('file.Completed')}}</option>
                                                 <option value="2">{{trans('file.Pending')}}</option>
@@ -49,7 +49,7 @@
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-12">
-                                        <label><strong>{{trans('file.Select Product')}}</strong></label>
+                                        <label>{{trans('file.Select Product')}}</label>
                                         <div class="search-box input-group">
                                             <button type="button" class="btn btn-secondary btn-lg"><i class="fa fa-barcode"></i></button>
                                             <input type="text" name="product_code_name" id="lims_productcodeSearch" placeholder="Please type product code and select..." class="form-control" />
@@ -70,7 +70,7 @@
                                                         <th>{{trans('file.Net Unit Cost')}}</th>
                                                         <th>{{trans('file.Tax')}}</th>
                                                         <th>{{trans('file.Subtotal')}}</th>
-                                                        <th><i class="fa fa-trash"></i></th>
+                                                        <th><i class="dripicons-trash"></i></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -81,7 +81,7 @@
                                                     <th></th>
                                                     <th id="total-tax">0.00</th>
                                                     <th id="total">0.00</th>
-                                                    <th><i class="fa fa-trash"></i></th>
+                                                    <th><i class="dripicons-trash"></i></th>
                                                 </tfoot>
                                             </table>
                                         </div>
@@ -125,16 +125,14 @@
                                 <div class="row mt-3">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>
-                                                <strong>{{trans('file.Shipping Cost')}}</strong>
-                                            </label>
+                                            <label>{{trans('file.Shipping Cost')}}</label>
                                             <input type="number" name="shipping_cost" class="form-control" step="any"/>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Attach Document')}}</strong></label>
-                                            <i class="fa fa-question-circle" data-toggle="tooltip" title="Only jpg, jpeg, png, gif, pdf, csv, docx, xlsx and txt file is supported"></i> 
+                                            <label>{{trans('file.Attach Document')}}</label>
+                                            <i class="dripicons-question" data-toggle="tooltip" title="Only jpg, jpeg, png, gif, pdf, csv, docx, xlsx and txt file is supported"></i> 
                                             <input type="file" name="document" class="form-control" />
                                             @if($errors->has('extension'))
                                                 <span>
@@ -147,7 +145,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Note')}}</strong></label>
+                                            <label>{{trans('file.Note')}}</label>
                                             <textarea rows="5" class="form-control" name="note"></textarea>
                                         </div>
                                     </div>
@@ -184,20 +182,20 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="modal_header" class="modal-title"></h5>
-                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                 </div>
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
-                            <label><strong>{{trans('file.Quantity')}}</strong></label>
+                            <label>{{trans('file.Quantity')}}</label>
                             <input type="number" name="edit_qty" class="form-control" step="any">
                         </div>
                         <div class="form-group">
-                            <label><strong>{{trans('file.Unit Cost')}}</strong></label>
+                            <label>{{trans('file.Unit Cost')}}</label>
                             <input type="number" name="edit_unit_cost" class="form-control" step="any">
                         </div>
                         <div class="form-group">
-                            <label><strong>{{trans('file.Product Unit')}}</strong></label>
+                            <label>{{trans('file.Product Unit')}}</label>
                             <select name="edit_unit" class="form-control selectpicker">
                             </select>
                         </div>
@@ -243,7 +241,7 @@ $('.selectpicker').selectpicker({
 $('[data-toggle="tooltip"]').tooltip();
 
 $('select[name="from_warehouse_id"]').on('change', function() {
-    var id = $('select[name="from_warehouse_id"]').val();
+    var id = $(this).val();
     $.get('getproduct/' + id, function(data) {
         lims_product_array = [];
         product_code = data[0];
@@ -369,7 +367,7 @@ function productSearch(data){
                 var newRow = $("<tr>");
                 var cols = '';
                 temp_unit_name = (data[6]).split(',');
-                cols += '<td>' + data[0] + '<button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="fa fa-edit"></i></button></td>';
+                cols += '<td>' + data[0] + '<button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="dripicons-document-edit"></i></button></td>';
                 cols += '<td>' + data[1] + '</td>';
                 cols += '<td><input type="number" class="form-control qty" name="qty[]" value="1" step="any" required/></td>';
                 cols += '<td class="net_unit_cost"></td>';
@@ -438,20 +436,19 @@ function checkQuantity(purchase_qty, flag) {
     if (total_qty > parseFloat(product_qty[pos])) {
         alert('Quantity exceeds stock quantity!');
         if (flag) {
-            var row_qty = $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.qty').val();
-            row_qty = row_qty.substring(0, row_qty.length - 1);
-            $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.qty').val(row_qty);
-        } else {
+            purchase_qty = purchase_qty.substring(0, purchase_qty.length - 1);
+            $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.qty').val(purchase_qty);
+        } 
+        else {
             edit();
             return;
         }
     }
     else {
         $('#editModal').modal('hide');
-        $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.qty').val(purchase_qty);
-
-        calculateRowProductData(purchase_qty);
+        $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.qty').val(purchase_qty);        
     }
+    calculateRowProductData(purchase_qty);
 }
 
 function calculateRowProductData(quantity) {

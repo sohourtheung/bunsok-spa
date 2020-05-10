@@ -81,7 +81,7 @@
                                           @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group" id="warehouse-id">
+                                    <div class="form-group" id="warehouseId">
                                         <label><strong>{{trans('file.Warehouse')}} *</strong></label>
                                         <select name="warehouse_id" required class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Warehouse...">
                                           @foreach($lims_warehouse_list as $warehouse)
@@ -95,8 +95,6 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 </section>
@@ -107,7 +105,7 @@
     $("ul#people").addClass("show");
     $("ul#people #user-create-menu").addClass("active");
 
-    $('#warehouse-id').hide();
+    $('#warehouseId').hide();
     $('#biller-id').hide();
 
     $('.selectpicker').selectpicker({
@@ -125,13 +123,13 @@
             $('select[name="warehouse_id"]').prop('required',true);
             $('select[name="biller_id"]').prop('required',true);
             $('#biller-id').show();
-            $('#warehouse-id').show();
+            $('#warehouseId').show();
         }
         else{
             $('select[name="warehouse_id"]').prop('required',false);
             $('select[name="biller_id"]').prop('required',false);
             $('#biller-id').hide();
-            $('#warehouse-id').hide();
+            $('#warehouseId').hide();
         }
     });
 </script>

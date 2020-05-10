@@ -13,4 +13,10 @@ class Supplier extends Model
         "state", "postal_code", "country", "is_active"
         
     ];
+
+    public function product()
+    {
+    	return $this->hasMany('App/Product');
+    	
+    }
 }

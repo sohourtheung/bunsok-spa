@@ -32,7 +32,6 @@ class CreateProductsTable extends Migration
             $table->longText('image')->nullable();
             $table->tinyInteger('featured')->nullable();
             $table->text('product_details')->nullable();
-            $table->text('product_invoice_details')->nullable();
             $table->boolean('is_active')->nullable();
             $table->timestamps();
         });

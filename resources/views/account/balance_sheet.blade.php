@@ -2,45 +2,41 @@
 
 <section class="forms">
     <div class="container-fluid">
-        <div class="card">
-            <div class="card-header mt-2">
-                <h3 class="text-center">{{trans('file.Balance Sheet')}}</h3>
-            </div>
-            <div class="table-responsive mb-4">
-                <table id="account-table" class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th class="not-exported"></th>
-                            <th>{{trans('file.name')}}</th>
-                            <th>{{trans('file.Account No')}}</th>
-                            <th>{{trans('file.Credit')}}</th>
-                            <th>{{trans('file.Debit')}}</th>
-                            <th>{{trans('file.Balance')}}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($lims_account_list as $key=>$account)
-                        <tr>
-                            <td>{{$key}}</td>
-                            <td>{{$account->name}}</td>
-                            <td>{{$account->account_no}}</td>
-                            <td>{{number_format((float)$credit[$key], 2, '.', '')}}</td>
-                            <td>{{number_format((float)($debit[$key] * -1), 2, '.', '')}}</td>
-                            <td>{{number_format((float)($credit[$key] - $debit[$key]), 2, '.', '')}}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot class="tfoot active">
-                        <th></th>
-                        <th>{{trans('file.Total')}}</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
+        <h3>{{trans('file.Balance Sheet')}}</h3>
+    </div>
+    <div class="table-responsive mb-4">
+        <table id="account-table" class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="not-exported"></th>
+                    <th>{{trans('file.name')}}</th>
+                    <th>{{trans('file.Account No')}}</th>
+                    <th>{{trans('file.Credit')}}</th>
+                    <th>{{trans('file.Debit')}}</th>
+                    <th>{{trans('file.Balance')}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($lims_account_list as $key=>$account)
+                <tr>
+                    <td>{{$key}}</td>
+                    <td>{{$account->name}}</td>
+                    <td>{{$account->account_no}}</td>
+                    <td>{{number_format((float)$credit[$key], 2, '.', '')}}</td>
+                    <td>{{number_format((float)($debit[$key] * -1), 2, '.', '')}}</td>
+                    <td>{{number_format((float)($credit[$key] - $debit[$key]), 2, '.', '')}}</td>
+                </tr>
+                @endforeach
+            </tbody>
+            <tfoot class="tfoot active">
+                <th></th>
+                <th>{{trans('file.Total')}}</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tfoot>
+        </table>
     </div>
 </section>
 
@@ -48,16 +44,15 @@
     $("ul#account").siblings('a').attr('aria-expanded','true');
     $("ul#account").addClass("show");
     $("ul#account #balance-sheet-menu").addClass("active");
-
-    $('#account-table').DataTable( {
+    var table = $('#account-table').DataTable( {
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -66,10 +61,18 @@
                 'targets': 0
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},

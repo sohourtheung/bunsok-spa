@@ -17,11 +17,11 @@
 
 <section>
     <div class="container-fluid">
-        <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-info"><i class="fa fa-plus"></i> {{trans('file.Add Unit')}}</a>&nbsp;
-        <a href="#" data-toggle="modal" data-target="#importUnit" class="btn btn-primary"><i class="fa fa-file"></i> {{trans('file.Import Unit')}}</a>
+        <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-info"><i class="dripicons-plus"></i> {{trans('file.Add Unit')}}</a>&nbsp;
+        <a href="#" data-toggle="modal" data-target="#importUnit" class="btn btn-primary"><i class="dripicons-copy"></i> {{trans('file.Import Unit')}}</a>
     </div>
     <div class="table-responsive">
-        <table id="unit-table" class="table table-striped">
+        <table id="unit-table" class="table">
             <thead>
                 <tr>
                     <th class="not-exported"></th>
@@ -57,19 +57,19 @@
                     @endif
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 <li>
-                                    <button type="button" data-id="{{$unit->id}}" class="open-EditUnitDialog btn btn-link" data-toggle="modal" data-target="#editModal"><i class="fa fa-edit"></i> {{trans('file.edit')}}
+                                    <button type="button" data-id="{{$unit->id}}" class="open-EditUnitDialog btn btn-link" data-toggle="modal" data-target="#editModal"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}
                                 </button>
                                 </li>
                                 <li class="divider"></li>
                                 {{ Form::open(['route' => ['unit.destroy', $unit->id], 'method' => 'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa fa-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                             </ul>
@@ -89,21 +89,21 @@
             {!! Form::open(['route' => 'unit.store', 'method' => 'post']) !!}
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Unit')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
                 <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
                 <form>
                     <div class="form-group">
-                    <label><strong>{{trans('file.Code')}} *</strong></label>
+                    <label>{{trans('file.Code')}} *</label>
                     {{Form::text('unit_code',null,array('required' => 'required', 'class' => 'form-control'))}}
                     </div>
                     <div class="form-group">
-                        <label><strong>{{trans('file.name')}} *</strong></label>
+                        <label>{{trans('file.name')}} *</label>
                         {{Form::text('unit_name',null,array('required' => 'required', 'class' => 'form-control'))}}
                     </div>
                     <div class="form-group">
-                        <label><strong>{{trans('file.Base Unit')}}</strong></label>
+                        <label>{{trans('file.Base Unit')}}</label>
                         <select class="form-control selectpicker" id="base_unit_create" name="base_unit">
                             <option value="">No Base Unit</option>
                             @foreach($lims_unit_all as $unit)
@@ -114,10 +114,10 @@
                         </select>
                     </div>
                     <div class="form-group operator">
-                        <label><strong>{{trans('file.Operator')}}</strong></label> <input type="text" name="operator" placeholder="Enter your Name" class="form-control" />
+                        <label>{{trans('file.Operator')}}</label> <input type="text" name="operator" placeholder="Enter your Name" class="form-control" />
                     </div>
                     <div class="form-group operation_value">
-                        <label><strong>{{trans('file.Operation Value')}}</strong></label><input type="number" name="operation_value" placeholder="Enter operation value" class="form-control" step="any"/>
+                        <label>{{trans('file.Operation Value')}}</label><input type="number" name="operation_value" placeholder="Enter operation value" class="form-control" step="any"/>
                     </div>
                     <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
             </form>
@@ -133,22 +133,22 @@
         {!! Form::open(['route' => ['unit.update',1], 'method' => 'put']) !!}
         <div class="modal-header">
           <h5 id="exampleModalLabel" class="modal-title"> {{trans('file.Update Unit')}}</h5>
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
         </div>
         <div class="modal-body">
           <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
             <form>
                 <input type="hidden" name="unit_id">
                 <div class="form-group">
-                <label><strong>{{trans('file.Code')}} *</strong></label>
+                <label>{{trans('file.Code')}} *</label>
                 {{Form::text('unit_code',null,array('required' => 'required', 'class' => 'form-control'))}}
                 </div>
                 <div class="form-group">
-                    <label><strong>{{trans('file.name')}} *</strong></label>
+                    <label>{{trans('file.name')}} *</label>
                     {{Form::text('unit_name',null,array('required' => 'required', 'class' => 'form-control'))}}
                 </div>
                 <div class="form-group">
-                    <label><strong>{{trans('file.Base Unit')}}</strong></label>
+                    <label>{{trans('file.Base Unit')}}</label>
                     <select class="form-control selectpicker" id="base_unit_edit" name="base_unit">
                         <option value="">No Base Unit</option>
                         @foreach($lims_unit_all as $unit)
@@ -159,10 +159,10 @@
                     </select>
                 </div>
                 <div class="form-group operator">
-                    <label><strong>{{trans('file.Operator')}}</strong></label> <input type="text" name="operator" placeholder="Enter your Name" class="form-control" />
+                    <label>{{trans('file.Operator')}}</label> <input type="text" name="operator" placeholder="Enter your Name" class="form-control" />
                 </div>
                 <div class="form-group operation_value">
-                    <label><strong>{{trans('file.Operation Value')}}</strong></label><input type="number" name="operation_value" placeholder="Enter operation value" class="form-control" step="any"/>
+                    <label>{{trans('file.Operation Value')}}</label><input type="number" name="operation_value" placeholder="Enter operation value" class="form-control" step="any"/>
                 </div>
                 <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
             </form>
@@ -178,7 +178,7 @@
         {!! Form::open(['route' => 'unit.import', 'method' => 'post', 'files' => true]) !!}
         <div class="modal-header">
           <h5 id="exampleModalLabel" class="modal-title"> {{trans('file.Import Unit')}}</h5>
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
         </div>
         <div class="modal-body">
             <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
@@ -186,14 +186,14 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label><strong>{{trans('file.Upload CSV File')}} *</strong></label>
+                        <label>{{trans('file.Upload CSV File')}} *</label>
                         {{Form::file('file', array('class' => 'form-control','required'))}}
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label><strong> {{trans('file.Sample File')}}</strong></label>
-                        <a href="public/sample_file/sample_unit.csv" class="btn btn-info btn-block btn-md"><i class="fa fa-download"></i>  {{trans('file.Download')}}</a>
+                        <label> {{trans('file.Sample File')}}</label>
+                        <a href="public/sample_file/sample_unit.csv" class="btn btn-info btn-block btn-md"><i class="dripicons-download"></i>  {{trans('file.Download')}}</a>
                     </div>
                 </div>
             </div>
@@ -322,11 +322,11 @@ $(document).ready(function() {
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -335,10 +335,18 @@ $(document).ready(function() {
                 'targets': [0, 6]
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},

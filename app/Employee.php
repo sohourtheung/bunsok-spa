@@ -11,5 +11,9 @@ class Employee extends Model
         "user_id", "address", "city", "country", "is_active"
     ];
 
+    public function payroll()
+    {
+    	return $this->hasMany('App\Payroll');
+    }
     
 }

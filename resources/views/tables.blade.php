@@ -87,7 +87,7 @@
                   <ul aria-labelledby="notifications" class="dropdown-menu">
                     <li><a rel="nofollow" href="#" class="dropdown-item"> 
                         <div class="notification d-flex justify-content-between">
-                          <div class="notification-content"><i class="fa fa-envelope"></i>You have 6 new messages </div>
+                          <div class="notification-content"><i class="dripicons-mail"></i>You have 6 new messages </div>
                           <div class="notification-time"><small>4 minutes ago</small></div>
                         </div></a></li>
                     <li><a rel="nofollow" href="#" class="dropdown-item"> 
@@ -108,7 +108,7 @@
                     <li><a rel="nofollow" href="#" class="dropdown-item all-notifications text-center"> <strong> <i class="fa fa-bell"></i>view all notifications                                            </strong></a></li>
                   </ul>
                 </li>
-                <li class="nav-item dropdown"> <a id="messages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link"><i class="fa fa-envelope"></i><span class="badge badge-info">10</span></a>
+                <li class="nav-item dropdown"> <a id="messages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link"><i class="dripicons-mail"></i><span class="badge badge-info">10</span></a>
                   <ul aria-labelledby="notifications" class="dropdown-menu">
                     <li><a rel="nofollow" href="#" class="dropdown-item d-flex"> 
                         <div class="msg-profile"> <img src="img/avatar-1.jpg" alt="..." class="img-fluid rounded-circle"></div>
@@ -125,7 +125,7 @@
                         <div class="msg-body">
                           <h3 class="h5">Ashley Wood</h3><span>sent you a direct message</span><small>3 days ago at 7:58 pm - 10.06.2014</small>
                         </div></a></li>
-                    <li><a rel="nofollow" href="#" class="dropdown-item all-notifications text-center"> <strong> <i class="fa fa-envelope"></i>Read all messages    </strong></a></li>
+                    <li><a rel="nofollow" href="#" class="dropdown-item all-notifications text-center"> <strong> <i class="dripicons-mail"></i>Read all messages    </strong></a></li>
                   </ul>
                 </li>
                 <li class="nav-item"><a href="login.html" class="nav-link logout">Logout<i class="fa fa-sign-out"></i></a></li>
@@ -198,7 +198,7 @@
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table">
                       <thead>
                         <tr>
                           <th>#</th>
@@ -239,7 +239,7 @@
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table table-striped table-hover">
+                    <table class="table table-hover">
                       <thead>
                         <tr>
                           <th>#</th>
@@ -280,7 +280,7 @@
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table table-striped table-sm">
+                    <table class="table table-sm">
                       <thead>
                         <tr>
                           <th>#</th>

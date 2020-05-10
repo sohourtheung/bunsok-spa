@@ -21,7 +21,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.customer')}} *</strong></label>
+                                            <label>{{trans('file.customer')}} *</label>
                                             <select required name="customer_id" class="selectpicker form-control" data-live-search="true" id="customer-id" data-live-search-style="begins" title="Select customer...">
                                                 @foreach($lims_customer_list as $customer)
                                                 <option value="{{$customer->id}}">{{$customer->name . ' (' . $customer->phone_number . ')'}}</option>
@@ -31,7 +31,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Warehouse')}} *</strong></label>
+                                            <label>{{trans('file.Warehouse')}} *</label>
                                             <select required name="warehouse_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select warehouse...">
                                                 @foreach($lims_warehouse_list as $warehouse)
                                                 <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
@@ -41,7 +41,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Biller')}} *</strong></label>
+                                            <label>{{trans('file.Biller')}} *</label>
                                             <select required name="biller_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Biller...">
                                                 @foreach($lims_biller_list as $biller)
                                                 <option value="{{$biller->id}}">{{$biller->name . ' (' . $biller->company_name . ')'}}</option>
@@ -53,15 +53,15 @@
                                 <div class="row mt-3">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Upload CSV File')}} *</strong></label>
+                                            <label>{{trans('file.Upload CSV File')}} *</label>
                                             <input type="file" name="file" class="form-control" required />
                                             <p>{{trans('file.The correct column order is')}} (product_code, quantity, sale_unit, product_price, discount, tax_name) {{trans('file.and you must follow this')}}. {{trans('file.For Digital product sale_unit will be n/a')}}. {{trans('file.All columns are required')}}</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong></strong></label><br>
-                                            <a download href="../public/sample_file/sample_sale_products.csv" class="btn btn-primary btn-block btn-lg"><i class="fa fa-download"></i> {{trans('file.Download Sample File')}}</a>
+                                            <label></label><br>
+                                            <a download href="../public/sample_file/sample_sale_products.csv" class="btn btn-primary btn-block btn-lg"><i class="dripicons-download"></i> {{trans('file.Download Sample File')}}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -103,7 +103,7 @@
                                 <div class="row mt-3">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Order Tax')}}</strong></label>
+                                            <label>{{trans('file.Order Tax')}}</label>
                                             <select class="form-control" name="order_tax_rate">
                                                 <option value="0">No Tax</option>
                                                 @foreach($lims_tax_list as $tax)
@@ -132,8 +132,8 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Attach Document')}}</strong></label>
-                                            <i class="fa fa-question-circle" data-toggle="tooltip" title="Only jpg, jpeg, png, gif, pdf, csv, docx, xlsx and txt file is supported"></i> 
+                                            <label>{{trans('file.Attach Document')}}</label>
+                                            <i class="dripicons-question" data-toggle="tooltip" title="Only jpg, jpeg, png, gif, pdf, csv, docx, xlsx and txt file is supported"></i> 
                                             <input type="file" name="document" class="form-control" />
                                             @if($errors->has('extension'))
                                                 <span>
@@ -144,7 +144,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Sale Status')}} *</strong></label>
+                                            <label>{{trans('file.Sale Status')}} *</label>
                                             <select name="sale_status" class="form-control">
                                                 <option value="1">{{trans('file.Completed')}}</option>
                                                 <option value="2">{{trans('file.Pending')}}</option>
@@ -155,13 +155,13 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Sale Note')}}</strong></label>
+                                            <label>{{trans('file.Sale Note')}}</label>
                                             <textarea rows="5" class="form-control" name="sale_note"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Staff Note')}}</strong></label>
+                                            <label>{{trans('file.Staff Note')}}</label>
                                             <textarea rows="5" class="form-control" name="staff_note"></textarea>
                                         </div>
                                     </div>

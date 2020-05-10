@@ -13,11 +13,11 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.name')}} *</strong> </label>
+                                    <label>{{trans('file.name')}} *</strong> </label>
                                     <input type="text" name="employee_name" required class="form-control">
                                 </div>
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Image')}}</strong></label>
+                                    <label>{{trans('file.Image')}}</label>
                                     <input type="file" name="image" class="form-control">
                                     @if($errors->has('image'))
                                    <span>
@@ -26,7 +26,7 @@
                                     @endif
                                 </div>
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Department')}} *</strong></label>
+                                    <label>{{trans('file.Department')}} *</label>
                                     <select class="form-control selectpicker" name="department_id" required>
                                         @foreach($lims_department_list as $department)
                                         <option value="{{$department->id}}">{{$department->name}}</option>
@@ -34,7 +34,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Email')}} *</strong></label>
+                                    <label>{{trans('file.Email')}} *</label>
                                     <input type="email" name="email" placeholder="example@example.com" required class="form-control">
                                     @if($errors->has('email'))
                                    <span>
@@ -43,30 +43,30 @@
                                     @endif
                                 </div>
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Phone Number')}} *</strong></label>
+                                    <label>{{trans('file.Phone Number')}} *</label>
                                     <input type="text" name="phone_number" required class="form-control">
                                 </div>
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Address')}}</strong></label>
+                                    <label>{{trans('file.Address')}}</label>
                                     <input type="text" name="address" class="form-control">
                                 </div>
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.City')}}</strong></label>
+                                    <label>{{trans('file.City')}}</label>
                                     <input type="text" name="city" class="form-control">
                                 </div>
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Country')}}</strong></label>
+                                    <label>{{trans('file.Country')}}</label>
                                     <input type="text" name="country" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mt-4">
-                                    <label><strong>{{trans('file.Add User')}}</strong></label>
+                                    <label>{{trans('file.Add User')}}</label>
                                     <input type="checkbox" name="user" checked value="1" />
                                 </div>
                                 <div id="user-input" class="mt-4">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.UserName')}} *</strong></label>
+                                        <label>{{trans('file.UserName')}} *</label>
                                         <input type="text" name="name" required class="form-control">
                                         @if($errors->has('name'))
                                        <span>
@@ -75,11 +75,11 @@
                                         @endif
                                     </div>
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Password')}} *</strong></label>
+                                        <label>{{trans('file.Password')}} *</label>
                                         <input required type="text" name="password" class="form-control">
                                     </div>
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Role')}} *</strong></label>
+                                        <label>{{trans('file.Role')}} *</label>
                                         <select name="role_id" class="selectpicker form-control">
                                             @foreach($lims_role_list as $role)
                                             <option value="{{$role->id}}">{{$role->name}}</option>
@@ -87,7 +87,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group" id="warehouse">
-                                        <label><strong>{{trans('file.Warehouse')}} *</strong></label>
+                                        <label>{{trans('file.Warehouse')}} *</label>
                                         <select name="warehouse_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Warehouse...">
                                             @foreach($lims_warehouse_list as $warehouse)
                                             <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
@@ -95,7 +95,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group" id="biller">
-                                        <label><strong>{{trans('file.Biller')}} *</strong></label>
+                                        <label>{{trans('file.Biller')}} *</label>
                                         <select name="biller_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Biller...">
                                             @foreach($lims_biller_list as $biller)
                                             <option value="{{$biller->id}}">{{$biller->name}} ({{$biller->company_name}})</option>

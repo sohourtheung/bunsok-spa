@@ -18,7 +18,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.From Warehouse')}} *</strong></label>
+                                            <label>{{trans('file.From Warehouse')}} *</label>
                                             <select required name="from_warehouse_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select warehouse...">
                                                 @foreach($lims_warehouse_list as $warehouse)
                                                 <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
@@ -28,7 +28,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.To Warehouse')}} *</strong></label>
+                                            <label>{{trans('file.To Warehouse')}} *</label>
                                             <select required name="to_warehouse_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select warehouse...">
                                                 @foreach($lims_warehouse_list as $warehouse)
                                                 <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
@@ -38,7 +38,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Status')}}</strong></label>
+                                            <label>{{trans('file.Status')}}</label>
                                             <select name="status" class="form-control selectpicker">
                                                 <option value="1">{{trans('file.Completed')}}</option>
                                                 <option value="2">{{trans('file.Pending')}}</option>
@@ -50,15 +50,15 @@
                                 <div class="row mt-3">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Upload CSV File')}} *</strong></label>
+                                            <label>{{trans('file.Upload CSV File')}} *</label>
                                             <input type="file" name="file" class="form-control" required />
                                             <p>{{trans('file.The correct column order is')}} (product_code, quantity, product_unit, product_cost, tax_name) {{trans('file.and you must follow this')}}. {{trans('file.All columns are required')}}</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong></strong></label><br>
-                                            <a href="../public/sample_file/sample_transfer_products.csv" class="btn btn-primary btn-block btn-lg"><i class="fa fa-download"></i> {{trans('file.Download Sample File')}}</a>
+                                            <label></label><br>
+                                            <a href="../public/sample_file/sample_transfer_products.csv" class="btn btn-primary btn-block btn-lg"><i class="dripicons-download"></i> {{trans('file.Download Sample File')}}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -100,8 +100,8 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Attach Document')}}</strong></label>
-                                            <i class="fa fa-question-circle" data-toggle="tooltip" title="Only jpg, jpeg, png, gif, pdf, csv, docx, xlsx and txt file is supported"></i> 
+                                            <label>{{trans('file.Attach Document')}}</label>
+                                            <i class="dripicons-question" data-toggle="tooltip" title="Only jpg, jpeg, png, gif, pdf, csv, docx, xlsx and txt file is supported"></i> 
                                             <input type="file" name="document" class="form-control" />
                                             @if($errors->has('extension'))
                                                 <span>
@@ -114,7 +114,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Note')}}</strong></label>
+                                            <label>{{trans('file.Note')}}</label>
                                             <textarea rows="5" class="form-control" name="note"></textarea>
                                         </div>
                                     </div>

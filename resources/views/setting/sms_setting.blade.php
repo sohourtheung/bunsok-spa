@@ -20,7 +20,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <input type="hidden" name="gateway_hidden" value="{{env('SMS_GATEWAY')}}">
-                                        <label><strong>{{trans('file.Gateway')}} *</strong></label>
+                                        <label>{{trans('file.Gateway')}} *</label>
                                         <select class="form-control" name="gateway">
                                             <option selected disabled>{{trans('file.Select SMS gateway...')}}</option>
                                             <option value="twilio">Twilio</option>
@@ -28,19 +28,19 @@
                                         </select>
                                     </div>
                                     <div class="form-group twilio">
-                                        <label><strong>ACCOUNT SID *</strong></label>
+                                        <label>ACCOUNT SID *</label>
                                         <input type="text" name="account_sid" class="form-control twilio-option" value="{{env('ACCOUNT_SID')}}" />
                                     </div>
                                     <div class="form-group twilio">
-                                        <label><strong>AUTH TOKEN *</strong></label>
+                                        <label>AUTH TOKEN *</label>
                                         <input type="text" name="auth_token" class="form-control twilio-option" value="{{env('AUTH_TOKEN')}}" />
                                     </div>
                                     <div class="form-group twilio">
-                                        <label><strong>Twilio Number *</strong></label>
+                                        <label>Twilio Number *</label>
                                         <input type="text" name="twilio_number" class="form-control twilio-option" value="{{env('Twilio_Number')}}" />
                                     </div>
                                     <div class="form-group clickatell">
-                                        <label><strong>API Key *</strong></label>
+                                        <label>API Key *</label>
                                         <input type="text" name="api_key" class="form-control clickatell-option" value="{{env('CLICKATELL_API_KEY')}}" />
                                     </div>
                                     <div class="form-group">

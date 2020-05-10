@@ -16,7 +16,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Customer Group')}} *</strong> </label>
+                                    <label>{{trans('file.Customer Group')}} *</strong> </label>
                                     <select required class="form-control selectpicker" name="customer_group_id">
                                         @foreach($lims_customer_group_all as $customer_group)
                                             <option value="{{$customer_group->id}}">{{$customer_group->name}}</option>
@@ -26,25 +26,25 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.name')}} *</strong> </label>
+                                    <label>{{trans('file.name')}} *</strong> </label>
                                     <input type="text" name="name" required class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Company Name')}}</strong></label>
+                                    <label>{{trans('file.Company Name')}}</label>
                                     <input type="text" name="company_name" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Email')}}</strong></label>
+                                    <label>{{trans('file.Email')}}</label>
                                     <input type="email" name="email" placeholder="example@example.com" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Phone Number')}} *</strong></label>
+                                    <label>{{trans('file.Phone Number')}} *</label>
                                     <input type="text" name="phone_number" required class="form-control">
                                     @if($errors->has('phone_number'))
                                    <span>
@@ -55,37 +55,37 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Tax Number')}}</strong></label>
+                                    <label>{{trans('file.Tax Number')}}</label>
                                     <input type="text" name="tax_no" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Address')}} *</strong></label>
+                                    <label>{{trans('file.Address')}} *</label>
                                     <input type="text" name="address" required class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.City')}} *</strong></label>
+                                    <label>{{trans('file.City')}} *</label>
                                     <input type="text" name="city" required class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.State')}}</strong></label>
+                                    <label>{{trans('file.State')}}</label>
                                     <input type="text" name="state" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Postal Code')}}</strong></label>
+                                    <label>{{trans('file.Postal Code')}}</label>
                                     <input type="text" name="postal_code" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label><strong>{{trans('file.Country')}}</strong></label>
+                                    <label>{{trans('file.Country')}}</label>
                                     <input type="text" name="country" class="form-control">
                                 </div>
                             </div>

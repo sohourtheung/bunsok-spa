@@ -8,18 +8,35 @@ use Illuminate\Validation\Rule;
 use Intervention\Image\Facades\Image;
 use App\Mail\UserNotification;
 use Illuminate\Support\Facades\Mail;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Auth;
 
 class BillerController extends Controller
 {
     public function index()
     {
-        $lims_biller_all = biller::where('is_active', true)->get();
-        return view('biller.index',compact('lims_biller_all'));
+        $role = Role::find(Auth::user()->role_id);
+        if($role->hasPermissionTo('billers-index')) {
+            $permissions = Role::findByName($role->name)->permissions;
+            foreach ($permissions as $permission)
+                $all_permission[] = $permission->name;
+            if(empty($all_permission))
+                $all_permission[] = 'dummy text';
+            $lims_biller_all = biller::where('is_active', true)->get();
+            return view('biller.index',compact('lims_biller_all', 'all_permission'));
+        }
+        else
+            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
 
     public function create()
     {
-        return view('biller.create');
+        $role = Role::find(Auth::user()->role_id);
+        if($role->hasPermissionTo('billers-add'))
+            return view('biller.create');
+        else
+            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
 
     public function store(Request $request)
@@ -72,8 +89,13 @@ class BillerController extends Controller
 
     public function edit($id)
     {
-        $lims_biller_data = Biller::where('id',$id)->first();
-        return view('biller.edit',compact('lims_biller_data'));
+        $role = Role::find(Auth::user()->role_id);
+        if($role->hasPermissionTo('billers-edit')) {
+            $lims_biller_data = Biller::where('id',$id)->first();
+            return view('biller.edit',compact('lims_biller_data'));
+        }
+        else
+            return redirect()->back()->with('not_permitted', 'Sorry! You are not allowed to access this module');
     }
 
     public function update(Request $request, $id)

@@ -12,10 +12,10 @@
 
 <section>
     <div class="container-fluid">
-        <button class="btn btn-info" data-toggle="modal" data-target="#create-modal"><i class="fa fa-plus"></i> {{trans('file.Add Coupon')}}</button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#create-modal"><i class="dripicons-plus"></i> {{trans('file.Add Coupon')}}</button>
     </div>
     <div class="table-responsive">
-        <table id="coupon-table" class="table table-striped">
+        <table id="coupon-table" class="table">
             <thead>
                 <tr>
                     <th class="not-exported"></th>
@@ -63,15 +63,15 @@
                     <td>{{ $created_by->name }}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
-                                <li><button type="button" data-id="{{$coupon->id}}" data-code="{{$coupon->code}}" data-type="{{$coupon->type}}" data-amount="{{$coupon->amount}}" data-minimum_amount="{{$coupon->minimum_amount}}" data-quantity="{{$coupon->quantity}}" data-expired_date="{{$coupon->expired_date}}" class="edit-btn btn btn-link" data-toggle="modal" data-target="#editModal"><i class="fa fa-edit"></i> {{trans('file.edit')}}</button></li>
+                                <li><button type="button" data-id="{{$coupon->id}}" data-code="{{$coupon->code}}" data-type="{{$coupon->type}}" data-amount="{{$coupon->amount}}" data-minimum_amount="{{$coupon->minimum_amount}}" data-quantity="{{$coupon->quantity}}" data-expired_date="{{$coupon->expired_date}}" class="edit-btn btn btn-link" data-toggle="modal" data-target="#editModal"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</button></li>
                                 {{ Form::open(['route' => ['coupons.destroy', $coupon->id], 'method' => 'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa fa-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                             </ul>
@@ -101,14 +101,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Coupon')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
               <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
                 {!! Form::open(['route' => 'coupons.store', 'method' => 'post']) !!}
                   <div class="row">
                       <div class="col-md-6 form-group">
-                          <label><strong>{{trans('file.Coupon Code')}} *</strong></label>
+                          <label>{{trans('file.Coupon Code')}} *</label>
                           <div class="input-group">
                               {{Form::text('code',null,array('required' => 'required', 'class' => 'form-control'))}}
                               <div class="input-group-append">
@@ -117,18 +117,18 @@
                           </div>
                       </div>
                       <div class="col-md-6 form-group">
-                          <label><strong>{{trans('file.Type')}} *</strong></label>
+                          <label>{{trans('file.Type')}} *</label>
                           <select class="form-control" name="type">
                             <option value="percentage">Percentage</option>
                             <option value="fixed">Fixed Amount</option>
                           </select>
                       </div>
                       <div class="col-md-6 form-group minimum-amount">
-                          <label><strong>{{trans('file.Minimum Amount')}} *</strong></label>
+                          <label>{{trans('file.Minimum Amount')}} *</label>
                           <input type="number" name="minimum_amount" step="any" class="form-control">
                       </div>
                       <div class="col-md-6 form-group">
-                          <label><strong>{{trans('file.Amount')}} *</strong></label>
+                          <label>{{trans('file.Amount')}} *</label>
                           <div class="input-group">
                               <input type="number" name="amount" step="any" required class="form-control">&nbsp;&nbsp;
                               <div class="input-group-append mt-1">
@@ -137,11 +137,11 @@
                           </div>
                       </div>
                       <div class="col-md-6 form-group">
-                          <label><strong>Qty *</strong></label>
+                          <label>Qty *</label>
                           <input type="number" name="quantity" step="any" required class="form-control">
                       </div>
                       <div class="col-md-6 form-group">
-                          <label><strong>{{trans('file.Expired Date')}}</strong></label>
+                          <label>{{trans('file.Expired Date')}}</label>
                           <input type="text" name="expired_date" class="expired_date form-control">
                       </div>
                   </div>
@@ -159,14 +159,14 @@
       <div class="modal-content">
           <div class="modal-header">
               <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Coupon')}}</h5>
-              <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+              <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
           </div>
           <div class="modal-body">
             <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
               {!! Form::open(['route' => ['coupons.update', 1], 'method' => 'put']) !!}
               <div class="row">
                 <div class="col-md-6 form-group">
-                    <label><strong>{{trans('file.Coupon')}} {{trans('file.Code')}} *</strong></label>
+                    <label>{{trans('file.Coupon')}} {{trans('file.Code')}} *</label>
                     <div class="input-group">
                         <input type="hidden" name="coupon_id">
                         {{Form::text('code',null,array('required' => 'required', 'class' => 'form-control'))}}
@@ -176,18 +176,18 @@
                     </div>
                 </div>
                 <div class="col-md-6 form-group">
-                    <label><strong>{{trans('file.Type')}} *</strong></label>
+                    <label>{{trans('file.Type')}} *</label>
                     <select class="form-control" name="type">
                       <option value="percentage">Percentage</option>
                       <option value="fixed">Fixed Amount</option>
                     </select>
                 </div>
                 <div class="col-md-6 form-group minimum-amount">
-                    <label><strong>{{trans('file.Minimum Amount')}} *</strong></label>
+                    <label>{{trans('file.Minimum Amount')}} *</label>
                     <input type="number" name="minimum_amount" step="any" class="form-control">
                 </div>
                 <div class="col-md-6 form-group">
-                    <label><strong>{{trans('file.Amount')}} *</strong></label>
+                    <label>{{trans('file.Amount')}} *</label>
                     <div class="input-group">
                         <input type="number" name="amount" step="any" required class="form-control">&nbsp;&nbsp;
                         <div class="input-group-append mt-1">
@@ -196,11 +196,11 @@
                     </div>
                 </div>
                 <div class="col-md-6 form-group">
-                    <label><strong>Qty *</strong></label>
+                    <label>Qty *</label>
                     <input type="number" name="quantity" step="any" required class="form-control">
                 </div>
                 <div class="col-md-6 form-group">
-                    <label><strong>{{trans('file.Expired Date')}}</strong></label>
+                    <label>{{trans('file.Expired Date')}}</label>
                     <input type="text" name="expired_date" class="expired_date form-control">
                 </div>
               </div>
@@ -301,15 +301,20 @@ function confirmDelete() {
     return false;
 }
 
-    $('#coupon-table').DataTable( {
+    var table = $('#coupon-table').DataTable( {
+        responsive: true,
+        fixedHeader: {
+            header: true,
+            footer: true
+        },
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -318,10 +323,18 @@ function confirmDelete() {
                 'targets': [0, 9]
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},

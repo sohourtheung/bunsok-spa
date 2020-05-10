@@ -10,7 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Auth::routes();
+
 Route::group(['middleware' => 'auth'], function() {
 	Route::get('/dashboard', 'HomeController@dashboard');
 });
@@ -56,6 +58,7 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 	Route::get('tax/lims_tax_search', 'TaxController@limsTaxSearch')->name('tax.search');
 	Route::resource('tax', 'TaxController');
 
+	//Route::get('products/getbarcode', 'ProductController@getBarcode');
 	Route::post('products/product-data', 'ProductController@productData');
 	Route::get('products/gencode', 'ProductController@generateCode');
 	Route::get('products/search', 'ProductController@search');
@@ -65,6 +68,7 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 	Route::post('importproduct', 'ProductController@importProduct')->name('product.import');
 	Route::post('exportproduct', 'ProductController@exportProduct')->name('product.export');
 	Route::get('products/print_barcode','ProductController@printBarcode')->name('product.printBarcode');
+	
 	Route::get('products/lims_product_search', 'ProductController@limsProductSearch')->name('product.search');
 	Route::post('products/deletebyselection', 'ProductController@deleteBySelection');
 	Route::post('products/update', 'ProductController@updateProduct');
@@ -89,29 +93,29 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 	Route::get('biller/lims_biller_search', 'BillerController@limsBillerSearch')->name('biller.search');
 	Route::resource('biller', 'BillerController');
 
-	Route::post('sale/sale-data', 'SaleController@saleData');
-	Route::post('sale/sendmail', 'SaleController@sendMail')->name('sale.sendmail');
-	Route::get('sale/sale_by_csv', 'SaleController@saleByCsv');
-	Route::get('sale/product_sale/{id}','SaleController@productSaleData');
+	Route::post('sales/sale-data', 'SaleController@saleData');
+	Route::post('sales/sendmail', 'SaleController@sendMail')->name('sale.sendmail');
+	Route::get('sales/sale_by_csv', 'SaleController@saleByCsv');
+	Route::get('sales/product_sale/{id}','SaleController@productSaleData');
 	Route::post('importsale', 'SaleController@importSale')->name('sale.import');
 	Route::get('pos', 'SaleController@posSale')->name('sale.pos');
-	Route::get('sale/lims_sale_search', 'SaleController@limsSaleSearch')->name('sale.search');
-	Route::get('sale/lims_product_search', 'SaleController@limsProductSearch')->name('product_sale.search');
-	Route::get('sale/getcustomergroup/{id}', 'SaleController@getCustomerGroup')->name('sale.getcustomergroup');
-	Route::get('sale/getproduct/{id}', 'SaleController@getProduct')->name('sale.getproduct');
-	Route::get('sale/getproduct/{category_id}/{brand_id}', 'SaleController@getProductByFilter');
-	Route::get('sale/getfeatured', 'SaleController@getFeatured');
-	Route::get('sale/get_gift_card', 'SaleController@getGiftCard');
-	Route::get('sale/paypalSuccess', 'SaleController@paypalSuccess');
-	Route::get('sale/paypalPaymentSuccess/{id}', 'SaleController@paypalPaymentSuccess');
-	Route::get('sale/gen_invoice/{id}', 'SaleController@genInvoice')->name('sale.invoice');
-	Route::post('sale/add_payment', 'SaleController@addPayment')->name('sale.add-payment');
-	Route::get('sale/getpayment/{id}', 'SaleController@getPayment')->name('sale.get-payment');
-	Route::post('sale/updatepayment', 'SaleController@updatePayment')->name('sale.update-payment');
-	Route::post('sale/deletepayment', 'SaleController@deletePayment')->name('sale.delete-payment');
-	Route::get('sale/{id}/create', 'SaleController@createSale');
-	Route::post('sale/deletebyselection', 'SaleController@deleteBySelection');
-	Route::resource('sale', 'SaleController');
+	Route::get('sales/lims_sale_search', 'SaleController@limsSaleSearch')->name('sale.search');
+	Route::get('sales/lims_product_search', 'SaleController@limsProductSearch')->name('product_sale.search');
+	Route::get('sales/getcustomergroup/{id}', 'SaleController@getCustomerGroup')->name('sale.getcustomergroup');
+	Route::get('sales/getproduct/{id}', 'SaleController@getProduct')->name('sale.getproduct');
+	Route::get('sales/getproduct/{category_id}/{brand_id}', 'SaleController@getProductByFilter');
+	Route::get('sales/getfeatured', 'SaleController@getFeatured');
+	Route::get('sales/get_gift_card', 'SaleController@getGiftCard');
+	Route::get('sales/paypalSuccess', 'SaleController@paypalSuccess');
+	Route::get('sales/paypalPaymentSuccess/{id}', 'SaleController@paypalPaymentSuccess');
+	Route::get('sales/gen_invoice/{id}', 'SaleController@genInvoice')->name('sale.invoice');
+	Route::post('sales/add_payment', 'SaleController@addPayment')->name('sale.add-payment');
+	Route::get('sales/getpayment/{id}', 'SaleController@getPayment')->name('sale.get-payment');
+	Route::post('sales/updatepayment', 'SaleController@updatePayment')->name('sale.update-payment');
+	Route::post('sales/deletepayment', 'SaleController@deletePayment')->name('sale.delete-payment');
+	Route::get('sales/{id}/create', 'SaleController@createSale');
+	Route::post('sales/deletebyselection', 'SaleController@deleteBySelection');
+	Route::resource('sales', 'SaleController');
 
 	Route::get('delivery', 'DeliveryController@index')->name('delivery.index');
 	Route::get('delivery/create/{id}', 'DeliveryController@create');
@@ -131,17 +135,17 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 	Route::post('quotations/deletebyselection', 'QuotationController@deleteBySelection');
 	Route::resource('quotations', 'QuotationController');
 
-	Route::post('purchase/purchase-data', 'PurchaseController@purchaseData');
-	Route::get('purchase/product_purchase/{id}','PurchaseController@productPurchaseData');
-	Route::get('purchase/lims_product_search', 'PurchaseController@limsProductSearch')->name('product_purchase.search');
-	Route::post('purchase/add_payment', 'PurchaseController@addPayment')->name('purchase.add-payment');
-	Route::get('purchase/getpayment/{id}', 'PurchaseController@getPayment')->name('purchase.get-payment');
-	Route::post('purchase/updatepayment', 'PurchaseController@updatePayment')->name('purchase.update-payment');
-	Route::post('purchase/deletepayment', 'PurchaseController@deletePayment')->name('purchase.delete-payment');
-	Route::get('purchase/purchase_by_csv', 'PurchaseController@purchaseByCsv');
+	Route::post('purchases/purchase-data', 'PurchaseController@purchaseData');
+	Route::get('purchases/product_purchase/{id}','PurchaseController@productPurchaseData');
+	Route::get('purchases/lims_product_search', 'PurchaseController@limsProductSearch')->name('product_purchase.search');
+	Route::post('purchases/add_payment', 'PurchaseController@addPayment')->name('purchase.add-payment');
+	Route::get('purchases/getpayment/{id}', 'PurchaseController@getPayment')->name('purchase.get-payment');
+	Route::post('purchases/updatepayment', 'PurchaseController@updatePayment')->name('purchase.update-payment');
+	Route::post('purchases/deletepayment', 'PurchaseController@deletePayment')->name('purchase.delete-payment');
+	Route::get('purchases/purchase_by_csv', 'PurchaseController@purchaseByCsv');
 	Route::post('importpurchase', 'PurchaseController@importPurchase')->name('purchase.import');
-	Route::post('purchase/deletebyselection', 'PurchaseController@deleteBySelection');
-	Route::resource('purchase', 'PurchaseController');
+	Route::post('purchases/deletebyselection', 'PurchaseController@deleteBySelection');
+	Route::resource('purchases', 'PurchaseController');
 
 	Route::get('transfers/product_transfer/{id}','TransferController@productTransferData');
 	Route::get('transfers/transfer_by_csv', 'TransferController@transferByCsv');
@@ -234,12 +238,13 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 	Route::get('coupons/gencode', 'CouponController@generateCode');
 	Route::post('coupons/deletebyselection', 'CouponController@deleteBySelection');
 	Route::resource('coupons', 'CouponController');
-
+	//accounting routes
 	Route::get('accounts/make-default/{id}', 'AccountsController@makeDefault');
 	Route::get('accounts/balancesheet', 'AccountsController@balanceSheet')->name('accounts.balancesheet');
 	Route::post('accounts/account-statement', 'AccountsController@accountStatement')->name('accounts.statement');
 	Route::resource('accounts', 'AccountsController');
-
+	Route::resource('money-transfers', 'MoneyTransferController');
+	//HRM routes
 	Route::post('departments/deletebyselection', 'DepartmentController@deleteBySelection');
 	Route::resource('departments', 'DepartmentController');
 

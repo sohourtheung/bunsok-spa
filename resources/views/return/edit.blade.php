@@ -18,13 +18,13 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.reference')}}</strong></label>
+                                            <label>{{trans('file.reference')}}</label>
                                             <p><strong>{{ $lims_return_data->reference_no }}</strong></p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.customer')}} *</strong></label>
+                                            <label>{{trans('file.customer')}} *</label>
                                             <input type="hidden" name="customer_id_hidden" value="{{ $lims_return_data->customer_id }}" />
                                             <select required name="customer_id" class="selectpicker form-control" data-live-search="true" id="customer-id" data-live-search-style="begins" title="Select customer...">
                                                 @foreach($lims_customer_list as $customer)
@@ -37,7 +37,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Warehouse')}} *</strong></label>
+                                            <label>{{trans('file.Warehouse')}} *</label>
                                             <input type="hidden" name="warehouse_id_hidden" value="{{$lims_return_data->warehouse_id}}" />
                                             <select required id="warehouse_id" name="warehouse_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select warehouse...">
                                                 @foreach($lims_warehouse_list as $warehouse)
@@ -48,7 +48,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Biller')}} *</strong></label>
+                                            <label>{{trans('file.Biller')}} *</label>
                                             <input type="hidden" name="biller_id_hidden" value="{{$lims_return_data->biller_id}}" />
                                             <select required name="biller_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Biller...">
                                                 @foreach($lims_biller_list as $biller)
@@ -60,7 +60,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12 mt-3">
-                                        <label><strong>{{trans('file.Select Product')}}</strong></label>
+                                        <label>{{trans('file.Select Product')}}</label>
                                         <div class="search-box input-group">
                                             <button type="button" class="btn btn-secondary btn-lg"><i class="fa fa-barcode"></i></button>
                                             <input type="text" name="product_code_name" id="lims_productcodeSearch" placeholder="Please type product code and select..." class="form-control" />
@@ -81,7 +81,7 @@
                                                         <th>{{trans('file.Discount')}}</th>
                                                         <th>{{trans('file.Tax')}}</th>
                                                         <th>{{trans('file.Subtotal')}}</th>
-                                                        <th><i class="fa fa-trash"></i></th>
+                                                        <th><i class="dripicons-trash"></i></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -94,7 +94,13 @@
                                                     <tr>
                                                     <?php 
                                                         $product_data = DB::table('products')->find($product_return->product_id);
-
+                                                        if($product_return->variant_id) {
+                                                            $product_variant_data = \App\ProductVariant::select('id', 'item_code')->FindExactProduct($product_data->id, $product_return->variant_id)->first();
+                                                            $product_variant_id = $product_variant_data->id;
+                                                            $product_data->code = $product_variant_data->item_code;
+                                                        }
+                                                        else
+                                                            $product_variant_id = null;
                                                         if($product_data->tax_method == 1){
                                                             $product_price = $product_return->net_unit_price + ($product_return->discount / $product_return->qty);
                                                         }
@@ -138,7 +144,7 @@
                                                         $temp_unit_operator = $unit_operator = implode(",",$unit_operator) .',';
                                                         $temp_unit_operation_value = $unit_operation_value =  implode(",",$unit_operation_value) . ',';  
                                                     ?>
-                                                        <td>{{$product_data->name}} <button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="fa fa-edit"></i></button> </td>
+                                                        <td>{{$product_data->name}} <button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="dripicons-document-edit"></i></button> </td>
                                                         <td>{{$product_data->code}}</td>
                                                         <td><input type="number" class="form-control qty" name="qty[]" value="{{$product_return->qty}}" required step="any" /></td>
                                                         <td class="net_unit_price">{{ number_format((float)$product_return->net_unit_price, 2, '.', '') }} </td>
@@ -148,6 +154,7 @@
                                                         <td><button type="button" class="ibtnDel btn btn-md btn-danger">{{trans("file.delete")}}</button></td>
                                                         <input type="hidden" class="product-code" name="product_code[]" value="{{$product_data->code}}"/>
                                                         <input type="hidden" name="product_id[]" value="{{$product_data->id}}"/>
+                                                        <input type="hidden" name="product_variant_id[]" value="{{$product_variant_id}}"/>
                                                         <input type="hidden" class="product-price" name="product_price[]" value="{{$product_price}}"/>
                                                         <input type="hidden" class="sale-unit" name="sale_unit[]" value="{{$unit_name}}"/>
                                                         <input type="hidden" class="sale-unit-operator" value="{{$unit_operator}}"/>
@@ -173,7 +180,7 @@
                                                     <th id="total-discount">{{ number_format((float)$lims_return_data->total_discount, 2, '.', '') }}</th>
                                                     <th id="total-tax">{{ number_format((float)$lims_return_data->total_tax, 2, '.', '')}}</th>
                                                     <th id="total">{{ number_format((float)$lims_return_data->total_price, 2, '.', '') }}</th>
-                                                    <th><i class="fa fa-trash"></i></th>
+                                                    <th><i class="dripicons-trash"></i></th>
                                                 </tfoot>
                                             </table>
                                         </div>
@@ -216,7 +223,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <input type="hidden" name="order_tax_rate_hidden" value="{{$lims_return_data->order_tax_rate}}">
-                                            <label><strong>{{trans('file.Order Tax')}}</strong></label>
+                                            <label>{{trans('file.Order Tax')}}</label>
                                             <select class="form-control" name="order_tax_rate">
                                                 <option value="0">No Tax</option>
                                                 @foreach($lims_tax_list as $tax)
@@ -227,8 +234,8 @@
                                     </div>
                                 	<div class="col-md-4">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Attach Document')}}</strong></label>
-                                            <i class="fa fa-question-circle" data-toggle="tooltip" title="Only jpg, jpeg, png, gif, pdf, csv, docx, xlsx and txt file is supported"></i> 
+                                            <label>{{trans('file.Attach Document')}}</label>
+                                            <i class="dripicons-question" data-toggle="tooltip" title="Only jpg, jpeg, png, gif, pdf, csv, docx, xlsx and txt file is supported"></i> 
                                             <input type="file" name="document" class="form-control" />
                                             @if($errors->has('extension'))
                                                 <span>
@@ -241,13 +248,13 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Return Note')}}</strong></label>
+                                            <label>{{trans('file.Return Note')}}</label>
                                             <textarea rows="5" class="form-control" name="return_note" >{{ $lims_return_data->return_note }}</textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Staff Note')}}</strong></label>
+                                            <label>{{trans('file.Staff Note')}}</label>
                                             <textarea rows="5" class="form-control" name="staff_note">{{ $lims_return_data->staff_note }}</textarea>
                                         </div>
                                     </div>
@@ -284,20 +291,20 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="modal_header" class="modal-title"></h5>
-                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                 </div>
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
-                            <label><strong>{{trans('file.Quantity')}}</strong></label>
+                            <label>{{trans('file.Quantity')}}</label>
                             <input type="number" name="edit_qty" class="form-control" step="any">
                         </div>
                         <div class="form-group">
-                            <label><strong>{{trans('file.Unit Discount')}}</strong></label>
+                            <label>{{trans('file.Unit Discount')}}</label>
                             <input type="number" name="edit_discount" class="form-control" step="any">
                         </div>
                         <div class="form-group">
-                            <label><strong>{{trans('file.Unit Price')}}</strong></label>
+                            <label>{{trans('file.Unit Price')}}</label>
                             <input type="number" name="edit_unit_price" class="form-control" step="any">
                         </div>
                         <?php
@@ -309,16 +316,16 @@
                             }
                         ?>
                             <div class="form-group">
-                                <label><strong>{{trans('file.Tax Rate')}}</strong></label>
-                                <select name="edit_tax_rate" class="form-control">
+                                <label>{{trans('file.Tax Rate')}}</label>
+                                <select name="edit_tax_rate" class="form-control selectpicker">
                                     @foreach($tax_name_all as $key => $name)
                                     <option value="{{$key}}">{{$name}}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div id="edit_unit" class="form-group">
-                                <label><strong>{{trans('file.Product Unit')}}</strong></label>
-                                <select name="edit_unit" class="form-control">
+                                <label>{{trans('file.Product Unit')}}</label>
+                                <select name="edit_unit" class="form-control selectpicker">
                                 </select>
                             </div>
                             <button type="button" name="update_btn" class="btn btn-primary">{{trans('file.update')}}</button>
@@ -458,6 +465,10 @@ lims_productcodeSearch.autocomplete({
 //Change quantity
 $("#myTable").on('input', '.qty', function() {
     rowindex = $(this).closest('tr').index();
+    if($(this).val() < 1 && $(this).val() != '') {
+      $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ') .qty').val(1);
+      alert("Quantity can't be less than 1");
+    }
     calculateRowProductData($(this).val());
 });
 
@@ -512,6 +523,7 @@ $("table.order-list").on("click", ".edit-product", function() {
         $("#edit_unit").hide();
     }
     $('input[name="edit_unit_price"]').val(row_product_price.toFixed(2));
+    $('.selectpicker').selectpicker('refresh');
 });
 
 //Update product
@@ -523,6 +535,12 @@ $('button[name="update_btn"]').on("click", function() {
     if (parseFloat(edit_discount) > parseFloat(edit_unit_price)) {
         alert('Invalid Discount Input!');
         return;
+    }
+
+    if(edit_qty < 1) {
+        $('input[name="edit_qty"]').val(1);
+        edit_qty = 1;
+        alert("Quantity can't be less than 1");
     }
 
     var tax_rate_all = <?php echo json_encode($tax_rate_all) ?>;
@@ -587,7 +605,7 @@ function productSearch(data){
                 var newRow = $("<tr>");
                 var cols = '';
                 temp_unit_name = (data[6]).split(',');
-                cols += '<td>' + data[0] + '<button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="fa fa-edit"></i></button></td>';
+                cols += '<td>' + data[0] + '<button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="dripicons-document-edit"></i></button></td>';
                 cols += '<td>' + data[1] + '</td>';
                 cols += '<td><input type="number" class="form-control qty" name="qty[]" value="1" required step="any"/></td>';
                 cols += '<td class="net_unit_price"></td>';
@@ -597,6 +615,7 @@ function productSearch(data){
                 cols += '<td><button type="button" class="ibtnDel btn btn-md btn-danger">{{trans("file.delete")}}</button></td>';
                 cols += '<input type="hidden" class="product-code" name="product_code[]" value="' + data[1] + '"/>';
                 cols += '<input type="hidden" name="product_id[]" value="' + data[9] + '"/>';
+                cols += '<input type="hidden" name="product_variant_id[]" value="' + data[10] + '"/>';
                 cols += '<input type="hidden" class="sale-unit" name="sale_unit[]" value="' + temp_unit_name[0]+ '"/>';
                 cols += '<input type="hidden" class="net_unit_price" name="net_unit_price[]" />';
                 cols += '<input type="hidden" class="discount-value" name="discount[]" />';

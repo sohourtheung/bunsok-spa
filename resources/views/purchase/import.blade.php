@@ -21,7 +21,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Warehouse')}} *</strong></label>
+                                            <label>{{trans('file.Warehouse')}} *</label>
                                             <select required name="warehouse_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select warehouse...">
                                                 @foreach($lims_warehouse_list as $warehouse)
                                                 <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
@@ -31,7 +31,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Supplier')}}</strong></label>
+                                            <label>{{trans('file.Supplier')}}</label>
                                             <select name="supplier_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select supplier...">
                                                 @foreach($lims_supplier_list as $supplier)
                                                 <option value="{{$supplier->id}}">{{$supplier->name .' ('. $supplier->company_name .')'}}</option>
@@ -43,7 +43,7 @@
                                 <div class="row">  
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Purchase Status')}}</strong></label>
+                                            <label>{{trans('file.Purchase Status')}}</label>
                                             <select name="status" class="form-control">
                                                 <option value="1">{{trans('file.Recieved')}}</option>
                                                 <option value="3">{{trans('file.Pending')}}</option>
@@ -53,8 +53,8 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Attach Document')}}</strong></label>
-                                            <i class="fa fa-question-circle" data-toggle="tooltip" title="Only jpg, jpeg, png, gif, pdf, csv, docx, xlsx and txt file is supported"></i> 
+                                            <label>{{trans('file.Attach Document')}}</label>
+                                            <i class="dripicons-question" data-toggle="tooltip" title="Only jpg, jpeg, png, gif, pdf, csv, docx, xlsx and txt file is supported"></i> 
                                             <input type="file" name="document" class="form-control" />
                                             @if($errors->has('extension'))
                                                 <span>
@@ -67,15 +67,15 @@
                                 <div class="row mt-3">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Upload CSV File')}} *</strong></label>
+                                            <label>{{trans('file.Upload CSV File')}} *</label>
                                             <input type="file" name="file" class="form-control" required />
                                             <p>{{trans('file.The correct column order is')}} (product_code, quantity, purchase_unit, product_cost, discount, tax_name) {{trans('file.and you must follow this')}}. {{trans('file.All columns are required')}}</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong></strong></label><br>
-                                            <a href="../public/sample_file/sample_purchase_products.csv" class="btn btn-primary btn-block btn-lg"><i class="fa fa-download"></i> {{trans('file.Download Sample File')}}</a>
+                                            <label></label><br>
+                                            <a href="../public/sample_file/sample_purchase_products.csv" class="btn btn-primary btn-block btn-lg"><i class="dripicons-download"></i> {{trans('file.Download Sample File')}}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -117,7 +117,7 @@
                                 <div class="row mt-3">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Order Tax')}}</strong></label>
+                                            <label>{{trans('file.Order Tax')}}</label>
                                             <select class="form-control" name="order_tax_rate">
                                                 <option value="0">{{trans('file.No Tax')}}</option>
                                                 @foreach($lims_tax_list as $tax)
@@ -146,7 +146,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Note')}}</strong></label>
+                                            <label>{{trans('file.Note')}}</label>
                                             <textarea rows="5" class="form-control" name="note"></textarea>
                                         </div>
                                     </div>

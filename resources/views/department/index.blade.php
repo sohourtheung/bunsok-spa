@@ -12,10 +12,10 @@
 
 <section>
     <div class="container-fluid">
-        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="fa fa-plus"></i> {{trans('file.Add Department')}}</button>
+        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="dripicons-plus"></i> {{trans('file.Add Department')}}</button>
     </div>
     <div class="table-responsive">
-        <table id="department-table" class="table table-striped">
+        <table id="department-table" class="table">
             <thead>
                 <tr>
                     <th class="not-exported"></th>
@@ -30,18 +30,18 @@
                     <td>{{ $department->name }}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                               <span class="caret"></span>
                               <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 <li>
-                                    <button type="button" data-id="{{$department->id}}" data-name="{{$department->name}}" class="edit-btn btn btn-link" data-toggle="modal" data-target="#editModal" ><i class="fa fa-edit"></i>  {{trans('file.edit')}}</button>
+                                    <button type="button" data-id="{{$department->id}}" data-name="{{$department->name}}" class="edit-btn btn btn-link" data-toggle="modal" data-target="#editModal" ><i class="dripicons-document-edit"></i>  {{trans('file.edit')}}</button>
                                 </li>
                                 <li class="divider"></li>
                                 {{ Form::open(['route' => ['departments.destroy', $department->id], 'method' => 'DELETE'] ) }}
                                 <li>
-                                  <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa fa-trash"></i> {{trans('file.delete')}}</button> 
+                                  <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button> 
                                 </li>
                                 {{ Form::close() }}
                             </ul>
@@ -61,13 +61,13 @@
         {!! Form::open(['route' => 'departments.store', 'method' => 'post']) !!}
         <div class="modal-header">
           <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Department')}}</h5>
-          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
         </div>
         <div class="modal-body">
           <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
           <form>
             <div class="form-group">
-                <label><strong>{{trans('file.name')}} *</strong></label>
+                <label>{{trans('file.name')}} *</label>
                 {{Form::text('name',null,array('required' => 'required', 'class' => 'form-control', 'placeholder' => 'Type department name...'))}}
             </div>               
             <div class="form-group">       
@@ -86,12 +86,12 @@
         {{ Form::open(['route' => ['departments.update', 1], 'method' => 'PUT'] ) }}
       <div class="modal-header">
         <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Department')}}</h5>
-        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+        <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
       </div>
       <div class="modal-body">
         <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
             <div class="form-group">
-                <label><strong>{{trans('file.name')}} *</strong></label>
+                <label>{{trans('file.name')}} *</label>
                 {{Form::text('name',null, array('required' => 'required', 'class' => 'form-control'))}}
             </div>
             <input type="hidden" name="department_id">
@@ -135,11 +135,11 @@ $(document).ready(function() {
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -148,10 +148,18 @@ $(document).ready(function() {
                 'targets': [0, 2]
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},

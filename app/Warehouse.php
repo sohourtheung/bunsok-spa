@@ -10,4 +10,10 @@ class Warehouse extends Model
 
         "name", "phone", "email", "address", "is_active"
     ];
+
+    public function product()
+    {
+    	return $this->hasMany('App\Product');
+    	
+    }
 }

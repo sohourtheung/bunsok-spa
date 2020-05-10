@@ -82,7 +82,7 @@
                                           @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group" id="warehouse-id">
+                                    <div class="form-group" id="warehouseId">
                                         <label><strong>{{trans('file.Warehouse')}} *</strong></label>
                                         <input type="hidden" name="warehouse_id_hidden" value="{{$lims_user_data->warehouse_id}}">
                                         <select name="warehouse_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Warehouse...">
@@ -105,15 +105,13 @@
     $("ul#people").siblings('a').attr('aria-expanded','true');
     $("ul#people").addClass("show");
     $('#biller-id').hide();
-    $('#warehouse-id').hide();
+    $('#warehouseId').hide();
     
-    $('.selectpicker').selectpicker({
-      style: 'btn-link',
-    });
+    
 
     $('select[name=role_id]').val($("input[name='role_id_hidden']").val());
     if($('select[name=role_id]').val() > 2){
-        $('#warehouse-id').show();
+        $('#warehouseId').show();
         $('select[name=warehouse_id]').val($("input[name='warehouse_id_hidden']").val());
         $('#biller-id').show();
         $('select[name=biller_id]').val($("input[name='biller_id_hidden']").val());
@@ -125,13 +123,13 @@
             $('select[name="warehouse_id"]').prop('required',true);
             $('select[name="biller_id"]').prop('required',true);
             $('#biller-id').show();
-            $('#warehouse-id').show();
+            $('#warehouseId').show();
         }
         else{
             $('select[name="warehouse_id"]').prop('required',false);
             $('select[name="biller_id"]').prop('required',false);
             $('#biller-id').hide();
-            $('#warehouse-id').hide();
+            $('#warehouseId').hide();
         }
     });
 

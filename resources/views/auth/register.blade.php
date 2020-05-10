@@ -25,19 +25,35 @@
     <!-- theme stylesheet-->
     <link rel="stylesheet" href="<?php echo asset('public/css/style.default.css') ?>" id="theme-stylesheet" type="text/css">
     <!-- Custom stylesheet - for your changes-->
-    <link rel="stylesheet" href="<?php echo asset('public/css/custom.css') ?>" type="text/css">
+    <link rel="stylesheet" href="<?php echo asset('public/css/custom-'.$general_setting->theme) ?>" type="text/css">
     <!-- Favicon-->
     <link rel="shortcut icon" href="img/favicon.ico">
     <!-- Tweaks for older IEs--><!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+
+    <script type="text/javascript" src="<?php echo asset('public/vendor/jquery/jquery.min.js') ?>"></script>
+<script type="text/javascript" src="<?php echo asset('public/vendor/jquery/jquery-ui.min.js') ?>"></script>
+<script type="text/javascript" src="<?php echo asset('public/vendor/jquery/bootstrap-datepicker.min.js') ?>"></script>
+<script type="text/javascript" src="<?php echo asset('public/vendor/popper.js/umd/popper.min.js') ?>">
+</script>
+<script type="text/javascript" src="<?php echo asset('public/vendor/bootstrap/js/bootstrap.min.js') ?>"></script>
+<script type="text/javascript" src="<?php echo asset('public/vendor/bootstrap/js/bootstrap-select.min.js') ?>"></script>
+<script type="text/javascript" src="<?php echo asset('public/js/grasp_mobile_progress_circle-1.0.0.min.js') ?>"></script>
+<script type="text/javascript" src="<?php echo asset('public/vendor/jquery.cookie/jquery.cookie.js') ?>">
+</script>
+<script type="text/javascript" src="<?php echo asset('public/vendor/chart.js/Chart.min.js') ?>"></script>
+<script type="text/javascript" src="<?php echo asset('public/vendor/jquery-validation/jquery.validate.min.js') ?>"></script>
+<script type="text/javascript" src="<?php echo asset('public/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js')?>"></script>
+<script type="text/javascript" src="<?php echo asset('public/js/charts-home.js') ?>"></script>
+<script type="text/javascript" src="<?php echo asset('public/js/front.js') ?>"></script>
   </head>
   <body>
     <div class="page login-page">
       <div class="container">
         <div class="form-outer text-center d-flex align-items-center">
           <div class="form-inner">
-            <div class="logo text-uppercase"><strong class="text-primary">{{$general_setting->site_title}}</strong></div>
+            <div class="logo"><span>{{$general_setting->site_title}}</span></div>
             <form method="POST" action="{{ route('register') }}">
                 @csrf
               <div class="form-group-material">
@@ -101,51 +117,36 @@
                 <label for="password-confirm" class="label-material">{{trans('file.Confirm Password')}} *</label>
               </div>
               <input id="register" type="submit" value="Register" class="btn btn-primary">
-            </form><small>{{trans('file.Already have an account')}}? </small><a href="{{url('login')}}" class="signup">{{trans('file.LogIn')}}</a>
-          </div>
-          <div class="copyrights text-center">
-            <p>{{trans('file.Developed By')}} <a href="http://lion-coders.com" class="external">LionCoders</a></p>
+            </form><p>{{trans('file.Already have an account')}}? </p><a href="{{url('login')}}" class="signup">{{trans('file.LogIn')}}</a>
           </div>
         </div>
       </div>
     </div>
-    <script type="text/javascript" src="<?php echo asset('public/vendor/jquery/jquery.min.js') ?>"></script>
-<script type="text/javascript" src="<?php echo asset('public/vendor/jquery/jquery-ui.min.js') ?>"></script>
-<script type="text/javascript" src="<?php echo asset('public/vendor/jquery/bootstrap-datepicker.min.js') ?>"></script>
-<script type="text/javascript" src="<?php echo asset('public/vendor/popper.js/umd/popper.min.js') ?>">
-</script>
-<script type="text/javascript" src="<?php echo asset('public/vendor/bootstrap/js/bootstrap.min.js') ?>"></script>
-<script type="text/javascript" src="<?php echo asset('public/vendor/bootstrap/js/bootstrap-select.min.js') ?>"></script>
-<script type="text/javascript" src="<?php echo asset('public/js/grasp_mobile_progress_circle-1.0.0.min.js') ?>"></script>
-<script type="text/javascript" src="<?php echo asset('public/vendor/jquery.cookie/jquery.cookie.js') ?>">
-</script>
-<script type="text/javascript" src="<?php echo asset('public/vendor/chart.js/Chart.min.js') ?>"></script>
-<script type="text/javascript" src="<?php echo asset('public/vendor/jquery-validation/jquery.validate.min.js') ?>"></script>
-<script type="text/javascript" src="<?php echo asset('public/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js')?>"></script>
-<script type="text/javascript" src="<?php echo asset('public/js/charts-home.js') ?>"></script>
-<script type="text/javascript" src="<?php echo asset('public/js/front.js') ?>"></script>
+    <script type="text/javascript">
+      // ------------------------------------------------------- //
+    // Material Inputs
+    // ------------------------------------------------------ //
+
+    var materialInputs = $('input.input-material');
+
+    // activate labels for prefilled values
+    materialInputs.filter(function() { return $(this).val() !== ""; }).siblings('.label-material').addClass('active');
+
+    // move label on focus
+    materialInputs.on('focus', function () {
+        $(this).siblings('.label-material').addClass('active');
+    });
+
+    // remove/keep label on blur
+    materialInputs.on('blur', function () {
+        $(this).siblings('.label-material').removeClass('active');
+
+        if ($(this).val() !== '') {
+            $(this).siblings('.label-material').addClass('active');
+        } else {
+            $(this).siblings('.label-material').removeClass('active');
+        }
+    });
+    </script>
   </body>
-<script type="text/javascript">
-    $('.selectpicker').selectpicker({
-      style: 'btn-link',
-    });
-
-    $('#warehouse-id').hide();
-    $('#biller-id').hide();
-
-    $('select[name="role_id"]').on('change', function() {
-        if($(this).val() > 2){
-            $('select[name="warehouse_id"]').prop('required',true);
-            $('select[name="biller_id"]').prop('required',true);
-            $('#biller-id').show();
-            $('#warehouse-id').show();
-        }
-        else{
-            $('select[name="warehouse_id"]').prop('required',false);
-            $('select[name="biller_id"]').prop('required',false);
-            $('#biller-id').hide();
-            $('#warehouse-id').hide();
-        }
-    });
-</script>
 </html>

@@ -11,4 +11,9 @@ class Biller extends Model
         "email", "phone_number", "address", "city",
         "state", "postal_code", "country", "is_active"
     ];
+
+    public function sale()
+    {
+    	return $this->hasMany('App\Sale');
+    }
 }

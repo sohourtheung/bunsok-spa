@@ -12,10 +12,10 @@
 
 <section>
     <div class="container-fluid">
-        <button class="btn btn-info" data-toggle="modal" data-target="#account-modal"><i class="fa fa-plus"></i> {{trans('file.Add Account')}}</button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#account-modal"><i class="dripicons-plus"></i> {{trans('file.Add Account')}}</button>
     </div>
     <div class="table-responsive">
-        <table id="account-table" class="table table-striped">
+        <table id="account-table" class="table">
             <thead>
                 <tr>
                     <th class="not-exported"></th>
@@ -48,16 +48,16 @@
                     <td>{{ $account->note }}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
-                                <li><button type="button" data-id="{{$account->id}}" data-account_no="{{$account->account_no}}" data-name="{{$account->name}}"  data-initial_balance="{{$account->initial_balance}}" data-note="{{$account->note}}" class="edit-btn btn btn-link" data-toggle="modal" data-target="#editModal"><i class="fa fa-edit"></i> {{trans('file.edit')}}</button></li>
+                                <li><button type="button" data-id="{{$account->id}}" data-account_no="{{$account->account_no}}" data-name="{{$account->name}}"  data-initial_balance="{{$account->initial_balance}}" data-note="{{$account->note}}" class="edit-btn btn btn-link" data-toggle="modal" data-target="#editModal"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</button></li>
                                 <li class="divider"></li>
                                 {{ Form::open(['route' => ['accounts.destroy', $account->id], 'method' => 'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa fa-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                             </ul>
@@ -84,26 +84,26 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Account')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
               <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
                 {!! Form::open(['route' => ['accounts.update', 1], 'method' => 'put']) !!}
                     <div class="form-group">
-                        <label><strong>{{trans('file.Account')}} No *</strong></label>
+                        <label>{{trans('file.Account')}} No *</label>
                         <input type="text" name="account_no" required class="form-control">
                         <input type="hidden" name="account_id">
                     </div>
                     <div class="form-group">
-                        <label><strong>{{trans('file.name')}} *</strong></label>
+                        <label>{{trans('file.name')}} *</label>
                         <input type="text" name="name" required class="form-control">
                     </div>
                     <div class="form-group">
-                        <label><strong>{{trans('file.Initial Balance')}}</strong></label>
+                        <label>{{trans('file.Initial Balance')}}</label>
                         <input type="number" name="initial_balance" step="any" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label><strong>{{trans('file.Note')}}</strong></label>
+                        <label>{{trans('file.Note')}}</label>
                         <textarea name="note" rows="3" class="form-control"></textarea>
                     </div>
                     <div class="form-group">
@@ -156,16 +156,15 @@ function confirmDelete() {
     }
     return false;
 }
-
-    $('#account-table').DataTable( {
+    var table = $('#account-table').DataTable( {
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -174,10 +173,18 @@ function confirmDelete() {
                 'targets': [0, 6]
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},
@@ -237,7 +244,6 @@ function confirmDelete() {
             datatable_sum(api, false);
         }
     } );
-
     function datatable_sum(dt_selector, is_calling_first) {
         if (dt_selector.rows( '.selected' ).any() && is_calling_first) {
             var rows = dt_selector.rows( '.selected' ).indexes();

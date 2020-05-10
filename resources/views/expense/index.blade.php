@@ -9,11 +9,11 @@
 <section>
     <div class="container-fluid">
       @if(in_array("expenses-add", $all_permission))
-        <button class="btn btn-info" data-toggle="modal" data-target="#expense-modal"><i class="fa fa-plus"></i> {{trans('file.Add Expense')}}</button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#expense-modal"><i class="dripicons-plus"></i> {{trans('file.Add Expense')}}</button>
       @endif
     </div>
     <div class="table-responsive">
-        <table id="expense-table" class="table table-striped">
+        <table id="expense-table" class="table">
             <thead>
                 <tr>
                     <th class="not-exported"></th>
@@ -42,19 +42,19 @@
                     <td>{{ $expense->note }}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 @if(in_array("expenses-edit", $all_permission))
-                                <li><button type="button" data-id="{{$expense->id}}" class="open-Editexpense_categoryDialog btn btn-link" data-toggle="modal" data-target="#editModal"><i class="fa fa-edit"></i> {{trans('file.edit')}}</button></li>
+                                <li><button type="button" data-id="{{$expense->id}}" class="open-Editexpense_categoryDialog btn btn-link" data-toggle="modal" data-target="#editModal"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</button></li>
                                 @endif
                                 @if(in_array("expenses-delete", $all_permission))
                                 <li class="divider"></li>
                                 {{ Form::open(['route' => ['expenses.destroy', $expense->id], 'method' => 'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa fa-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                                 @endif
@@ -83,7 +83,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Expense')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
               <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
@@ -94,12 +94,12 @@
                 ?>
                   <div class="form-group">
                       <input type="hidden" name="expense_id">
-                      <label><strong>{{trans('file.reference')}}</strong></label>
+                      <label>{{trans('file.reference')}}</label>
                       <p id="reference">{{'er-' . date("Ymd") . '-'. date("his")}}</p>
                   </div>
                     <div class="row">
                         <div class="col-md-6 form-group">
-                            <label><strong>{{trans('file.Expense Category')}} *</strong></label>
+                            <label>{{trans('file.Expense Category')}} *</label>
                             <select name="expense_category_id" class="selectpicker form-control" required data-live-search="true" data-live-search-style="begins" title="Select Expense Category...">
                                 @foreach($lims_expense_category_list as $expense_category)
                                 <option value="{{$expense_category->id}}">{{$expense_category->name . ' (' . $expense_category->code. ')'}}</option>
@@ -107,7 +107,7 @@
                             </select>
                         </div>
                         <div class="col-md-6 form-group">
-                            <label><strong>{{trans('file.Warehouse')}} *</strong></label>
+                            <label>{{trans('file.Warehouse')}} *</label>
                             <select name="warehouse_id" class="selectpicker form-control" required data-live-search="true" data-live-search-style="begins" title="Select Warehouse...">
                                 @foreach($lims_warehouse_list as $warehouse)
                                 <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
@@ -115,11 +115,11 @@
                             </select>
                         </div>
                         <div class="col-md-6 form-group">
-                            <label><strong>{{trans('file.Amount')}} *</strong></label>
+                            <label>{{trans('file.Amount')}} *</label>
                             <input type="number" name="amount" step="any" required class="form-control">
                         </div>
                         <div class="col-md-6 form-group">
-                            <label><strong> {{trans('file.Account')}}</strong></label>
+                            <label> {{trans('file.Account')}}</label>
                             <select class="form-control selectpicker" name="account_id">
                             @foreach($lims_account_list as $account)
                                 @if($account->is_default)
@@ -132,7 +132,7 @@
                         </div>
                     </div>
                   <div class="form-group">
-                      <label><strong>{{trans('file.Note')}}</strong></label>
+                      <label>{{trans('file.Note')}}</label>
                       <textarea name="note" rows="3" class="form-control"></textarea>
                   </div>
                   <div class="form-group">
@@ -189,11 +189,11 @@ function confirmDelete() {
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -202,10 +202,18 @@ function confirmDelete() {
                 'targets': [0, 7]
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},

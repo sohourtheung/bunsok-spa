@@ -8,10 +8,10 @@
 
 <section>
     <div class="container-fluid">
-        <button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="fa fa-plus"></i> {{trans('file.Add Attendance')}} </button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="dripicons-plus"></i> {{trans('file.Add Attendance')}} </button>
     </div>
     <div class="table-responsive">
-        <table id="attendance-table" class="table table-striped">
+        <table id="attendance-table" class="table">
             <thead>
                 <tr>
                     <th class="not-exported"></th>
@@ -45,7 +45,7 @@
                     <td>
                         <div class="btn-group">
                             {{ Form::open(['route' => ['attendance.destroy', $attendance->id], 'method' => 'DELETE'] ) }}
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirmDelete()" title="{{trans('file.delete')}}"><i class="fa fa-trash"></i></button>
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirmDelete()" title="{{trans('file.delete')}}"><i class="dripicons-trash"></i></button>
                             {{ Form::close() }}
                         </div>
                     </td>
@@ -61,14 +61,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Attendance')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
               <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
                 {!! Form::open(['route' => 'attendance.store', 'method' => 'post', 'files' => true]) !!}
                 <div class="row">
                     <div class="col-md-6 form-group">
-                        <label><strong>{{trans('file.Employee')}} *</strong></label>
+                        <label>{{trans('file.Employee')}} *</label>
                         <select class="form-control selectpicker" name="employee_id[]" required data-live-search="true" data-live-search-style="begins" title="Select Employee..." multiple>
                             @foreach($lims_employee_list as $employee)
                             <option value="{{$employee->id}}">{{$employee->name}}</option>
@@ -76,19 +76,19 @@
                         </select>
                     </div>
                     <div class="col-md-6 form-group">
-                        <label><strong>{{trans('file.date')}} *</strong></label>
+                        <label>{{trans('file.date')}} *</label>
                         <input type="text" name="date" class="form-control date" value="{{date($general_setting->date_format)}}" required>
                     </div>
                     <div class="col-md-6 form-group">
-                        <label><strong>{{trans('file.CheckIn')}} *</strong></label>
+                        <label>{{trans('file.CheckIn')}} *</label>
                         <input type="text" id="checkin" name="checkin" class="form-control" value="{{$lims_hrm_setting_data->checkin}}" required>
                     </div>
                     <div class="col-md-6 form-group">
-                        <label><strong>{{trans('file.CheckOut')}} *</strong></label>
+                        <label>{{trans('file.CheckOut')}} *</label>
                         <input type="text" id="checkout" name="checkout" class="form-control" value="{{$lims_hrm_setting_data->checkout}}" required>
                     </div>
                     <div class="col-md-12 form-group">
-                        <label><strong>{{trans('file.Note')}}</strong></label>
+                        <label>{{trans('file.Note')}}</label>
                         <textarea name="note" rows="3" class="form-control"></textarea>
                     </div>
                 </div>
@@ -134,15 +134,15 @@
     	'step': 15,
     });
 
-    $('#attendance-table').DataTable( {
+    var table = $('#attendance-table').DataTable( {
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -151,10 +151,18 @@
                 'targets': [0, 7]
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},

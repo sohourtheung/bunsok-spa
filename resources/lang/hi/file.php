@@ -534,5 +534,21 @@ return [
 	"Quick Cash" => "त्वरित नकद प्राप्ति",
 	"Clear" => "स्पष्ट",
 	"You can upload multiple image. Only .jpeg, .jpg, .png, .gif file can be uploaded. First image will be base image." => "आप कई छवि अपलोड कर सकते हैं। केवल .jpeg, .jpg, .png, .gif फ़ाइल अपलोड की जा सकती है। पहली छवि आधार छवि होगी।",
-		];
+	"This product has variant" => "इस उत्पाद का संस्करण है",
+	"Enter variant seperated by comma" => "अल्पविराम द्वारा अलग किया गया संस्करण दर्ज करें",
+	"Item Code" => "आइटम कोड",
+	"Additional Price" => "अतिरिक्त कीमत",
+	"Variant" => "प्रकार",
+	"Warehouse Quantity" => "वेयरहाउस मात्रा",
+	"Warehouse quantity of product variants" => "उत्पाद वेरिएंट की वेयरहाउस मात्रा",
+	"Thank you for shopping with us. Please come again" => "हमारे साथ खरीदारी करने के लिए धन्यवाद। कृपया फिर आइएगा",
+	"Money Transfer" => "मनी ट्रांसफर",
+	"Add Money Transfer" => "मनी ट्रांसफर जोड़ें",
+	"From Account" => "अकाउंट से",
+	"To Account" => "खाते में",
+	"Update Money Transfer" => "मनी ट्रांसफर को अपडेट करें",
+	"Stock Quantity" => "शेयर मात्रा",
+	"Stock Worth (Price/Cost)" => "स्टॉक वर्थ (मूल्य / लागत)",
+	"Number of Product" => "उत्पाद की संख्या",
+];
 ?>

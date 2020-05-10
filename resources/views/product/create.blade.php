@@ -12,70 +12,69 @@
                     <div class="card-body">
                         <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
                         <form id="product-form">
-                            <div class="row">                            
-                                <div class="col-md-6">
-    	                            <div class="form-group">
-    	                                <label><strong>{{trans('file.Product Name')}} *</strong> </label>
-    	                                <input type="text" name="name" class="form-control" id="name" aria-describedby="name" required>
-                                        <span class="validation-msg" id="name-error"></span>
-    	                            </div>
-                                </div>
-                                <div class="col-md-6">
-                            		<div class="form-group">
-                            			<label><strong>{{trans('file.Product Code')}} *</strong> </label>
-                            			<div class="input-group">
-    		                                <input type="text" name="code" class="form-control" id="code" aria-describedby="code" required>
-    		                                <div class="input-group-append">
-    				                            <button id="genbutton" type="button" class="btn btn-default">{{trans('file.Generate')}}</button>
-    				                        </div>
-                            			</div>
-                                        <span class="validation-msg" id="code-error"></span>
-    	                            </div>
-                                    
-                                </div>
-                            	<div class="col-md-6">
-                            		<div class="form-group">
-                            			<label><strong>{{trans('file.Product Type')}} *</strong> </label>
-                            			<div class="input-group">
-    		                                <select name="type" required class="form-control selectpicker" id="type">
-    		                                	<option value="standard">Standard</option>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{trans('file.Product Type')}} *</strong> </label>
+                                        <div class="input-group">
+                                            <select name="type" required class="form-control selectpicker" id="type">
+                                                <option value="standard">Standard</option>
                                                 <option value="combo">Combo</option>
                                                 <option value="digital">Digital</option>
-    		                                </select>
-                            			</div>
-    	                            </div>
-                            	</div>
-                                <div class="col-md-6">
-                            		<div class="form-group">
-                            			<label><strong>{{trans('file.Barcode Symbology')}} *</strong> </label>
-                            			<div class="input-group">
-    		                                <select name="barcode_symbology" required class="form-control selectpicker">
-    		                                	<option value="C128">Code 128</option>
-    		                                	<option value="C39">Code 39</option>
-    		                                	<option value="UPCA">UPC-A</option>
-    		                                	<option value="UPCE">UPC-E</option>
-    		                                	<option value="EAN8">EAN-8</option>
-    		                                	<option value="EAN13">EAN-13</option>
-    		                                </select>
-                            			</div>
-    	                            </div>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div id="digital" class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Attach File')}} *</strong> </label>
+                                        <label>{{trans('file.Product Name')}} *</strong> </label>
+                                        <input type="text" name="name" class="form-control" id="name" aria-describedby="name" required>
+                                        <span class="validation-msg" id="name-error"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{trans('file.Product Code')}} *</strong> </label>
+                                        <div class="input-group">
+                                            <input type="text" name="code" class="form-control" id="code" aria-describedby="code" required>
+                                            <div class="input-group-append">
+                                                <button id="genbutton" type="button" class="btn btn-sm btn-default" title="{{trans('file.Generate')}}"><i class="fa fa-refresh"></i></button>
+                                            </div>
+                                        </div>
+                                        <span class="validation-msg" id="code-error"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{trans('file.Barcode Symbology')}} *</strong> </label>
+                                        <div class="input-group">
+                                            <select name="barcode_symbology" required class="form-control selectpicker">
+                                                <option value="C128">Code 128</option>
+                                                <option value="C39">Code 39</option>
+                                                <option value="UPCA">UPC-A</option>
+                                                <option value="UPCE">UPC-E</option>
+                                                <option value="EAN8">EAN-8</option>
+                                                <option value="EAN13">EAN-13</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="digital" class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{trans('file.Attach File')}} *</strong> </label>
                                         <div class="input-group">
                                             <input type="file" name="file" class="form-control">
                                         </div>
                                         <span class="validation-msg"></span>
                                     </div>                                
                                 </div>
-                                <div id="combo" class="col-md-8 mb-1">
-                                    <label><strong>{{trans('file.add_product')}}</strong></label>
+                                <div id="combo" class="col-md-9 mb-1">
+                                    <label>{{trans('file.add_product')}}</label>
                                     <div class="search-box input-group mb-3">
                                         <button class="btn btn-secondary"><i class="fa fa-barcode"></i></button>
                                         <input type="text" name="product_code_name" id="lims_productcodeSearch" placeholder="Please type product code and select..." class="form-control" />
                                     </div>
-                                    <label><strong>{{trans('file.Combo Products')}}</strong></label>
+                                    <label>{{trans('file.Combo Products')}}</label>
                                     <div class="table-responsive">
                                         <table id="myTable" class="table table-hover order-list">
                                             <thead>
@@ -83,7 +82,7 @@
                                                     <th>{{trans('file.product')}}</th>
                                                     <th>{{trans('file.Quantity')}}</th>
                                                     <th>{{trans('file.Unit Price')}}</th>
-                                                    <th><i class="fa fa-trash"></i></th>
+                                                    <th><i class="dripicons-trash"></i></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -91,21 +90,21 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-    							    <div class="form-group">
-    							    	<label><strong>{{trans('file.Brand')}}</strong> </label>
-    							    	<div class="input-group">
-    								      <select name="brand_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Brand...">
-    								      	@foreach($lims_brand_list as $brand)
-    								      		<option value="{{$brand->id}}">{{$brand->title}}</option>
-    								      	@endforeach
-    								      </select>
-    								  </div>
-    							    </div>
-                                </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.category')}} *</strong> </label>
+                                        <label>{{trans('file.Brand')}}</strong> </label>
+                                        <div class="input-group">
+                                          <select name="brand_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Brand...">
+                                            @foreach($lims_brand_list as $brand)
+                                                <option value="{{$brand->id}}">{{$brand->title}}</option>
+                                            @endforeach
+                                          </select>
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{trans('file.category')}} *</strong> </label>
                                         <div class="input-group">
                                           <select name="category_id" required class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Category...">
                                             @foreach($lims_category_list as $category)
@@ -118,8 +117,8 @@
                                 </div>
                                 <div id="unit" class="col-md-12">
                                     <div class="row ">
-                                        <div class="col-md-6 form-group">
-                                                <label><strong>{{trans('file.Product Unit')}} *</strong> </label>
+                                        <div class="col-md-4 form-group">
+                                                <label>{{trans('file.Product Unit')}} *</strong> </label>
                                                 <div class="input-group">
                                                   <select required class="form-control selectpicker" name="unit_id">
                                                     <option value="" disabled selected>Select Product Unit...</option>
@@ -132,16 +131,16 @@
                                               </div>
                                               <span class="validation-msg"></span>
                                         </div>
-                                        <div class="col-md-6">
-                                                <label><strong>{{trans('file.Sale Unit')}}</strong> </label>
+                                        <div class="col-md-4">
+                                                <label>{{trans('file.Sale Unit')}}</strong> </label>
                                                 <div class="input-group">
                                                   <select class="form-control selectpicker" name="sale_unit_id"> 
                                                   </select>
                                               </div>
                                         </div>
-                                        <div class="col-md-6 mt-2">
+                                        <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label><strong>{{trans('file.Purchase Unit')}}</strong> </label>
+                                                    <label>{{trans('file.Purchase Unit')}}</strong> </label>
                                                     <div class="input-group">
                                                       <select class="form-control selectpicker" name="purchase_unit_id"> 
                                                       </select>
@@ -150,16 +149,16 @@
                                         </div>                                
                                     </div>                                
                                 </div>
-                                <div id="cost" class="col-md-6">
+                                <div id="cost" class="col-md-4">
                                      <div class="form-group">
-                                        <label><strong>{{trans('file.Product Cost')}} *</strong> </label>
+                                        <label>{{trans('file.Product Cost')}} *</strong> </label>
                                         <input type="number" name="cost" required class="form-control" step="any">
                                         <span class="validation-msg"></span>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Product Price')}} *</strong> </label>
+                                        <label>{{trans('file.Product Price')}} *</strong> </label>
                                         <input type="number" name="price" required class="form-control" step="any">
                                         <span class="validation-msg"></span>
                                     </div>
@@ -167,52 +166,15 @@
                                         <input type="hidden" name="qty" value="0.00">
                                     </div>
                                 </div>
-                                <div id="alert-qty" class="col-md-6">
+                                <div id="alert-qty" class="col-md-4">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Alert Quantity')}}</strong> </label>
+                                        <label>{{trans('file.Alert Quantity')}}</strong> </label>
                                         <input type="number" name="alert_quantity" class="form-control" step="any">
                                     </div>
                                 </div>
-                                <div class="col-md-6 mt-3">
-                                    <label><strong> {{trans('file.Add Promotional Price')}}</strong></label>&nbsp;
-                                    <input name="promotion" type="checkbox" id="promotion" value="1">
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mt-3">
-                                        <label><strong>{{trans('file.Featured')}}</strong></label>&nbsp;
-                                        <input type="checkbox" name="featured" value="1">
-                                        <p class="italic">{{trans('file.Featured product will be displayed in POS')}}</p>
-                                    </div> 
-                                </div>
-                                <div class="col-md-6" id="promotion_price">
-                                    <label><strong>{{trans('file.Promotional Price')}}</strong></label>
-                                    <input type="number" name="promotion_price" class="form-control" step="any" />
-                                </div>
-                                <div class="col-md-6" id="start_date">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Promotion Starts')}}</strong></label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text"><i class="ion-calendar"></i></div>
-                                            </div>
-                                            <input type="text" name="starting_date" id="starting_date" class="form-control" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6" id="last_date">
-                                    <div class="form-group">
-                                        <label><strong>{{trans('file.Promotion Ends')}}</strong></label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text"><i class="ion-calendar"></i></div>
-                                            </div>
-                                            <input type="text" name="last_date" id="ending_date" class="form-control" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label><strong>{{trans('file.Product Tax')}}</strong> </label>
+                                        <label>{{trans('file.Product Tax')}}</strong> </label>
                                         <select name="tax_id" class="form-control selectpicker">
                                             <option value="">No Tax</option>
                                             @foreach($lims_tax_list as $tax)
@@ -221,34 +183,92 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Tax Method')}}</strong> </label> <i class="fa fa-question-circle" data-toggle="tooltip" title="{{trans('file.Exclusive: Poduct price = Actual product price + Tax. Inclusive: Actual product price = Product price - Tax')}}"></i>
+                                        <label>{{trans('file.Tax Method')}}</strong> </label> <i class="dripicons-question" data-toggle="tooltip" title="{{trans('file.Exclusive: Poduct price = Actual product price + Tax. Inclusive: Actual product price = Product price - Tax')}}"></i>
                                         <select name="tax_method" class="form-control selectpicker">
                                             <option value="1">{{trans('file.Exclusive')}}</option>
                                             <option value="2">{{trans('file.Inclusive')}}</option>
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mt-3">
+                                        <input type="checkbox" name="featured" value="1">&nbsp;
+                                        <label>{{trans('file.Featured')}}</label>
+                                        <p class="italic">{{trans('file.Featured product will be displayed in POS')}}</p>
+                                    </div> 
+                                </div>                             
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Product Image')}}</strong> </label> <i class="fa fa-question-circle" data-toggle="tooltip" title="{{trans('file.You can upload multiple image. Only .jpeg, .jpg, .png, .gif file can be uploaded. First image will be base image.')}}"></i>
+                                        <label>{{trans('file.Product Image')}}</strong> </label> <i class="dripicons-question" data-toggle="tooltip" title="{{trans('file.You can upload multiple image. Only .jpeg, .jpg, .png, .gif file can be uploaded. First image will be base image.')}}"></i>
                                         <div id="imageUpload" class="dropzone"></div>
                                         <span class="validation-msg" id="image-error"></span>
                                     </div>
                                 </div>                            
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label><strong>{{trans('file.Product Details')}}</strong></label>
+                                        <label>{{trans('file.Product Details')}}</label>
                                         <textarea name="product_details" class="form-control" rows="3"></textarea>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label><strong>{{trans('file.Product Invoice Details')}}</strong></label>
-                                        <textarea name="product_invoice_details" class="form-control" rows="3"></textarea>
+                                <div class="col-md-12" id="variant-option">
+                                    <h5><input name="is_variant" type="checkbox" id="is-variant" value="1">&nbsp; {{trans('file.This product has variant')}}</h5>
+                                </div>
+                                <div class="col-md-12" id="variant-section">
+                                    <div class="col-md-6 form-group mt-2">
+                                        <input type="text" name="variant" class="form-control" placeholder="{{trans('file.Enter variant seperated by comma')}}">
+                                    </div>
+                                    <div class="table-responsive ml-2">
+                                        <table id="variant-table" class="table table-hover variant-list">
+                                            <thead>
+                                                <tr>
+                                                    <th><i class="dripicons-view-apps"></i></th>
+                                                    <th>{{trans('file.name')}}</th>
+                                                    <th>{{trans('file.Item Code')}}</th>
+                                                    <th>{{trans('file.Additional Price')}}</th>
+                                                    <th><i class="dripicons-trash"></i></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
+                                <div class="col-md-4 mt-3">
+                                    <input name="promotion" type="checkbox" id="promotion" value="1">&nbsp;
+                                    <label><h5> {{trans('file.Add Promotional Price')}}</h5></label>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-4" id="promotion_price">
+                                            <label>{{trans('file.Promotional Price')}}</label>
+                                            <input type="number" name="promotion_price" class="form-control" step="any" />
+                                        </div>
+                                        <div class="col-md-4" id="start_date">
+                                            <div class="form-group">
+                                                <label>{{trans('file.Promotion Starts')}}</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text"><i class="dripicons-calendar"></i></div>
+                                                    </div>
+                                                    <input type="text" name="starting_date" id="starting_date" class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4" id="last_date">
+                                            <div class="form-group">
+                                                <label>{{trans('file.Promotion Ends')}}</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text"><i class="dripicons-calendar"></i></div>
+                                                    </div>
+                                                    <input type="text" name="last_date" id="ending_date" class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>  
+                                </div> 
                             </div>
                             <div class="form-group">
                                 <input type="button" value="{{trans('file.submit')}}" id="submit-btn" class="btn btn-primary">
@@ -269,6 +289,7 @@
 
     $("#digital").hide();
     $("#combo").hide();
+    $("#variant-section").hide();
     $("#promotion_price").hide();
     $("#start_date").hide();
     $("#last_date").hide();
@@ -281,15 +302,13 @@
         }
     });
 
-	$('#genbutton').on("click", function(){
+    $('#genbutton').on("click", function(){
       $.get('gencode', function(data){
         $("input[name='code']").val(data);
       });
     });
 
-    $('.selectpicker').selectpicker({
-	  style: 'btn-link',
-	});
+    
 
     tinymce.init({
       selector: 'textarea',
@@ -308,26 +327,32 @@
             $("input[name='cost']").prop('required',false);
             $("select[name='unit_id']").prop('required',false);
             hide();
-            $("#combo").show();
+            $("#combo").show(300);
             $("input[name='price']").prop('disabled',true);
+            $("#is-variant").prop("checked", false);
+            $("#variant-section, #variant-option").hide(300);
         }
         else if($(this).val() == 'digital'){
             $("input[name='cost']").prop('required',false);
             $("select[name='unit_id']").prop('required',false);
             $("input[name='file']").prop('required',true);
             hide();
-            $("#digital").show();
+            $("#digital").show(300);
+            $("#combo").hide(300);
             $("input[name='price']").prop('disabled',false);
+            $("#is-variant").prop("checked", false);
+            $("#variant-section, #variant-option").hide(300);
         }
         else if($(this).val() == 'standard'){
             $("input[name='cost']").prop('required',true);
             $("select[name='unit_id']").prop('required',true);
             $("input[name='file']").prop('required',false);
-            $("#cost").show();
-            $("#unit").show();
-            $("#alert-qty").show();
-            $("#digital").hide();
-            $("#combo").hide();
+            $("#cost").show(300);
+            $("#unit").show(300);
+            $("#alert-qty").show(300);
+            $("#variant-option").show(300);
+            $("#digital").hide(300);
+            $("#combo").hide(300);
             $("input[name='price']").prop('disabled',false);
         }
     });
@@ -408,9 +433,9 @@
     });
 
     function hide() {
-        $("#cost").hide();
-        $("#unit").hide();
-        $("#alert-qty").hide();
+        $("#cost").hide(300);
+        $("#unit").hide(300);
+        $("#alert-qty").hide(300);
     }
 
     function calculate_price() {
@@ -441,17 +466,52 @@
         });
     }
 
+    $("input[name='is_variant']").on("change", function () {
+        if ($(this).is(':checked')) {
+            $("#variant-section").show(300);
+        }
+        else
+            $("#variant-section").hide(300);
+    });
+
+    $("input[name='variant']").on("input", function () {
+        if($("#code").val() == ''){
+            $("input[name='variant']").val('');
+            alert('Please fillup above information first.');
+        }
+        else if($(this).val().indexOf(',') > -1) {
+            var variant_name = $(this).val().slice(0, -1);
+            var item_code = variant_name+'-'+$("#code").val();
+            var newRow = $("<tr>");
+            var cols = '';
+            cols += '<td style="cursor:grab"><i class="dripicons-view-apps"></i></td>';
+            cols += '<td><input type="text" class="form-control" name="variant_name[]" value="' + variant_name + '" /></td>';
+            cols += '<td><input type="text" class="form-control" name="item_code[]" value="'+item_code+'" /></td>';
+            cols += '<td><input type="number" class="form-control" name="additional_price[]" value="" step="any" /></td>';
+            cols += '<td><button type="button" class="vbtnDel btn btn-sm btn-danger">X</button></td>';
+
+            $("input[name='variant']").val('');
+            newRow.append(cols);
+            $("table.variant-list tbody").append(newRow);
+        }
+    });
+
+    //Delete variant
+    $("table#variant-table tbody").on("click", ".vbtnDel", function(event) {
+        $(this).closest("tr").remove();
+    });
+
     $( "#promotion" ).on( "change", function() {
         if ($(this).is(':checked')) {
             $("#starting_date").val($.datepicker.formatDate('dd-mm-yy', new Date()));
-            $("#promotion_price").show();
-            $("#start_date").show();
-            $("#last_date").show();
+            $("#promotion_price").show(300);
+            $("#start_date").show(300);
+            $("#last_date").show(300);
         } 
         else {
-            $("#promotion_price").hide();
-            $("#start_date").hide();
-            $("#last_date").hide();
+            $("#promotion_price").hide(300);
+            $("#start_date").hide(300);
+            $("#last_date").hide(300);
         }
     });
 
@@ -540,9 +600,22 @@
                 return false;
             }
         }
+        if($("#is-variant").is(":checked")) {
+            rowindex = $("table#variant-table tbody tr:last").index();
+            if (rowindex < 0) {
+                alert('This product has variant. Please insert variant to table');
+                return false;
+            }
+        }
         $("input[name='price']").prop('disabled',false);
         return true;
     }
+
+    $("table#variant-table tbody").sortable({
+        items: 'tr',
+        cursor: 'grab',
+        opacity: 0.5,
+    });
 
     $(".dropzone").sortable({
         items:'.dz-preview',
@@ -590,6 +663,7 @@
             $('#submit-btn').on("click", function (e) {
                 e.preventDefault();
                 if ( $("#product-form").valid() && validate() ) {
+                    tinyMCE.triggerSave();
                     if(myDropzone.getAcceptedFiles().length) {
                         myDropzone.processQueue();
                     }
@@ -598,7 +672,8 @@
                             type:'POST',
                             url:'{{route('products.store')}}',
                             data: $("#product-form").serialize(),
-                            success:function(){
+                            success:function(response){
+                                //console.log(response);
                                 location.href = '../products';
                             },
                             error:function(response) {

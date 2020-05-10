@@ -534,5 +534,21 @@ return [
 	"Quick Cash" => "Quick Cash",
 	"Clear" => "Chiaro",
 	"You can upload multiple image. Only .jpeg, .jpg, .png, .gif file can be uploaded. First image will be base image." => "Puoi caricare più immagini. È possibile caricare solo file .jpeg, .jpg, .png, .gif. La prima immagine sarà l'immagine di base.",
-	];
+	"This product has variant" => "Questo prodotto ha una variante",
+	"Enter variant seperated by comma" => "Inserisci la variante separata da una virgola",
+	"Item Code" => "Codice articolo",
+	"Additional Price" => "Prezzo aggiuntivo",
+	"Variant" => "Variante",
+	"Warehouse Quantity" => "Quantità di magazzino",
+	"Warehouse quantity of product variants" => "Quantità di magazzino di varianti di prodotto",
+	"Thank you for shopping with us. Please come again" => "Grazie per l'acquisto con noi. Per favore ritorna",
+	"Money Transfer" => "Trasferimento di denaro",
+	"Add Money Transfer" => "Aggiungi trasferimento di denaro",
+	"From Account" => "Dall'account",
+	"To Account" => "Per conto",
+	"Update Money Transfer" => "Aggiorna trasferimento di denaro",
+	"Stock Quantity" => "Quantità di stock",
+	"Stock Worth (Price/Cost)" => "Stock Worth (Prezzo / Costo)",
+	"Number of Product" => "Numero del prodotto",
+];
 ?>

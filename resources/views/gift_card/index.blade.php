@@ -12,10 +12,10 @@
 
 <section>
     <div class="container-fluid">
-        <button class="btn btn-info" data-toggle="modal" data-target="#gift_card-modal"><i class="fa fa-plus"></i> {{trans('file.Add Gift Card')}}</button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#gift_card-modal"><i class="dripicons-plus"></i> {{trans('file.Add Gift Card')}}</button>
     </div>
     <div class="table-responsive">
-        <table id="gift_card-table" class="table table-striped">
+        <table id="gift_card-table" class="table">
             <thead>
                 <tr>
                     <th class="not-exported"></th>
@@ -59,18 +59,18 @@
                     @endif
                     <td>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans('file.action')}}
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                 <li><button type="button" data-client="{{$client}}" data-card_no="{{$gift_card->card_no}}" data-amount="{{$gift_card->amount}}" data-expense="{{$gift_card->expense}}" data-expired_date="{{date('d-m-Y', strtotime($gift_card->expired_date))}}" class="view-btn btn btn-link" data-toggle="modal" data-target="#viewModal"><i class="fa fa-eye"></i> {{trans('file.View')}}</button></li>
-                                <li><button type="button" data-id="{{$gift_card->id}}" class="open-Edit_gift_card_Dialog btn btn-link" data-toggle="modal" data-target="#editModal"><i class="fa fa-edit"></i> {{trans('file.edit')}}</button></li>
+                                <li><button type="button" data-id="{{$gift_card->id}}" class="open-Edit_gift_card_Dialog btn btn-link" data-toggle="modal" data-target="#editModal"><i class="dripicons-document-edit"></i> {{trans('file.edit')}}</button></li>
                                 <li><button type="button" data-id="{{$gift_card->id}}" class="recharge btn btn-link" data-toggle="modal" data-target="#rechargeModal"><i class="fa fa-money"></i> {{trans('file.Recharge')}}</button></li>
                                 <li class="divider"></li>
                                 {{ Form::open(['route' => ['gift_cards.destroy', $gift_card->id], 'method' => 'DELETE'] ) }}
                                 <li>
-                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="fa fa-trash"></i> {{trans('file.delete')}}</button>
+                                    <button type="submit" class="btn btn-link" onclick="return confirmDelete()"><i class="dripicons-trash"></i> {{trans('file.delete')}}</button>
                                 </li>
                                 {{ Form::close() }}
                             </ul>
@@ -99,8 +99,8 @@
       <div class="modal-content">
           <div class="modal-header">
               <h5 id="exampleModalLabel" class="modal-title d-print-none"> {{trans('file.Card Details')}} &nbsp;&nbsp;</h5>
-              <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i class="fa fa-print"></i> {{trans('file.Print')}}</button>
-              <button type="button" data-dismiss="modal" aria-label="Close" class="close d-print-none" id="close-btn"><span aria-hidden="true">×</span></button>
+              <button id="print-btn" type="button" class="btn btn-default btn-sm d-print-none"><i class="dripicons-print"></i> {{trans('file.Print')}}</button>
+              <button type="button" data-dismiss="modal" aria-label="Close" class="close d-print-none" id="close-btn"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
           </div>
           <div class="modal-body">
               <div class="gift-card" style="margin: 0 auto; max-width: 350px; position: relative; color:#fff;"><img src="{{url('public/images/gift_card/front.jpg')}}" width="350" height="200">
@@ -130,7 +130,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Gift Card')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
               <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
@@ -139,7 +139,7 @@
                   $lims_warehouse_list = DB::table('warehouses')->where('is_active', true)->get();
                 ?>
                   <div class="form-group">
-                      <label><strong>{{trans('file.Card No')}} *</strong></label>
+                      <label>{{trans('file.Card No')}} *</label>
                       <div class="input-group">
                           {{Form::text('card_no',null,array('required' => 'required', 'class' => 'form-control'))}}
                           <div class="input-group-append">
@@ -148,15 +148,15 @@
                       </div>
                   </div>
                   <div class="form-group">
-                      <label><strong>{{trans('file.Amount')}} *</strong></label>
+                      <label>{{trans('file.Amount')}} *</label>
                       <input type="number" name="amount" step="any" required class="form-control">
                   </div>
                   <div class="form-group">
-                      <label><strong>{{trans('file.User List')}}</strong></label>&nbsp;
+                      <label>{{trans('file.User List')}}</label>&nbsp;
                       <input type="checkbox" id="user" name="user" value="1">
                   </div>
                   <div class="form-group user_list">
-                      <label><strong>{{trans('file.User')}} *</strong></label>
+                      <label>{{trans('file.User')}} *</label>
                       <select name="user_id" class="selectpicker form-control" required data-live-search="true" data-live-search-style="begins" title="Select User...">
                           @foreach($lims_user_list as $user)
                           <option value="{{$user->id}}">{{$user->name .' ('.$user->email.')'}}</option>
@@ -164,7 +164,7 @@
                       </select>
                   </div>
                   <div class="form-group customer_list">
-                      <label><strong>{{trans('file.customer')}} *</strong></label>
+                      <label>{{trans('file.customer')}} *</label>
                       <select name="customer_id" class="selectpicker form-control" required data-live-search="true" data-live-search-style="begins" title="Select Customer...">
                           @foreach($lims_customer_list as $customer)
                           <option value="{{$customer->id}}">{{$customer->name .' ('.$customer->phone_number.')'}}</option>
@@ -172,7 +172,7 @@
                       </select>
                   </div>
                   <div class="form-group">
-                      <label><strong>{{trans('file.Expired Date')}}</strong></label>
+                      <label>{{trans('file.Expired Date')}}</label>
                       <input type="text" id="expired_date" name="expired_date" class="form-control">
                   </div>
                   <div class="form-group">
@@ -189,7 +189,7 @@
       <div class="modal-content">
           <div class="modal-header">
               <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Gift Card')}}</h5>
-              <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+              <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
           </div>
           <div class="modal-body">
             <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
@@ -199,7 +199,7 @@
               ?>
                 <div class="form-group">
                     <input type="hidden" name="gift_card_id">
-                    <label><strong>{{trans('file.Card No')}} *</strong></label>
+                    <label>{{trans('file.Card No')}} *</label>
                     <div class="input-group">
                         {{Form::text('card_no_edit',null,array('required' => 'required', 'class' => 'form-control'))}}
                         <div class="input-group-append">
@@ -208,15 +208,15 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label><strong>{{trans('file.Amount')}} *</strong></label>
+                    <label>{{trans('file.Amount')}} *</label>
                     <input type="number" name="amount_edit" step="any" required class="form-control">
                 </div>
                 <div class="form-group">
-                    <label><strong>{{trans('file.User List')}} </strong></label>&nbsp;
+                    <label>{{trans('file.User List')}} </label>&nbsp;
                     <input type="checkbox" id="user_edit" name="user_edit" value="1">
                 </div>
                 <div class="form-group user_list_edit">
-                    <label><strong>{{trans('file.User')}} *</strong></label>
+                    <label>{{trans('file.User')}} *</label>
                     <select name="user_id_edit" class="selectpicker form-control" required data-live-search="true" data-live-search-style="begins" title="Select User...">
                         @foreach($lims_user_list as $user)
                         <option value="{{$user->id}}">{{$user->name .' ('.$user->email.')'}}</option>
@@ -224,7 +224,7 @@
                     </select>
                 </div>
                 <div class="form-group customer_list_edit">
-                    <label><strong>{{trans('file.customer')}} *</strong></label>
+                    <label>{{trans('file.customer')}} *</label>
                     <select name="customer_id_edit" class="selectpicker form-control" required data-live-search="true" data-live-search-style="begins" title="Select Customer...">
                         @foreach($lims_customer_list as $customer)
                         <option value="{{$customer->id}}">{{$customer->name .' ('.$customer->phone_number.')'}}</option>
@@ -232,7 +232,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label><strong>{{trans('file.Expired Date')}}</strong></label>
+                    <label>{{trans('file.Expired Date')}}</label>
                     <input type="text" id="expired_date_edit" name="expired_date_edit" class="form-control">
                 </div>
                 <div class="form-group">
@@ -249,14 +249,14 @@
       <div class="modal-content">
           <div class="modal-header">
               <h5 id="exampleModalLabel" class="modal-title"> {{trans('file.Card No')}}: <span id="card-no"></span></h5>
-              <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+              <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
           </div>
           <div class="modal-body">
             <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
               {!! Form::open(['route' => ['gift_cards.recharge', 1], 'method' => 'post']) !!}
                 <div class="form-group">
                     <input type="hidden" name="gift_card_id">
-                    <label><strong>{{trans('file.Amount')}} *</strong></label>
+                    <label>{{trans('file.Amount')}} *</label>
                     <input type="number" name="amount" step="any" required class="form-control">
                 </div>
                 <div class="form-group">
@@ -415,11 +415,11 @@ function confirmDelete() {
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -428,10 +428,18 @@ function confirmDelete() {
                 'targets': [0, 8]
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},

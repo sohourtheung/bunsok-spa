@@ -11,7 +11,7 @@
                 <h3 class="text-center">{{trans('file.Purchase Report')}}</h3>
             </div>
             {!! Form::open(['route' => 'report.purchase', 'method' => 'post']) !!}
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-md-4 offset-md-2 mt-3">
                     <div class="form-group row">
                         <label class="d-tc mt-2"><strong>{{trans('file.Choose Your Date')}}</strong> &nbsp;</label>
@@ -45,69 +45,102 @@
                 </div>
             </div>
             {!! Form::close() !!}
-            <div class="table-responsive mb-4">
-                <table id="report-table" class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th class="not-exported"></th>
-                            <th>{{trans('file.Product Name')}}</th>
-                            <th>{{trans('file.Purchased Amount')}}</th>
-                            <th>{{trans('file.Purchased Qty')}}</th>
-                            <th>{{trans('file.In Stock')}}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if(!empty($product_name))
-                        @foreach($product_id as $key => $pro_id)
-                        <tr>
-                            <td>{{$key}}</td>
-                            <td>{{$product_name[$key]}}</td>
-                            <?php
-                                if($warehouse_id == 0){
-                                    $purchased_cost = DB::table('product_purchases')->where('product_id', $pro_id)->whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=' , $end_date)->sum('total');
-
-                                    $product_purchase_data = DB::table('product_purchases')->where('product_id', $pro_id)->whereDate('created_at','>=', $start_date)->whereDate('created_at','<=', $end_date)->get();
-                                }
-                                else{
-                                    $purchased_cost = DB::table('purchases')
-                                        ->join('product_purchases', 'purchases.id', '=', 'product_purchases.purchase_id')->where([
-                                            ['product_purchases.product_id', $pro_id],
-                                            ['purchases.warehouse_id', $warehouse_id]
-                                        ])->whereDate('purchases.created_at','>=', $start_date)->whereDate('purchases.created_at','<=', $end_date)->sum('total');
-                                    $product_purchase_data = DB::table('purchases')
-                                        ->join('product_purchases', 'purchases.id', '=', 'product_purchases.purchase_id')->where([
-                                            ['product_purchases.product_id', $pro_id],
-                                            ['purchases.warehouse_id', $warehouse_id]
-                                        ])->whereDate('purchases.created_at','>=', $start_date)->whereDate('purchases.created_at','<=', $end_date)->get();
-                                }
-                                $purchased_qty = 0;
-                                foreach ($product_purchase_data as $product_purchase) {
-                                    $unit = DB::table('units')->find($product_purchase->purchase_unit_id);
-                                    if($unit->operator == '*'){
-                                        $purchased_qty += $product_purchase->qty * $unit->operation_value;
-                                    }
-                                    elseif($unit->operator == '/'){
-                                        $purchased_qty += $product_purchase->qty / $unit->operation_value;
-                                    }
-                                }
-                            ?>
-                            <td>{{number_format((float)$purchased_cost, 2, '.', '')}}</td>
-                            <td>{{$purchased_qty}}</td>
-                            <td>{{$product_qty[$key]}}</td>
-                        </tr>
-                        @endforeach
-                        @endif
-                    </tbody>
-                    <tfoot>
-                        <th></th>
-                    	<th>Total</th>
-                    	<th>0.00</th>
-                    	<th>0</th>
-                    	<th>0</th>
-                    </tfoot>
-                </table>
-            </div>
         </div>
+    </div>
+    <div class="table-responsive mb-4">
+        <table id="report-table" class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="not-exported"></th>
+                    <th>{{trans('file.Product Name')}}</th>
+                    <th>{{trans('file.Purchased Amount')}}</th>
+                    <th>{{trans('file.Purchased Qty')}}</th>
+                    <th>{{trans('file.In Stock')}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(!empty($product_name))
+                @foreach($product_id as $key => $pro_id)
+                <tr>
+                    <td>{{$key}}</td>
+                    <td>{{$product_name[$key]}}</td>
+                    <?php
+                        if($warehouse_id == 0) {
+                            if($variant_id[$key]) {
+                                $purchased_cost = DB::table('product_purchases')->where([
+                                    ['product_id', $pro_id],
+                                    ['variant_id', $variant_id[$key] ]
+                                ])->whereDate('created_at', '>=', $start_date)
+                                  ->whereDate('created_at', '<=' , $end_date)
+                                  ->sum('total');
+
+                                $product_purchase_data = DB::table('product_purchases')->where([
+                                    ['product_id', $pro_id],
+                                    ['variant_id', $variant_id[$key] ]
+                                ])->whereDate('created_at','>=', $start_date)
+                                  ->whereDate('created_at','<=', $end_date)
+                                  ->get();
+                            }
+                            else {
+                                $purchased_cost = DB::table('product_purchases')->where('product_id', $pro_id)->whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=' , $end_date)->sum('total');
+
+                                $product_purchase_data = DB::table('product_purchases')->where('product_id', $pro_id)->whereDate('created_at','>=', $start_date)->whereDate('created_at','<=', $end_date)->get();
+                            }
+                        }
+                        else {
+                            if($variant_id[$key]) {
+                                $purchased_cost = DB::table('purchases')
+                                    ->join('product_purchases', 'purchases.id', '=', 'product_purchases.purchase_id')->where([
+                                        ['product_purchases.product_id', $pro_id],
+                                        ['product_purchases.variant_id', $variant_id[$key] ],
+                                        ['purchases.warehouse_id', $warehouse_id]
+                                    ])->whereDate('purchases.created_at','>=', $start_date)->whereDate('purchases.created_at','<=', $end_date)->sum('total');
+                                $product_purchase_data = DB::table('purchases')
+                                    ->join('product_purchases', 'purchases.id', '=', 'product_purchases.purchase_id')->where([
+                                        ['product_purchases.product_id', $pro_id],
+                                        ['product_purchases.variant_id', $variant_id[$key] ],
+                                        ['purchases.warehouse_id', $warehouse_id]
+                                    ])->whereDate('purchases.created_at','>=', $start_date)->whereDate('purchases.created_at','<=', $end_date)->get();
+                            }
+                            else {
+                                $purchased_cost = DB::table('purchases')
+                                    ->join('product_purchases', 'purchases.id', '=', 'product_purchases.purchase_id')->where([
+                                        ['product_purchases.product_id', $pro_id],
+                                        ['purchases.warehouse_id', $warehouse_id]
+                                    ])->whereDate('purchases.created_at','>=', $start_date)->whereDate('purchases.created_at','<=', $end_date)->sum('total');
+                                $product_purchase_data = DB::table('purchases')
+                                    ->join('product_purchases', 'purchases.id', '=', 'product_purchases.purchase_id')->where([
+                                        ['product_purchases.product_id', $pro_id],
+                                        ['purchases.warehouse_id', $warehouse_id]
+                                    ])->whereDate('purchases.created_at','>=', $start_date)->whereDate('purchases.created_at','<=', $end_date)->get();
+                            }
+                        }
+                        $purchased_qty = 0;
+                        foreach ($product_purchase_data as $product_purchase) {
+                            $unit = DB::table('units')->find($product_purchase->purchase_unit_id);
+                            if($unit->operator == '*'){
+                                $purchased_qty += $product_purchase->qty * $unit->operation_value;
+                            }
+                            elseif($unit->operator == '/'){
+                                $purchased_qty += $product_purchase->qty / $unit->operation_value;
+                            }
+                        }
+                    ?>
+                    <td>{{number_format((float)$purchased_cost, 2, '.', '')}}</td>
+                    <td>{{$purchased_qty}}</td>
+                    <td>{{$product_qty[$key]}}</td>
+                </tr>
+                @endforeach
+                @endif
+            </tbody>
+            <tfoot>
+                <th></th>
+                <th>Total</th>
+                <th>0.00</th>
+                <th>0</th>
+                <th>0</th>
+            </tfoot>
+        </table>
     </div>
 </section>
 
@@ -124,11 +157,11 @@
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -137,10 +170,18 @@
                 'targets': 0
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},

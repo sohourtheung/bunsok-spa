@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use DB;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,11 +28,21 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        $language = DB::table('languages')->latest()->first();
+        if( (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443) {
+            URL::forceScheme('https');
+        }
+        //setting language
+        if(isset($_COOKIE['language'])) {
+            \App::setLocale($_COOKIE['language']);
+        } else {
+            \App::setLocale('en');
+        }
+        //get general setting value        
+        $general_setting = DB::table('general_settings')->latest()->first();
+        View::share('general_setting', $general_setting);
+        config(['staff_access' => $general_setting->staff_access, 'date_format' => $general_setting->date_format, 'currency' => $general_setting->currency, 'currency_position' => $general_setting->currency_position]);
+        
         $alert_product = DB::table('products')->where('is_active', true)->whereColumn('alert_quantity', '>', 'qty')->count();
-        \App::setLocale($language->code);
-        View::share('general_setting', DB::table('general_settings')->latest()->first());
-        View::share('language', $language);
         View::share('alert_product', $alert_product);
         Schema::defaultStringLength(191);
     }

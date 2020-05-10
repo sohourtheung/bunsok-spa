@@ -7,7 +7,7 @@
                 <h4 class="text-center">{{trans('file.Due Report')}}</h4>
             </div>
             {!! Form::open(['route' => 'report.dueByDate', 'method' => 'post']) !!}
-            <div class="col-md-6 offset-md-3 mt-4">
+            <div class="col-md-6 offset-md-3 mt-4 mb-3">
                 <div class="form-group row">
                     <label class="d-tc mt-2"><strong>{{trans('file.Choose Your Date')}}</strong> &nbsp;</label>
                     <div class="d-tc">
@@ -23,48 +23,48 @@
                 </div> 
             </div>
             {!! Form::close() !!}
-            <div class="table-responsive mb-4">
-                <table id="report-table" class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th class="not-exported"></th>
-                            <th>{{trans('file.Date')}}</th>
-                            <th>{{trans('file.reference')}}</th>
-                            <th>{{trans('file.Customer Details')}}</th>
-                            <th>{{trans('file.Paid')}}</th>
-                            <th>{{trans('file.Due')}}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($lims_sale_data as $key=>$sale_data)
-                        <tr>
-                            <td>{{$key}}</td>
-                            <td>{{date($general_setting->date_format, strtotime($sale_data->created_at->toDateString())) . ' '. $sale_data->created_at->toTimeString()}}</td>
-                            <td>{{$sale_data->reference_no}}</td>
-                            <?php
-                                $customer = DB::table('customers')->find($sale_data->customer_id);
-                            ?>
-                            <td>{{$customer->name .' (' .$customer->phone_number . ')'}}</td>
-                            @if($sale_data->paid_amount)
-                            <td>{{number_format((float)$sale_data->paid_amount, 2, '.', '')}}</td>
-                            @else
-                            <td>0.00</td>
-                            @endif
-                            <td>{{number_format((float)($sale_data->grand_total - $sale_data->paid_amount), 2, '.', '')}}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot class="tfoot active">
-                        <th></th>
-                        <th>{{trans('file.Total')}}:</th>
-                        <th></th>
-                        <th></th>
-                        <th>0.00</th>
-                        <th>0.00</th>
-                    </tfoot>
-                </table>
-            </div>
         </div>
+    </div>
+    <div class="table-responsive mb-4">
+        <table id="report-table" class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="not-exported"></th>
+                    <th>{{trans('file.Date')}}</th>
+                    <th>{{trans('file.reference')}}</th>
+                    <th>{{trans('file.Customer Details')}}</th>
+                    <th>{{trans('file.Paid')}}</th>
+                    <th>{{trans('file.Due')}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($lims_sale_data as $key=>$sale_data)
+                <tr>
+                    <td>{{$key}}</td>
+                    <td>{{date($general_setting->date_format, strtotime($sale_data->created_at->toDateString())) . ' '. $sale_data->created_at->toTimeString()}}</td>
+                    <td>{{$sale_data->reference_no}}</td>
+                    <?php
+                        $customer = DB::table('customers')->find($sale_data->customer_id);
+                    ?>
+                    <td>{{$customer->name .' (' .$customer->phone_number . ')'}}</td>
+                    @if($sale_data->paid_amount)
+                    <td>{{number_format((float)$sale_data->paid_amount, 2, '.', '')}}</td>
+                    @else
+                    <td>0.00</td>
+                    @endif
+                    <td>{{number_format((float)($sale_data->grand_total - $sale_data->paid_amount), 2, '.', '')}}</td>
+                </tr>
+                @endforeach
+            </tbody>
+            <tfoot class="tfoot active">
+                <th></th>
+                <th>{{trans('file.Total')}}:</th>
+                <th></th>
+                <th></th>
+                <th>0.00</th>
+                <th>0.00</th>
+            </tfoot>
+        </table>
     </div>
 </section>
 
@@ -79,11 +79,11 @@
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -92,10 +92,18 @@
                 'targets': 0
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},

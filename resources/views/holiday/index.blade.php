@@ -7,10 +7,10 @@
 @endif
 <section>
     <div class="container-fluid">
-        <button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="fa fa-plus"></i> {{trans('file.Add Holiday')}} </button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#createModal"><i class="dripicons-plus"></i> {{trans('file.Add Holiday')}} </button>
     </div>
     <div class="table-responsive">
-        <table id="holiday-table" class="table table-striped">
+        <table id="holiday-table" class="table">
             <thead>
                 <tr>
                     <th class="not-exported"></th>
@@ -36,9 +36,9 @@
                         	@if(!$holiday->is_approved && $approve_permission)
                         	<button type="button" class="btn btn-sm btn-success btn-approve" title="{{trans('file.Approve')}}" data-id="{{$holiday->id}}"><i class="fa fa-check"></i></button>
                         	@endif
-                        	<button type="button" class="btn btn-sm btn-primary btn-edit" title="{{trans('file.edit')}}" data-id="{{$holiday->id}}" data-from="{{date($general_setting->date_format, strtotime($holiday->from_date))}}" data-to="{{date($general_setting->date_format, strtotime($holiday->to_date))}}" data-note="{{$holiday->note}}" data-toggle="modal" data-target="#editModal"><i class="fa fa-edit"></i></button>
+                        	<button type="button" class="btn btn-sm btn-primary btn-edit" title="{{trans('file.edit')}}" data-id="{{$holiday->id}}" data-from="{{date($general_setting->date_format, strtotime($holiday->from_date))}}" data-to="{{date($general_setting->date_format, strtotime($holiday->to_date))}}" data-note="{{$holiday->note}}" data-toggle="modal" data-target="#editModal"><i class="dripicons-document-edit"></i></button>
                             {{ Form::open(['route' => ['holidays.destroy', $holiday->id], 'method' => 'DELETE'] ) }}
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirmDelete()" title="{{trans('file.delete')}}"><i class="fa fa-trash"></i></button>
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirmDelete()" title="{{trans('file.delete')}}"><i class="dripicons-trash"></i></button>
                             {{ Form::close() }}
                         </div>
                     </td>
@@ -54,22 +54,22 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Holiday')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
               <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
                 {!! Form::open(['route' => 'holidays.store', 'method' => 'post']) !!}
                 <div class="row">
                     <div class="col-md-6 form-group">
-                        <label><strong>{{trans('file.From')}} *</strong></label>
+                        <label>{{trans('file.From')}} *</label>
                         <input type="text" name="from_date" class="form-control date" value="{{date($general_setting->date_format)}}" required>
                     </div>
                     <div class="col-md-6 form-group">
-                        <label><strong>{{trans('file.To')}} *</strong></label>
+                        <label>{{trans('file.To')}} *</label>
                         <input type="text" name="to_date" class="form-control date" value="{{date($general_setting->date_format)}}" required>
                     </div>
                     <div class="col-md-12 form-group">
-                        <label><strong>{{trans('file.Note')}}</strong></label>
+                        <label>{{trans('file.Note')}}</label>
                         <textarea name="note" rows="3" class="form-control"></textarea>
                     </div>
                 </div>
@@ -87,23 +87,23 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Update Holiday')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
             </div>
             <div class="modal-body">
               <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
                 {!! Form::open(['route' => ['holidays.update', 1], 'method' => 'put']) !!}
                 <div class="row">
                     <div class="col-md-6 form-group">
-                        <label><strong>{{trans('file.From')}} *</strong></label>
+                        <label>{{trans('file.From')}} *</label>
                         <input type="hidden" name="id">
                         <input type="text" name="from_date" class="form-control date" required>
                     </div>
                     <div class="col-md-6 form-group">
-                        <label><strong>{{trans('file.To')}} *</strong></label>
+                        <label>{{trans('file.To')}} *</label>
                         <input type="text" name="to_date" class="form-control date" required>
                     </div>
                     <div class="col-md-12 form-group">
-                        <label><strong>{{trans('file.Note')}}</strong></label>
+                        <label>{{trans('file.Note')}}</label>
                         <textarea name="note" rows="3" class="form-control"></textarea>
                     </div>
                 </div>
@@ -164,11 +164,11 @@
         "order": [],
         'language': {
             'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
+             "info":      '<small>{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)</small>',
             "search":  '{{trans("file.Search")}}',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<i class="dripicons-chevron-left"></i>',
+                    'next': '<i class="dripicons-chevron-right"></i>'
             }
         },
         'columnDefs': [
@@ -177,10 +177,18 @@
                 'targets': [0, 6]
             },
             {
-                'checkboxes': {
-                   'selectRow': true
+                'render': function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                    }
+
+                   return data;
                 },
-                'targets': 0
+                'checkboxes': {
+                   'selectRow': true,
+                   'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                },
+                'targets': [0]
             }
         ],
         'select': { style: 'multi',  selector: 'td:first-child'},

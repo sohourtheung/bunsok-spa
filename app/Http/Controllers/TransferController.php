@@ -10,6 +10,7 @@ use App\Tax;
 use App\Unit;
 use App\Transfer;
 use App\ProductTransfer;
+use App\ProductVariant;
 use Auth;
 use DB;
 use Spatie\Permission\Models\Role;
@@ -27,11 +28,11 @@ class TransferController extends Controller
                 $all_permission[] = $permission->name;
             if(empty($all_permission))
                 $all_permission[] = 'dummy text';
-            $general_setting = DB::table('general_settings')->latest()->first();
-            if(Auth::user()->role_id > 2 && $general_setting->staff_access == 'own')
-                $lims_transfer_all = Transfer::orderBy('id', 'desc')->where('user_id', Auth::id())->get();
+            
+            if(Auth::user()->role_id > 2 && config('staff_access') == 'own')
+                $lims_transfer_all = Transfer::with('fromWarehouse', 'toWarehouse', 'user')->orderBy('id', 'desc')->where('user_id', Auth::id())->get();
             else
-                $lims_transfer_all = Transfer::orderBy('id', 'desc')->get();
+                $lims_transfer_all = Transfer::with('fromWarehouse', 'toWarehouse', 'user')->orderBy('id', 'desc')->get();
             return view('transfer.index', compact('lims_transfer_all', 'all_permission'));
         }
         else
@@ -54,30 +55,49 @@ class TransferController extends Controller
         $lims_product_warehouse_data = Product_Warehouse::where([
                                         ['warehouse_id', $id],
                                         ['qty', '>', 0]
-                                    ])->get();
+                                    ])->whereNull('variant_id')->get();
+        $lims_product_with_variant_warehouse_data = Product_Warehouse::where([
+                ['warehouse_id', $id],
+                ['qty', '>', 0]
+            ])->whereNotNull('variant_id')->get();
         $product_code = [];
         $product_name = [];
         $product_qty = [];
         $product_data = [];
+        //product without variant
         foreach ($lims_product_warehouse_data as $product_warehouse) 
         {
             $product_qty[] = $product_warehouse->qty;
-            $lims_product_data = Product::find($product_warehouse->product_id);
+            $lims_product_data = Product::select('name', 'code')->find($product_warehouse->product_id);
             $product_code[] =  $lims_product_data->code;
             $product_name[] = $lims_product_data->name;
         }
-
-        $product_data[] = $product_code;
-        $product_data[] = $product_name;
-        $product_data[] = $product_qty;
+        //product with variant
+        foreach ($lims_product_with_variant_warehouse_data as $product_warehouse) 
+        {
+            $product_qty[] = $product_warehouse->qty;
+            $lims_product_data = Product::select('name', 'code')->find($product_warehouse->product_id);
+            $lims_product_variant_data = ProductVariant::select('item_code')->FindExactProduct($product_warehouse->product_id, $product_warehouse->variant_id)->first();
+            $product_code[] =  $lims_product_variant_data->item_code;
+            $product_name[] = $lims_product_data->name;
+        }
+        $product_data = [$product_code, $product_name, $product_qty];
         return $product_data;
     }
 
     public function limsProductSearch(Request $request)
     {
         $product_code = explode(" ", $request['data']);
+        $product_variant_id = null;
         $lims_product_data = Product::where('code', $product_code[0])->first();
-
+        if(!$lims_product_data) {
+            $lims_product_data = Product::join('product_variants', 'products.id', 'product_variants.product_id')
+                ->select('products.*', 'product_variants.id as product_variant_id', 'product_variants.item_code')
+                ->where('product_variants.item_code', $product_code)
+                ->first();
+            $product_variant_id = $lims_product_data->product_variant_id;
+            $lims_product_data->code = $lims_product_data->item_code;
+        }
         $product[] = $lims_product_data->name;
         $product[] = $lims_product_data->code;
         $product[] = $lims_product_data->cost;
@@ -114,12 +134,14 @@ class TransferController extends Controller
         $product[] = implode(",", $unit_operator) . ',';
         $product[] = implode(",", $unit_operation_value) . ',';
         $product[] = $lims_product_data->id;
+        $product[] = $product_variant_id;
         return $product;
     }
 
     public function store(Request $request)
     {
         $data = $request->except('document');
+        //return dd($data);
         $data['user_id'] = Auth::id();
         $data['reference_no'] = 'tr-' . date("Ymd") . '-'. date("his");
         $document = $request->document;
@@ -143,6 +165,7 @@ class TransferController extends Controller
 
         $lims_transfer_data = Transfer::latest()->first();
         $product_id = $data['product_id'];
+        $product_code = $data['product_code'];
         $qty = $data['qty'];
         $purchase_unit = $data['purchase_unit'];
         $net_unit_cost = $data['net_unit_cost'];
@@ -150,9 +173,8 @@ class TransferController extends Controller
         $tax = $data['tax'];
         $total = $data['subtotal'];
         $product_transfer = [];
-        $i=0;
 
-        foreach ($product_id as $id) {
+        foreach ($product_id as $i => $id) {
             $lims_purchase_unit_data  = Unit::where('unit_name', $purchase_unit[$i])->first();
 
             if($data['status'] != 2){
@@ -163,26 +185,41 @@ class TransferController extends Controller
             }
             else
                 $quantity = 0;
-
-            //deduct quantity from sending warehouse
-            $lims_product_warehouse_data = Product_Warehouse::where([
-                ['product_id', $id],
-                ['warehouse_id', $data['from_warehouse_id'] ],
-                ])->first();
-            $lims_product_warehouse_data->qty = $lims_product_warehouse_data->qty - $quantity;
-            $lims_product_warehouse_data->save();
-            //add quantity to destination warehouse
-            if($data['status'] == 1){
+            //get product data
+            $lims_product_data = Product::select('is_variant')->find($id);
+            if($lims_product_data->is_variant) {
+                $lims_product_variant_data = ProductVariant::select('variant_id')->FindExactProductWithCode($id, $product_code[$i])->first();
+                $lims_product_warehouse_data = Product_Warehouse::FindProductWithVariant($id, $lims_product_variant_data->variant_id, $data['from_warehouse_id'])->first();
+                $product_transfer['variant_id'] = $lims_product_variant_data->variant_id;
+            }
+            else {
                 $lims_product_warehouse_data = Product_Warehouse::where([
-                ['product_id', $id],
-                ['warehouse_id', $data['to_warehouse_id'] ],
-                ])->first();
-
+                    ['product_id', $id],
+                    ['warehouse_id', $data['from_warehouse_id'] ],
+                    ])->first();
+                $product_transfer['variant_id'] = null;
+            }
+            //deduct quantity from sending warehouse
+            $lims_product_warehouse_data->qty -= $quantity;
+            $lims_product_warehouse_data->save();
+            
+            if($data['status'] == 1){
+                if($lims_product_data->is_variant) {
+                    $lims_product_warehouse_data = Product_Warehouse::FindProductWithVariant($id, $lims_product_variant_data->variant_id, $data['to_warehouse_id'])->first();
+                }
+                else {
+                    $lims_product_warehouse_data = Product_Warehouse::where([
+                        ['product_id', $id],
+                        ['warehouse_id', $data['to_warehouse_id'] ],
+                    ])->first();
+                }
+                //add quantity to destination warehouse
                 if ($lims_product_warehouse_data)
-                    $lims_product_warehouse_data->qty = $lims_product_warehouse_data->qty + $quantity;
+                    $lims_product_warehouse_data->qty += $quantity;
                 else {
                     $lims_product_warehouse_data = new Product_Warehouse();
                     $lims_product_warehouse_data->product_id = $id;
+                    $lims_product_warehouse_data->variant_id = $product_transfer['variant_id'];
                     $lims_product_warehouse_data->warehouse_id = $data['to_warehouse_id'];
                     $lims_product_warehouse_data->qty = $quantity;
                 }
@@ -199,7 +236,6 @@ class TransferController extends Controller
             $product_transfer['tax'] = $tax[$i];
             $product_transfer['total'] = $total[$i];
             ProductTransfer::create($product_transfer);
-            $i++;
         }
 
         return redirect('transfers')->with('message', 'Transfer created successfully');
@@ -211,8 +247,11 @@ class TransferController extends Controller
         foreach ($lims_product_transfer_data as $key => $product_transfer_data) {
             $product = Product::find($product_transfer_data->product_id);
             $unit = Unit::find($product_transfer_data->purchase_unit_id);
-
-            $product_transfer[0][$key] = $product->name . '-' . $product->code;
+            if($product_transfer_data->variant_id) {
+                $lims_product_variant_data = ProductVariant::select('item_code')->FindExactProduct($product_transfer_data->product_id, $product_transfer_data->variant_id)->first();
+                $product->code = $lims_product_variant_data->item_code;
+            }
+            $product_transfer[0][$key] = $product->name . ' [' . $product->code. ']';
             $product_transfer[1][$key] = $product_transfer_data->qty;
             $product_transfer[2][$key] = $unit->unit_code;
             $product_transfer[3][$key] = $product_transfer_data->tax;
@@ -321,8 +360,17 @@ class TransferController extends Controller
                     ['product_id', $product['id']],
                     ['warehouse_id', $data['to_warehouse_id']]
                 ])->first();
-                $product_warehouse->qty += $quantity;
-                $product_warehouse->save();
+                if($product_warehouse) {
+                    $product_warehouse->qty += $quantity;
+                    $product_warehouse->save();
+                }
+                else {
+                    $product_warehouse = new Product_Warehouse();
+                    $product_warehouse->product_id = $product['id'];
+                    $product_warehouse->warehouse_id = $data['to_warehouse_id'];
+                    $product_warehouse->qty = $quantity;
+                    $product_warehouse->save();
+                }
             }
             elseif ($data['status'] == 3) {
                 if($unit[$key]['operator'] == '*')
@@ -373,6 +421,7 @@ class TransferController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->except('document');
+        //return dd($data);
         $document = $request->document;
         if ($document) {
             $v = Validator::make(
@@ -394,6 +443,7 @@ class TransferController extends Controller
         $lims_transfer_data = Transfer::find($id);
         $lims_product_transfer_data = ProductTransfer::where('transfer_id', $id)->get();
         $product_id = $data['product_id'];
+        $product_variant_id = $data['product_variant_id'];
         $qty = $data['qty'];
         $purchase_unit = $data['purchase_unit'];
         $net_unit_cost = $data['net_unit_cost'];
@@ -403,6 +453,7 @@ class TransferController extends Controller
         $product_transfer = [];
         foreach ($lims_product_transfer_data as $key => $product_transfer_data) {
             $old_product_id[] = $product_transfer_data->product_id;
+            $old_product_variant_id[] = null;
             $lims_transfer_unit_data = Unit::find($product_transfer_data->purchase_unit_id);
             if ($lims_transfer_unit_data->operator == '*') {
                 $quantity = $product_transfer_data->qty * $lims_transfer_unit_data->operation_value;
@@ -411,75 +462,100 @@ class TransferController extends Controller
             }
             
             if($lims_transfer_data->status == 1){
-                $lims_product_warehouse_data = Product_Warehouse::where([
-                    ['product_id', $product_transfer_data->product_id],
-                    ['warehouse_id', $lims_transfer_data->from_warehouse_id]
-                ])->first();
-                $lims_product_warehouse_data->qty += $quantity;
-                $lims_product_warehouse_data->save();
+                if($product_transfer_data->variant_id) {
+                    $lims_product_variant_data = ProductVariant::select('id')->FindExactProduct($product_transfer_data->product_id, $product_transfer_data->variant_id)->first();
+                    $lims_product_from_warehouse_data = Product_Warehouse::FindProductWithVariant($product_transfer_data->product_id, $product_transfer_data->variant_id, $lims_transfer_data->from_warehouse_id)->first();
+                    $lims_product_to_warehouse_data = Product_Warehouse::FindProductWithVariant($product_transfer_data->product_id, $product_transfer_data->variant_id, $lims_transfer_data->to_warehouse_id)->first();
+                    $old_product_variant_id[$key] = $lims_product_variant_data->id;
+                }
+                else {
+                    $lims_product_from_warehouse_data = Product_Warehouse::FindProductWithoutVariant($product_transfer_data->product_id, $lims_transfer_data->from_warehouse_id)->first();
+                    $lims_product_to_warehouse_data = Product_Warehouse::FindProductWithoutVariant($product_transfer_data->product_id, $lims_transfer_data->to_warehouse_id)->first();
+                }
+                    
+                $lims_product_from_warehouse_data->qty += $quantity;
+                $lims_product_from_warehouse_data->save();
 
-                $lims_product_warehouse_data = Product_Warehouse::where([
-                    ['product_id', $product_transfer_data->product_id],
-                    ['warehouse_id', $lims_transfer_data->to_warehouse_id]
-                ])->first();
-                $lims_product_warehouse_data->qty -= $quantity;
-                $lims_product_warehouse_data->save();
+                $lims_product_to_warehouse_data->qty -= $quantity;
+                $lims_product_to_warehouse_data->save();
             }
             elseif($lims_transfer_data->status == 3){
-                $lims_product_warehouse_data = Product_Warehouse::where([
-                    ['product_id', $product_transfer_data->product_id],
-                    ['warehouse_id', $lims_transfer_data->from_warehouse_id]
-                ])->first();
-                $lims_product_warehouse_data->qty += $quantity;
-                $lims_product_warehouse_data->save();
+                if($product_transfer_data->variant_id) {
+                    $lims_product_variant_data = ProductVariant::select('id')->FindExactProduct($product_transfer_data->product_id, $product_transfer_data->variant_id)->first();
+                    $lims_product_from_warehouse_data = Product_Warehouse::FindProductWithVariant($product_transfer_data->product_id, $product_transfer_data->variant_id, $lims_transfer_data->from_warehouse_id)->first();
+                    $old_product_variant_id[$key] = $lims_product_variant_data->id;
+                }
+                else {
+                    $lims_product_from_warehouse_data = Product_Warehouse::FindProductWithoutVariant($product_transfer_data->product_id, $lims_transfer_data->from_warehouse_id)->first();
+                }
+                $lims_product_from_warehouse_data->qty += $quantity;
+                $lims_product_from_warehouse_data->save();
             }
-            if( !(in_array($old_product_id[$key], $product_id)) )
+            
+            if($product_transfer_data->variant_id && !(in_array($old_product_variant_id[$key], $product_variant_id)) ){
                 $product_transfer_data->delete();
+            }
+            elseif( !(in_array($old_product_id[$key], $product_id)) ){
+                $product_transfer_data->delete();
+            }
         }
 
         foreach ($product_id as $key => $pro_id) {
+            $lims_product_data = Product::select('is_variant')->find($pro_id);
             $lims_transfer_unit_data = Unit::where('unit_name', $purchase_unit[$key])->first();
+            $variant_id = null;
+            //unit conversion
             if ($lims_transfer_unit_data->operator == '*') {
                 $quantity = $qty[$key] * $lims_transfer_unit_data->operation_value;
             } else {
                 $quantity = $qty[$key] / $lims_transfer_unit_data->operation_value;
             }
 
-            if($data['status'] == 1){
-                $lims_product_warehouse_data = Product_Warehouse::where([
-                ['product_id', $pro_id],
-                ['warehouse_id', $data['from_warehouse_id']]
-                ])->first();
+            if($data['status'] == 1) {
+                if($lims_product_data->is_variant) {
+                    $lims_product_variant_data = ProductVariant::select('variant_id')->find($product_variant_id[$key]);
+                    $lims_product_from_warehouse_data = Product_Warehouse::FindProductWithVariant($pro_id, $lims_product_variant_data->variant_id, $data['from_warehouse_id'])->first();
+                    $lims_product_to_warehouse_data = Product_Warehouse::FindProductWithVariant($pro_id, $lims_product_variant_data->variant_id, $data['to_warehouse_id'])->first();
+                    $variant_id = $lims_product_variant_data->variant_id;
+                }
+                else{
+                    $lims_product_from_warehouse_data = Product_Warehouse::FindProductWithoutVariant($pro_id, $data['from_warehouse_id'])->first();
+                    $lims_product_to_warehouse_data = Product_Warehouse::FindProductWithoutVariant($pro_id, $data['to_warehouse_id'])->first();                    
+                }
 
-                $lims_product_warehouse_data->qty -= $quantity;
-                $lims_product_warehouse_data->save();
+                $lims_product_from_warehouse_data->qty -= $quantity;
+                $lims_product_from_warehouse_data->save();
 
-                $lims_product_warehouse_data = Product_Warehouse::where([
-                ['product_id', $pro_id],
-                ['warehouse_id', $data['to_warehouse_id']]
-                ])->first();
-                if($lims_product_warehouse_data){
-                    $lims_product_warehouse_data->qty += $quantity;
+                if($lims_product_to_warehouse_data){
+                    $lims_product_to_warehouse_data->qty += $quantity;
+                    $lims_product_to_warehouse_data->save();
                 }
                 else{
                     $lims_product_warehouse_data = new Product_Warehouse();
                     $lims_product_warehouse_data->product_id = $pro_id;
+                    $lims_product_warehouse_data->variant_id = $variant_id;
                     $lims_product_warehouse_data->warehouse_id = $data['to_warehouse_id'];
                     $lims_product_warehouse_data->qty = $quantity;
+                    $lims_product_warehouse_data->save();
                 }
-                $lims_product_warehouse_data->save();
+                
             }
-            elseif($data['status'] == 3){
-                $lims_product_warehouse_data = Product_Warehouse::where([
-                ['product_id', $pro_id],
-                ['warehouse_id', $data['from_warehouse_id']]
-                ])->first();
+            elseif($data['status'] == 3) {
+                if($lims_product_data->is_variant) {
+                    $lims_product_variant_data = ProductVariant::select('variant_id')->find($product_variant_id[$key]);
+                    $lims_product_from_warehouse_data = Product_Warehouse::FindProductWithVariant($pro_id, $lims_product_variant_data->variant_id, $data['from_warehouse_id'])->first();
+                    $variant_id = $lims_product_variant_data->variant_id;
+                }
+                else{
+                    $lims_product_from_warehouse_data = Product_Warehouse::FindProductWithoutVariant($pro_id, $data['from_warehouse_id'])->first();
+                }
 
-                $lims_product_warehouse_data->qty -= $quantity;
-                $lims_product_warehouse_data->save();
+                $lims_product_from_warehouse_data->qty -= $quantity;
+                $lims_product_from_warehouse_data->save();
             }
 
             $product_transfer['product_id'] = $pro_id;
+            $product_transfer['variant_id'] = $variant_id;
             $product_transfer['transfer_id'] = $id;
             $product_transfer['qty'] = $qty[$key];
             $product_transfer['purchase_unit_id'] = $lims_transfer_unit_data->id;
@@ -488,10 +564,17 @@ class TransferController extends Controller
             $product_transfer['tax'] = $tax[$key];
             $product_transfer['total'] = $total[$key];
             
-            if(in_array($pro_id, $old_product_id)){
+            if($lims_product_data->is_variant && in_array($product_variant_id[$key], $old_product_variant_id) ) {
                 ProductTransfer::where([
-                ['transfer_id', $id],
-                ['product_id', $pro_id]
+                    ['transfer_id', $id],
+                    ['product_id', $pro_id],
+                    ['variant_id', $variant_id]
+                ])->update($product_transfer);
+            }
+            elseif($variant_id == null && in_array($pro_id, $old_product_id) ){
+                ProductTransfer::where([
+                    ['transfer_id', $id],
+                    ['product_id', $pro_id]
                 ])->update($product_transfer);
             }
             else
@@ -516,26 +599,30 @@ class TransferController extends Controller
                     $quantity = $product_transfer_data / $lims_transfer_unit_data->operation_value;
                 }
 
-                if($lims_transfer_data->status == 1){
-                    $lims_product_warehouse_data = Product_Warehouse::where([
-                        ['product_id', $product_transfer_data->product_id],
-                        ['warehouse_id', $lims_transfer_data->from_warehouse_id]
-                    ])->first();
+                if($lims_transfer_data->status == 1) {
+                    //add quantity for from warehouse
+                    if($product_transfer_data->variant_id)
+                        $lims_product_warehouse_data = Product_Warehouse::FindProductWithVariant($product_transfer_data->product_id, $product_transfer_data->variant_id, $lims_transfer_data->from_warehouse_id)->first();
+                    else
+                        $lims_product_warehouse_data = Product_Warehouse::FindProductWithoutVariant($product_transfer_data->product_id, $lims_transfer_data->from_warehouse_id)->first();
                     $lims_product_warehouse_data->qty += $quantity;
                     $lims_product_warehouse_data->save();
+                    //deduct quantity for to warehouse
+                    if($product_transfer_data->variant_id)
+                        $lims_product_warehouse_data = Product_Warehouse::FindProductWithVariant($product_transfer_data->product_id, $product_transfer_data->variant_id, $lims_transfer_data->to_warehouse_id)->first();
+                    else
+                        $lims_product_warehouse_data = Product_Warehouse::FindProductWithoutVariant($product_transfer_data->product_id, $lims_transfer_data->to_warehouse_id)->first();
 
-                    $lims_product_warehouse_data = Product_Warehouse::where([
-                        ['product_id', $product_transfer_data->product_id],
-                        ['warehouse_id', $lims_transfer_data->to_warehouse_id]
-                    ])->first();
                     $lims_product_warehouse_data->qty -= $quantity;
                     $lims_product_warehouse_data->save();
                 }
-                elseif($lims_transfer_data->status == 3){
-                    $lims_product_warehouse_data = Product_Warehouse::where([
-                        ['product_id', $product_transfer_data->product_id],
-                        ['warehouse_id', $lims_transfer_data->from_warehouse_id]
-                    ])->first();
+                elseif($lims_transfer_data->status == 3) {
+                    //add quantity for from warehouse
+                    if($product_transfer_data->variant_id)
+                        $lims_product_warehouse_data = Product_Warehouse::FindProductWithVariant($product_transfer_data->product_id, $product_transfer_data->variant_id, $lims_transfer_data->from_warehouse_id)->first();
+                    else
+                        $lims_product_warehouse_data = Product_Warehouse::FindProductWithoutVariant($product_transfer_data->product_id, $lims_transfer_data->from_warehouse_id)->first();
+
                     $lims_product_warehouse_data->qty += $quantity;
                     $lims_product_warehouse_data->save();
                 }
@@ -558,26 +645,30 @@ class TransferController extends Controller
                 $quantity = $product_transfer_data / $lims_transfer_unit_data->operation_value;
             }
 
-            if($lims_transfer_data->status == 1){
-                $lims_product_warehouse_data = Product_Warehouse::where([
-                    ['product_id', $product_transfer_data->product_id],
-                    ['warehouse_id', $lims_transfer_data->from_warehouse_id]
-                ])->first();
+            if($lims_transfer_data->status == 1) {
+                //add quantity for from warehouse
+                if($product_transfer_data->variant_id)
+                    $lims_product_warehouse_data = Product_Warehouse::FindProductWithVariant($product_transfer_data->product_id, $product_transfer_data->variant_id, $lims_transfer_data->from_warehouse_id)->first();
+                else
+                    $lims_product_warehouse_data = Product_Warehouse::FindProductWithoutVariant($product_transfer_data->product_id, $lims_transfer_data->from_warehouse_id)->first();
                 $lims_product_warehouse_data->qty += $quantity;
                 $lims_product_warehouse_data->save();
+                //deduct quantity for to warehouse
+                if($product_transfer_data->variant_id)
+                    $lims_product_warehouse_data = Product_Warehouse::FindProductWithVariant($product_transfer_data->product_id, $product_transfer_data->variant_id, $lims_transfer_data->to_warehouse_id)->first();
+                else
+                    $lims_product_warehouse_data = Product_Warehouse::FindProductWithoutVariant($product_transfer_data->product_id, $lims_transfer_data->to_warehouse_id)->first();
 
-                $lims_product_warehouse_data = Product_Warehouse::where([
-                    ['product_id', $product_transfer_data->product_id],
-                    ['warehouse_id', $lims_transfer_data->to_warehouse_id]
-                ])->first();
                 $lims_product_warehouse_data->qty -= $quantity;
                 $lims_product_warehouse_data->save();
             }
-            elseif($lims_transfer_data->status == 3){
-                $lims_product_warehouse_data = Product_Warehouse::where([
-                    ['product_id', $product_transfer_data->product_id],
-                    ['warehouse_id', $lims_transfer_data->from_warehouse_id]
-                ])->first();
+            elseif($lims_transfer_data->status == 3) {
+                //add quantity for from warehouse
+                if($product_transfer_data->variant_id)
+                    $lims_product_warehouse_data = Product_Warehouse::FindProductWithVariant($product_transfer_data->product_id, $product_transfer_data->variant_id, $lims_transfer_data->from_warehouse_id)->first();
+                else
+                    $lims_product_warehouse_data = Product_Warehouse::FindProductWithoutVariant($product_transfer_data->product_id, $lims_transfer_data->from_warehouse_id)->first();
+
                 $lims_product_warehouse_data->qty += $quantity;
                 $lims_product_warehouse_data->save();
             }

@@ -18,13 +18,13 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.reference')}}</strong></label>
+                                            <label>{{trans('file.reference')}}</label>
                                             <p><strong>{{ $lims_transfer_data->reference_no }}</strong></p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans("file.Status")}}</strong></label>
+                                            <label>{{trans("file.Status")}}</label>
                                             <input type="hidden" name="status_hidden" value="{{ $lims_transfer_data->status }}">
                                             <select name="status" class="form-control selectpicker">
                                                 <option value="1">{{trans('file.Completed')}}</option>
@@ -37,7 +37,7 @@
                                 <div class="row">  
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.From Warehouse')}} *</strong></label>
+                                            <label>{{trans('file.From Warehouse')}} *</label>
                                             <input type="hidden" name="from_warehouse_id_hidden" value="{{ $lims_transfer_data->from_warehouse_id }}" />
                                             <select required name="from_warehouse_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select warehouse...">
                                                 @foreach($lims_warehouse_list as $warehouse)
@@ -48,7 +48,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.To Warehouse')}} *</strong></label>
+                                            <label>{{trans('file.To Warehouse')}} *</label>
                                             <input type="hidden" name="to_warehouse_id_hidden" value="{{ $lims_transfer_data->to_warehouse_id }}" />
                                             <select required name="to_warehouse_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select warehouse...">
                                                 @foreach($lims_warehouse_list as $warehouse)
@@ -60,7 +60,7 @@
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-md-12">
-                                        <label><strong>{{trans('file.Select Product')}}</strong></label>
+                                        <label>{{trans('file.Select Product')}}</label>
                                         <div class="search-box input-group">
                                             <button type="button" class="btn btn-secondary btn-lg"><i class="fa fa-barcode"></i></button>
                                             <input type="text" name="product_code_name" id="lims_productcodeSearch" placeholder="Please type product code and select..." class="form-control" />
@@ -81,7 +81,7 @@
                                                         <th>{{trans('file.Net Unit Cost')}}</th>
                                                         <th>{{trans('file.Tax')}}</th>
                                                         <th>{{trans('file.Subtotal')}}</th>
-                                                        <th><i class="fa fa-trash"></i></th>
+                                                        <th><i class="dripicons-trash"></i></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -94,6 +94,14 @@
                                                     <tr>
                                                     <?php 
                                                         $product_data = DB::table('products')->find($product_transfer->product_id);
+
+                                                        if($product_transfer->variant_id) {
+                                                            $product_variant_data = \App\ProductVariant::select('id', 'item_code')->FindExactProduct($product_data->id, $product_transfer->variant_id)->first();
+                                                            $product_variant_id = $product_variant_data->id;
+                                                            $product_data->code = $product_variant_data->item_code;
+                                                        }
+                                                        else
+                                                            $product_variant_id = null;
 
                                                         $tax = DB::table('taxes')->where('rate', $product_transfer->tax_rate)->first();
 
@@ -130,7 +138,7 @@
 
                                                         $temp_unit_operation_value = $unit_operation_value =  implode(",",$unit_operation_value) . ',';
                                                     ?>
-                                                        <td>{{$product_data->name}} <button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="fa fa-edit"></i></button> </td>
+                                                        <td>{{$product_data->name}} <button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="dripicons-document-edit"></i></button> </td>
                                                         <td>{{$product_data->code}}</td>
                                                         <td><input type="number" class="form-control qty" name="qty[]" value="{{$product_transfer->qty}}" required step="any" /></td>
                                                         <td class="net_unit_cost">{{ number_format((float)$product_transfer->net_unit_cost, 2, '.', '') }} </td>
@@ -138,6 +146,7 @@
                                                         <td class="sub-total">{{ number_format((float)$product_transfer->total, 2, '.', '') }}</td>
                                                         <td><button type="button" class="ibtnDel btn btn-md btn-danger">{{trans("file.delete")}}</button></td>
                                                         <input type="hidden" class="product-id" name="product_id[]" value="{{$product_data->id}}"/>
+                                                        <input type="hidden" name="product_variant_id[]" value="{{$product_variant_id}}"/>
                                                         <input type="hidden" class="product-code" name="product_code[]" value="{{$product_data->code}}"/>
                                                         <input type="hidden" class="product-cost" name="product_cost[]" value="{{ $product_cost}}"/>
                                                         <input type="hidden" class="purchase-unit" name="purchase_unit[]" value="{{$unit_name}}"/>
@@ -162,7 +171,7 @@
                                                     <th></th>
                                                     <th id="total-tax">{{ number_format((float)$lims_transfer_data->total_tax, 2, '.', '')}}</th>
                                                     <th id="total">{{ number_format((float)$lims_transfer_data->total_cost, 2, '.', '')}}</th>
-                                                    <th><i class="fa fa-trash"></i></th>
+                                                    <th><i class="dripicons-trash"></i></th>
                                                 </tfoot>
                                             </table>
                                         </div>
@@ -208,8 +217,8 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Attach Document')}}</strong></label>
-                                            <i class="fa fa-question-circle" data-toggle="tooltip" title="Only jpg, jpeg, png, gif, pdf, csv, docx, xlsx and txt file is supported"></i> 
+                                            <label>{{trans('file.Attach Document')}}</label>
+                                            <i class="dripicons-question" data-toggle="tooltip" title="Only jpg, jpeg, png, gif, pdf, csv, docx, xlsx and txt file is supported"></i> 
                                             <input type="file" name="document" class="form-control" />
                                             @if($errors->has('extension'))
                                                 <span>
@@ -222,7 +231,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label><strong>{{trans('file.Note')}}</strong></label>
+                                            <label>{{trans('file.Note')}}</label>
                                             <textarea rows="5" class="form-control" name="note">{{ $lims_transfer_data->note }}</textarea>
                                         </div>
                                     </div>
@@ -259,20 +268,20 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="modal_header" class="modal-title"></h5>
-                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                 </div>
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
-                            <label><strong>{{trans('file.Quantity')}}</strong></label>
+                            <label>{{trans('file.Quantity')}}</label>
                             <input type="number" name="edit_qty" class="form-control" step="any">
                         </div>
                         <div class="form-group">
-                            <label><strong>{{trans('file.Unit Cost')}}</strong></label>
+                            <label>{{trans('file.Unit Cost')}}</label>
                             <input type="number" name="edit_unit_cost" class="form-control" step="any">
                         </div>
                         <div class="form-group">
-                            <label><strong>{{trans('file.Product Unit')}}</strong></label>
+                            <label>{{trans('file.Product Unit')}}</label>
                             <select name="edit_unit" class="form-control selectpicker">
                             </select>
                         </div>
@@ -492,7 +501,7 @@ function productSearch(data){
                 var newRow = $("<tr>");
                 var cols = '';
                 temp_unit_name = (data[6]).split(',');
-                cols += '<td>' + data[0] + '<button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="fa fa-edit"></i></button></td>';
+                cols += '<td>' + data[0] + '<button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="dripicons-document-edit"></i></button></td>';
                 cols += '<td>' + data[1] + '</td>';
                 cols += '<td><input type="number" class="form-control qty" name="qty[]" value="1" required step="any"/></td>';
                 cols += '<td class="net_unit_cost"></td>';
@@ -501,6 +510,7 @@ function productSearch(data){
                 cols += '<td><button type="button" class="ibtnDel btn btn-md btn-danger">{{trans("file.delete")}}</button></td>';
                 cols += '<input type="hidden" class="product-code" name="product_code[]" value="' + data[1] + '"/>';
                 cols += '<input type="hidden" class="product-id" name="product_id[]" value="' + data[9] + '"/>';
+                cols += '<input type="hidden" name="product_variant_id[]" value="' + data[10] + '"/>';
                 cols += '<input type="hidden" class="purchase-unit" name="purchase_unit[]" value="' + temp_unit_name[0] + '"/>';
                 cols += '<input type="hidden" class="net_unit_cost" name="net_unit_cost[]" />';
                 cols += '<input type="hidden" class="tax-rate" name="tax_rate[]" value="' + data[3] + '"/>';
@@ -560,9 +570,8 @@ function checkQuantity(purchase_qty, flag) {
     if (total_qty > parseFloat(product_qty[pos])) {
         alert('Quantity exceeds stock quantity!');
         if (flag) {
-            var row_qty = $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.qty').val();
-            row_qty = row_qty.substring(0, row_qty.length - 1);
-            $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.qty').val(row_qty);
+            purchase_qty = purchase_qty.substring(0, purchase_qty.length - 1);
+            $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.qty').val(purchase_qty);
         } else {
             edit();
             return;
@@ -571,9 +580,8 @@ function checkQuantity(purchase_qty, flag) {
     else {
         $('#editModal').modal('hide');
         $('table.order-list tbody tr:nth-child(' + (rowindex + 1) + ')').find('.qty').val(purchase_qty);
-
-        calculateRowProductData(purchase_qty);
     }
+    calculateRowProductData(purchase_qty);
 }
 
 function calculateRowProductData(quantity) {
